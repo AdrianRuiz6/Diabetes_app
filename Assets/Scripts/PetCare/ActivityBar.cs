@@ -5,29 +5,42 @@ using UnityEngine.UI;
 
 public class ActivityBar : MonoBehaviour
 {
+    [Header("Activity fill bar")]
     public Image activityFillBar;
     public Gradient activityColorGradient;
 
-    public float currentActivity;
+    [Header("Activity values")]
+    public float currentActivityValue;
     public float maxActivity;
     public float minActivity;
 
+    [Header("Passive decision")]
     public float timePassiveDecision;
     private float timerPassiveDesion;
-
     private float passiveHitActivity = 5;
     private int decisionActivity;
 
+    [Header("Modifier buttons")]
     public Button sportButton;
     public Button foodButton;
 
+    [Header("Generative coins")]
+    public float timeToGenerateCoins;
+    private float timerGenerateCoins;
     public Color myGradientGreen;
+    public int coinsGenerateGreen;
     public Color myGradientOrange;
+    public int coinsGenerateOrange;
     public Color myGradientRed;
+    public int coinsGenerateRed;
+    private Color currentColor;
+    public int totalCoinsGenerated;//
+    public Button activityBarButton;
+    private CoinsManager coinsManager;
 
     private void OnValidate()
     {
-        currentActivity = Mathf.Clamp(currentActivity, minActivity, maxActivity);
+        currentActivityValue = Mathf.Clamp(currentActivityValue, minActivity, maxActivity);
     }
 
     void Start()
@@ -38,11 +51,17 @@ public class ActivityBar : MonoBehaviour
         foodButton.onClick.AddListener(UseFood);
 
         timerPassiveDesion = timePassiveDecision;
+
+        timerGenerateCoins = timeToGenerateCoins;
+        coinsManager = GetComponent<CoinsManager>();
+        activityBarButton.onClick.AddListener(ExtractCoins);
     }
 
     void Update()
     {
         WaitPassiveDecision();
+
+        GenerateCoins();
     }
 
     private void WaitPassiveDecision()
@@ -66,10 +85,52 @@ public class ActivityBar : MonoBehaviour
             timerPassiveDesion += timePassiveDecision;
         }
     }
+
+    private void GenerateCoins()
+    {
+        timerGenerateCoins -= Time.deltaTime;
+        if (timerGenerateCoins <= 0)
+        {
+            currentColor = activityColorGradient.Evaluate(activityFillBar.fillAmount);
+            //Debug.Log("Current color: " + currentColor);
+            //Debug.Log("Green: " + myGradientGreen);
+            //Debug.Log("Orange: " + myGradientOrange);
+            //Debug.Log("Red: " + myGradientRed);
+
+            if (AreColorSimilar(currentColor, myGradientGreen, 0.1f))
+            {
+                //Debug.Log("Selected color: green");
+                totalCoinsGenerated += coinsGenerateGreen;
+            }
+            else if (AreColorSimilar(currentColor, myGradientOrange, 0.1f))
+            {
+                //Debug.Log("Selected color: orange");
+                totalCoinsGenerated += coinsGenerateOrange;
+            }
+            else if (AreColorSimilar(currentColor, myGradientRed, 0.1f))
+            {
+                //Debug.Log("Selected color: red");
+                totalCoinsGenerated += coinsGenerateRed;
+            }
+            timerGenerateCoins = timeToGenerateCoins;
+        }
+    }
+
+    private bool AreColorSimilar(Color color1, Color color2, float threshold)
+    {
+        return Vector4.Distance(color1, color2) < threshold;
+    }
+
+    public void ExtractCoins()
+    {
+        coinsManager.AddCoins(totalCoinsGenerated);
+        totalCoinsGenerated = 0;
+    }
+
     private void UpdateActivity(float amount)
     {
-        currentActivity = Mathf.Clamp(currentActivity + amount, minActivity, maxActivity);
-        activityFillBar.fillAmount = currentActivity / maxActivity;
+        currentActivityValue = Mathf.Clamp(currentActivityValue + amount, minActivity, maxActivity);
+        activityFillBar.fillAmount = currentActivityValue / maxActivity;
         activityFillBar.color = activityColorGradient.Evaluate(activityFillBar.fillAmount);
     }
 

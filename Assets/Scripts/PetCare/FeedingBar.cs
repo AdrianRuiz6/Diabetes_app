@@ -5,23 +5,27 @@ using UnityEngine.UI;
 
 public class FeedingBar : MonoBehaviour
 {
+    [Header("Feeding fill bar")]
     public Image feedingFillBar;
     public Gradient feedingColorGradient;
 
-    public float currentFeeding;
+    [Header("Feeding values")]
+    public float currentFeedingValue;
     public float maxFeeding;
     public float minFeeding;
 
+    [Header("Passive decision")]
     public float timePassiveDecision;
     private float timerPassiveDesion;
-
     private float passiveHitFeeding = 5;
     private int decisionFeeding;
 
+    [Header("Modifier buttons")]
     public Button sportButton;
     public Button foodButton;
 
-    public float timeGenerateCoins;
+    [Header("Generative coins")]
+    public float timeToGenerateCoins;
     private float timerGenerateCoins;
     public Color myGradientGreen;
     public int coinsGenerateGreen;
@@ -36,7 +40,7 @@ public class FeedingBar : MonoBehaviour
 
     private void OnValidate()
     {
-        currentFeeding = Mathf.Clamp(currentFeeding, minFeeding, maxFeeding);
+        currentFeedingValue = Mathf.Clamp(currentFeedingValue, minFeeding, maxFeeding);
     }
 
     void Start()
@@ -48,7 +52,7 @@ public class FeedingBar : MonoBehaviour
 
         timerPassiveDesion = timePassiveDecision;
 
-        timerGenerateCoins = timeGenerateCoins;
+        timerGenerateCoins = timeToGenerateCoins;
         coinsManager = GetComponent<CoinsManager>();
         feedingBarButton.onClick.AddListener(ExtractCoins);
     }
@@ -88,27 +92,27 @@ public class FeedingBar : MonoBehaviour
         if(timerGenerateCoins <= 0)
         {
             currentColor = feedingColorGradient.Evaluate(feedingFillBar.fillAmount);
-            Debug.Log("Current color: " + currentColor);//
-            Debug.Log("Green: " + myGradientGreen);//
-            Debug.Log("Orange: " + myGradientOrange);//
-            Debug.Log("Red: " + myGradientRed);//
+            //Debug.Log("Current color: " + currentColor);
+            //Debug.Log("Green: " + myGradientGreen);
+            //Debug.Log("Orange: " + myGradientOrange);
+            //Debug.Log("Red: " + myGradientRed);
 
             if (AreColorSimilar(currentColor, myGradientGreen, 0.1f))
             {
-                Debug.Log("verde");//
+                //Debug.Log("Selected color: green");
                 totalCoinsGenerated += coinsGenerateGreen;
             }
             else if (AreColorSimilar(currentColor, myGradientOrange, 0.1f))
             {
-                Debug.Log("naranja");//
+                //Debug.Log("Selected color: orange");
                 totalCoinsGenerated += coinsGenerateOrange;
             }
             else if (AreColorSimilar(currentColor, myGradientRed, 0.1f))
             {
-                Debug.Log("rojo");//
+                //Debug.Log("Selected color: red");
                 totalCoinsGenerated += coinsGenerateRed;
             }
-            timerGenerateCoins = timeGenerateCoins;
+            timerGenerateCoins = timeToGenerateCoins;
         }
     }
 
@@ -125,8 +129,8 @@ public class FeedingBar : MonoBehaviour
 
     private void UpdateFeeding(float amount)
     {
-        currentFeeding = Mathf.Clamp(currentFeeding + amount, minFeeding, maxFeeding);
-        feedingFillBar.fillAmount = currentFeeding / maxFeeding;
+        currentFeedingValue = Mathf.Clamp(currentFeedingValue + amount, minFeeding, maxFeeding);
+        feedingFillBar.fillAmount = currentFeedingValue / maxFeeding;
         feedingFillBar.color = feedingColorGradient.Evaluate(feedingFillBar.fillAmount);
     }
 

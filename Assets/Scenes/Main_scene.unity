@@ -767,6 +767,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 147363188}
+  - component: {fileID: 147363189}
   m_Layer: 5
   m_Name: ActivityBar
   m_TagString: Untagged
@@ -795,6 +796,50 @@ RectTransform:
   m_AnchoredPosition: {x: -0.6, y: 36.96}
   m_SizeDelta: {x: 6.8282, y: 14.744}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &147363189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147363187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &320688868
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,6 +986,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 336399200}
+  - component: {fileID: 336399201}
   m_Layer: 5
   m_Name: GlucoseBar
   m_TagString: Untagged
@@ -969,6 +1015,50 @@ RectTransform:
   m_AnchoredPosition: {x: -21, y: 36.96}
   m_SizeDelta: {x: 6.8282, y: 14.744}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &336399201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336399199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &373916084
 GameObject:
   m_ObjectHideFlags: 0
@@ -2002,7 +2092,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &703397560
 RectTransform:
@@ -3450,16 +3540,22 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 5
     m_NumAlphaKeys: 2
-  currentGlucose: 100
+  currentGlucoseValue: 100
   maxGlucose: 200
   minGlucose: 0
   timePassiveDecision: 2
   insulineButton: {fileID: 1282870370}
   sportButton: {fileID: 1870401256}
   foodButton: {fileID: 109883900}
+  timeToGenerateCoins: 1
   myGradientGreen: {r: 0.098039225, g: 1, b: 0, a: 1}
+  coinsGenerateGreen: 10
   myGradientOrange: {r: 0.9843138, g: 0.5058824, b: 0, a: 1}
+  coinsGenerateOrange: 5
   myGradientRed: {r: 1, g: 0, b: 0, a: 1}
+  coinsGenerateRed: 50
+  totalCoinsGenerated: 0
+  glucoseBarButton: {fileID: 336399201}
 --- !u!114 &1486701558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3503,15 +3599,21 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 5
     m_NumAlphaKeys: 2
-  currentActivity: 50
+  currentActivityValue: 50
   maxActivity: 100
   minActivity: 0
   timePassiveDecision: 2
   sportButton: {fileID: 1870401256}
   foodButton: {fileID: 109883900}
+  timeToGenerateCoins: 1
   myGradientGreen: {r: 0.098039225, g: 1, b: 0, a: 1}
+  coinsGenerateGreen: 10
   myGradientOrange: {r: 0.9843138, g: 0.5058824, b: 0, a: 1}
+  coinsGenerateOrange: 5
   myGradientRed: {r: 1, g: 0, b: 0, a: 1}
+  coinsGenerateRed: 50
+  totalCoinsGenerated: 0
+  activityBarButton: {fileID: 147363189}
 --- !u!114 &1486701559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3555,13 +3657,13 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 5
     m_NumAlphaKeys: 2
-  currentFeeding: 50
+  currentFeedingValue: 50
   maxFeeding: 100
   minFeeding: 0
   timePassiveDecision: 2
   sportButton: {fileID: 1870401256}
   foodButton: {fileID: 109883900}
-  timeGenerateCoins: 1
+  timeToGenerateCoins: 1
   myGradientGreen: {r: 0.098039225, g: 1, b: 0, a: 1}
   coinsGenerateGreen: 10
   myGradientOrange: {r: 0.9843138, g: 0.5058824, b: 0, a: 1}
