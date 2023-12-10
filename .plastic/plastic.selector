@@ -1,4 +1,0 @@
-repository "TFG_app@arues04@cloud"
-  path "/"
-    smartbranch "/main" changeset "2" 
-     
