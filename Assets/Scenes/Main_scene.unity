@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 25845528}
   - component: {fileID: 25845527}
   m_Layer: 5
-  m_Name: Color (1)
+  m_Name: Color (1)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -406,8 +406,9 @@ GameObject:
   - component: {fileID: 109883902}
   - component: {fileID: 109883901}
   - component: {fileID: 109883900}
+  - component: {fileID: 109883903}
   m_Layer: 5
-  m_Name: Food
+  m_Name: Food_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -515,6 +516,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 109883898}
   m_CullTransparentMesh: 1
+--- !u!114 &109883903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109883898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ebd07996351d334fb7c78428e804e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 5
 --- !u!1 &118130808
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,7 +541,7 @@ GameObject:
   - component: {fileID: 118130811}
   - component: {fileID: 118130810}
   m_Layer: 5
-  m_Name: GlucoseBorder
+  m_Name: GlucoseBorder_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -795,7 +809,7 @@ GameObject:
   - component: {fileID: 320688873}
   - component: {fileID: 320688872}
   m_Layer: 5
-  m_Name: Color (2)
+  m_Name: Color (2)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1115,7 +1129,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -10.391465}
+  m_AnchoredPosition: {x: 0, y: -0.0000009536743}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &405606930
@@ -1170,7 +1184,7 @@ GameObject:
   - component: {fileID: 451375116}
   - component: {fileID: 451375115}
   m_Layer: 5
-  m_Name: GlucoseBorder
+  m_Name: GlucoseBorder_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1401,7 +1415,7 @@ GameObject:
   - component: {fileID: 568661652}
   - component: {fileID: 568661651}
   m_Layer: 5
-  m_Name: Panel_title
+  m_Name: Title_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1536,7 +1550,7 @@ GameObject:
   - component: {fileID: 584498560}
   - component: {fileID: 584498559}
   m_Layer: 5
-  m_Name: Configuration_button
+  m_Name: Configuration_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1656,7 +1670,7 @@ GameObject:
   - component: {fileID: 613959298}
   - component: {fileID: 613959297}
   m_Layer: 5
-  m_Name: GlucoseBorder
+  m_Name: GlucoseBorder_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2024,7 +2038,7 @@ GameObject:
   - component: {fileID: 719139854}
   - component: {fileID: 719139853}
   m_Layer: 5
-  m_Name: Color (1)
+  m_Name: Color (1)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2161,7 +2175,7 @@ GameObject:
   - component: {fileID: 763403898}
   - component: {fileID: 763403897}
   m_Layer: 5
-  m_Name: Color (2)
+  m_Name: Color (2)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2331,6 +2345,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 846469419}
+  - component: {fileID: 846469420}
   m_Layer: 5
   m_Name: FeedingBar
   m_TagString: Untagged
@@ -2359,6 +2374,50 @@ RectTransform:
   m_AnchoredPosition: {x: 22.6, y: 36.96}
   m_SizeDelta: {x: 6.8282, y: 14.744}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &846469420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846469418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &953670030
 GameObject:
   m_ObjectHideFlags: 0
@@ -2371,7 +2430,7 @@ GameObject:
   - component: {fileID: 953670033}
   - component: {fileID: 953670032}
   m_Layer: 5
-  m_Name: Coins_image
+  m_Name: Coins_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2448,7 +2507,7 @@ GameObject:
   - component: {fileID: 1000379778}
   - component: {fileID: 1000379777}
   m_Layer: 5
-  m_Name: Color
+  m_Name: Color_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2851,7 +2910,7 @@ GameObject:
   - component: {fileID: 1186331252}
   - component: {fileID: 1186331251}
   m_Layer: 5
-  m_Name: GlucoseFill
+  m_Name: GlucoseFill_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2889,7 +2948,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.098039225, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2901,7 +2960,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillAmount: 0.5
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -2926,7 +2985,7 @@ GameObject:
   - component: {fileID: 1232958056}
   - component: {fileID: 1232958055}
   m_Layer: 5
-  m_Name: GlucoseFill
+  m_Name: GlucoseFill_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2964,7 +3023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.098039225, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2976,7 +3035,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillAmount: 0.5
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -3001,8 +3060,9 @@ GameObject:
   - component: {fileID: 1282870372}
   - component: {fileID: 1282870371}
   - component: {fileID: 1282870370}
+  - component: {fileID: 1282870373}
   m_Layer: 5
-  m_Name: Injection
+  m_Name: Injection_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3110,6 +3170,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1282870368}
   m_CullTransparentMesh: 1
+--- !u!114 &1282870373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1282870368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ebd07996351d334fb7c78428e804e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 5
 --- !u!1 &1368060277
 GameObject:
   m_ObjectHideFlags: 0
@@ -3124,7 +3197,7 @@ GameObject:
   - component: {fileID: 1368060280}
   - component: {fileID: 1368060279}
   m_Layer: 5
-  m_Name: Color
+  m_Name: Color_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3295,8 +3368,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1486701555}
   - component: {fileID: 1486701556}
+  - component: {fileID: 1486701557}
+  - component: {fileID: 1486701558}
+  - component: {fileID: 1486701559}
   m_Layer: 0
-  m_Name: Economy
+  m_Name: Systems
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3329,8 +3405,171 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b032ad54d2aadc4ea3256547f529085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  total_coins: 500
-  coinsInterfaceObj: {fileID: 1638374156}
+  totalCoins: 500
+  coinsText: {fileID: 1638374156}
+--- !u!114 &1486701557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486701553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a57cfe2f42817441985005ab8fcddcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glucoseFillBar: {fileID: 1232958055}
+  glucoseColorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 0.51204026, b: 0, a: 1}
+    key2: {r: 0.09829593, g: 1, b: 0, a: 0}
+    key3: {r: 0.9843138, g: 0.5058824, b: 0, a: 0}
+    key4: {r: 1, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 19661
+    ctime1: 26214
+    ctime2: 39321
+    ctime3: 45875
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 1
+    m_ColorSpace: -1
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 2
+  currentGlucose: 100
+  maxGlucose: 200
+  minGlucose: 0
+  timePassiveDecision: 2
+  insulineButton: {fileID: 1282870370}
+  sportButton: {fileID: 1870401256}
+  foodButton: {fileID: 109883900}
+  myGradientGreen: {r: 0.098039225, g: 1, b: 0, a: 1}
+  myGradientOrange: {r: 0.9843138, g: 0.5058824, b: 0, a: 1}
+  myGradientRed: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &1486701558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486701553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089a5ce35edcf0c47b6a3f805d20c6e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activityFillBar: {fileID: 1632079194}
+  activityColorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 0.51204026, b: 0, a: 1}
+    key2: {r: 0.09829593, g: 1, b: 0, a: 0}
+    key3: {r: 0.9843138, g: 0.5058824, b: 0, a: 0}
+    key4: {r: 1, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 19661
+    ctime1: 26214
+    ctime2: 39321
+    ctime3: 45875
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 1
+    m_ColorSpace: -1
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 2
+  currentActivity: 50
+  maxActivity: 100
+  minActivity: 0
+  timePassiveDecision: 2
+  sportButton: {fileID: 1870401256}
+  foodButton: {fileID: 109883900}
+  myGradientGreen: {r: 0.098039225, g: 1, b: 0, a: 1}
+  myGradientOrange: {r: 0.9843138, g: 0.5058824, b: 0, a: 1}
+  myGradientRed: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &1486701559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486701553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cafcdbd17546c36498dd560af8101fc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feedingFillBar: {fileID: 1186331251}
+  feedingColorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 0.9843138, g: 0.5058824, b: 0, a: 1}
+    key2: {r: 0.09829593, g: 1, b: 0, a: 0}
+    key3: {r: 0.9843138, g: 0.5058824, b: 0, a: 0}
+    key4: {r: 1, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 19661
+    ctime1: 26214
+    ctime2: 39321
+    ctime3: 45875
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 1
+    m_ColorSpace: -1
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 2
+  currentFeeding: 50
+  maxFeeding: 100
+  minFeeding: 0
+  timePassiveDecision: 2
+  sportButton: {fileID: 1870401256}
+  foodButton: {fileID: 109883900}
+  timeGenerateCoins: 1
+  myGradientGreen: {r: 0.098039225, g: 1, b: 0, a: 1}
+  coinsGenerateGreen: 10
+  myGradientOrange: {r: 0.9843138, g: 0.5058824, b: 0, a: 1}
+  coinsGenerateOrange: 5
+  myGradientRed: {r: 1, g: 0, b: 0, a: 1}
+  coinsGenerateRed: 50
+  totalCoinsGenerated: 0
+  feedingBarButton: {fileID: 846469420}
 --- !u!1 &1593447865
 GameObject:
   m_ObjectHideFlags: 0
@@ -3381,7 +3620,7 @@ GameObject:
   - component: {fileID: 1632079195}
   - component: {fileID: 1632079194}
   m_Layer: 5
-  m_Name: GlucoseFill
+  m_Name: GlucoseFill_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3419,7 +3658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.098039225, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3431,7 +3670,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillAmount: 0.5
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -3456,7 +3695,7 @@ GameObject:
   - component: {fileID: 1638374159}
   - component: {fileID: 1638374158}
   m_Layer: 5
-  m_Name: Coins_amount
+  m_Name: CoinsAmount_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3592,7 +3831,7 @@ GameObject:
   - component: {fileID: 1641121966}
   - component: {fileID: 1641121965}
   m_Layer: 5
-  m_Name: Color
+  m_Name: Color_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3899,7 +4138,7 @@ GameObject:
   - component: {fileID: 1723319031}
   - component: {fileID: 1723319030}
   m_Layer: 5
-  m_Name: Character
+  m_Name: Character_Img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3976,7 +4215,7 @@ GameObject:
   - component: {fileID: 1742134400}
   - component: {fileID: 1742134399}
   m_Layer: 5
-  m_Name: Color (1)
+  m_Name: Color (1)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4113,7 +4352,7 @@ GameObject:
   - component: {fileID: 1764662738}
   - component: {fileID: 1764662737}
   m_Layer: 5
-  m_Name: Color
+  m_Name: Color_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4250,7 +4489,7 @@ GameObject:
   - component: {fileID: 1785688170}
   - component: {fileID: 1785688169}
   m_Layer: 5
-  m_Name: Color
+  m_Name: Color_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4387,7 +4626,7 @@ GameObject:
   - component: {fileID: 1849592483}
   - component: {fileID: 1849592482}
   m_Layer: 5
-  m_Name: Color (1)
+  m_Name: Color (1)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4522,8 +4761,9 @@ GameObject:
   - component: {fileID: 1870401258}
   - component: {fileID: 1870401257}
   - component: {fileID: 1870401256}
+  - component: {fileID: 1870401259}
   m_Layer: 5
-  m_Name: Sport
+  m_Name: Sport_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4631,6 +4871,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870401254}
   m_CullTransparentMesh: 1
+--- !u!114 &1870401259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870401254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ebd07996351d334fb7c78428e804e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 5
 --- !u!1 &2037194013
 GameObject:
   m_ObjectHideFlags: 0
@@ -4645,7 +4898,7 @@ GameObject:
   - component: {fileID: 2037194018}
   - component: {fileID: 2037194017}
   m_Layer: 5
-  m_Name: Color (1)
+  m_Name: Color (1)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4782,7 +5035,7 @@ GameObject:
   - component: {fileID: 2046607065}
   - component: {fileID: 2046607064}
   m_Layer: 5
-  m_Name: Color (2)
+  m_Name: Color (2)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4919,7 +5172,7 @@ GameObject:
   - component: {fileID: 2078016208}
   - component: {fileID: 2078016207}
   m_Layer: 5
-  m_Name: Color (2)
+  m_Name: Color (2)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5056,7 +5309,7 @@ GameObject:
   - component: {fileID: 2108109542}
   - component: {fileID: 2108109541}
   m_Layer: 5
-  m_Name: Color (2)
+  m_Name: Color (2)_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
