@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FoodFunctionality : MonoBehaviour
 {
-
     private Button foodButton;
 
     public GameObject systemsObject;
@@ -23,10 +23,20 @@ public class FoodFunctionality : MonoBehaviour
     private Cooldown cooldownFood;
     private bool validAnswer = false;
 
+    public GameObject foodBotPanel;
+    public GameObject petCarePanel;
+    private Image backgroundPetCarePanel;
+
+    public Button goBackBtn;
+    public TMP_InputField InputUser;
+    public TMP_Text feedbackText;
+
     void Start()
     {
         foodButton = GetComponent<Button>();
+
         foodButton.onClick.AddListener(openFoodBotPopUp);
+        goBackBtn.onClick.AddListener(closeFoodBotPopUp);
 
         feedingBarFunctionality = systemsObject.GetComponent<FeedingBar>();
         activityBarFunctionality = systemsObject.GetComponent<ActivityBar>();
@@ -35,6 +45,8 @@ public class FoodFunctionality : MonoBehaviour
         foodBot = objectIA.GetComponent<FoodBot>();
 
         cooldownFood = GetComponent<Cooldown>();
+
+        backgroundPetCarePanel = petCarePanel.GetComponent<Image>();
     }
 
     private void openFoodBotPopUp()
@@ -43,8 +55,16 @@ public class FoodFunctionality : MonoBehaviour
         cooldownFood.DisableCooldown();
 
         // Inhabilitar ventana principal desactivando raycast del panel y desactivando "interactable" de todos los botones.
+        backgroundPetCarePanel.raycastTarget = false;
+
+        Button[] buttons_in_panel = petCarePanel.GetComponentsInChildren<Button>();
+        foreach(Button button in buttons_in_panel)
+        {
+            button.interactable = false;
+        }
 
         // Activar panel de la ventana emergente del talkbot de comida.
+        foodBotPanel.SetActive(true);
     }
 
     private void closeFoodBotPopUp()
@@ -56,11 +76,23 @@ public class FoodFunctionality : MonoBehaviour
             UpdateBars();
         }
         validAnswer = false;
-        
+
 
         // Habilitar ventana principal activando raycast del panel y activando "interactable" de todos los botones.
+        backgroundPetCarePanel.raycastTarget = true;
+
+        Button[] buttons_in_panel = petCarePanel.GetComponentsInChildren<Button>();
+        foreach (Button button in buttons_in_panel)
+        {
+            button.interactable = true;
+        }
 
         // Desactivar panel de la ventana emergente del talkbot de comida.
+        foodBotPanel.SetActive(false);
+
+        // Limpiar campos de texto.
+        InputUser.text = string.Empty;
+        feedbackText.text = string.Empty;
     }
 
     private void FeedbackIA()
