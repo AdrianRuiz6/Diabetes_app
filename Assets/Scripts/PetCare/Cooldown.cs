@@ -31,19 +31,27 @@ public class Cooldown : MonoBehaviour
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                image.color = Color.white;
-                button.enabled = true;
-                isCoolingDown = false;
-
-                timer = time;
+                DisableCooldown();
             }
+        }
+        else
+        {
+            DisableCooldown();
         }
     }
 
-    private void ActivateCooldown()
+    public void ActivateCooldown()
     {
         image.color = Color.grey;
         button.enabled = false;
         isCoolingDown = true;
+    }
+
+    public void DisableCooldown()
+    {
+        image.color = Color.white;
+        button.enabled = true;
+        isCoolingDown = false;
+        timer = time;
     }
 }

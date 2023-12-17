@@ -3,26 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FeedingBar : MonoBehaviour
+public class ActivityBar : MonoBehaviour
 {
-    [Header("Feeding fill bar")]
-    public Image feedingFillBar;
-    public Gradient feedingColorGradient;
+    [Header("Activity fill bar")]
+    public Image activityFillBar;
+    public Gradient activityColorGradient;
 
-    [Header("Feeding values")]
-    public float currentFeedingValue;
-    public float maxFeeding;
-    public float minFeeding;
+    [Header("Activity values")]
+    public float currentActivityValue;
+    public float maxActivity;
+    public float minActivity;
 
     [Header("Passive decision")]
     public float timePassiveDecision;
     private float timerPassiveDesion;
-    private float passiveHitFeeding = 5;
-    private int decisionFeeding;
-
-    [Header("Modifier buttons")]
-    public Button sportButton;
-    public Button foodButton;
+    private float passiveHitActivity = 5;
+    private int decisionActivity;
 
     [Header("Generative coins")]
     public float timeToGenerateCoins;
@@ -35,26 +31,23 @@ public class FeedingBar : MonoBehaviour
     public int coinsGenerateRed;
     private Color currentColor;
     public int totalCoinsGenerated;//
-    public Button feedingBarButton;
+    public Button activityBarButton;
     private CoinsManager coinsManager;
 
     private void OnValidate()
     {
-        currentFeedingValue = Mathf.Clamp(currentFeedingValue, minFeeding, maxFeeding);
+        currentActivityValue = Mathf.Clamp(currentActivityValue, minActivity, maxActivity);
     }
 
     void Start()
     {
-        UpdateFeeding(0);
-
-        sportButton.onClick.AddListener(UseSport);
-        foodButton.onClick.AddListener(UseFood);
+        UpdateActivity(0);
 
         timerPassiveDesion = timePassiveDecision;
 
         timerGenerateCoins = timeToGenerateCoins;
         coinsManager = GetComponent<CoinsManager>();
-        feedingBarButton.onClick.AddListener(ExtractCoins);
+        activityBarButton.onClick.AddListener(ExtractCoins);
     }
 
     void Update()
@@ -69,14 +62,14 @@ public class FeedingBar : MonoBehaviour
         timerPassiveDesion -= Time.deltaTime;
         if (timerPassiveDesion <= 0)
         {
-            decisionFeeding = Random.Range(0, 2);
-            switch (decisionFeeding)
+            decisionActivity = Random.Range(0, 2);
+            switch (decisionActivity)
             {
                 case 0:
-                    UpdateFeeding(-passiveHitFeeding);
+                    UpdateActivity(-passiveHitActivity);
                     break;
                 case 1:
-                    UpdateFeeding(+passiveHitFeeding);
+                    UpdateActivity(+passiveHitActivity);
                     break;
                 default:
                     break;
@@ -89,9 +82,9 @@ public class FeedingBar : MonoBehaviour
     private void GenerateCoins()
     {
         timerGenerateCoins -= Time.deltaTime;
-        if(timerGenerateCoins <= 0)
+        if (timerGenerateCoins <= 0)
         {
-            currentColor = feedingColorGradient.Evaluate(feedingFillBar.fillAmount);
+            currentColor = activityColorGradient.Evaluate(activityFillBar.fillAmount);
             //Debug.Log("Current color: " + currentColor);
             //Debug.Log("Green: " + myGradientGreen);
             //Debug.Log("Orange: " + myGradientOrange);
@@ -127,21 +120,10 @@ public class FeedingBar : MonoBehaviour
         totalCoinsGenerated = 0;
     }
 
-    private void UpdateFeeding(float amount)
+    public void UpdateActivity(float amount)
     {
-        currentFeedingValue = Mathf.Clamp(currentFeedingValue + amount, minFeeding, maxFeeding);
-        feedingFillBar.fillAmount = currentFeedingValue / maxFeeding;
-        feedingFillBar.color = feedingColorGradient.Evaluate(feedingFillBar.fillAmount);
+        currentActivityValue = Mathf.Clamp(currentActivityValue + amount, minActivity, maxActivity);
+        activityFillBar.fillAmount = currentActivityValue / maxActivity;
+        activityFillBar.color = activityColorGradient.Evaluate(activityFillBar.fillAmount);
     }
-
-    public void UseFood()
-    {
-        UpdateFeeding(+15);
-    }
-
-    public void UseSport()
-    {
-        UpdateFeeding(-10);
-    }
-
 }

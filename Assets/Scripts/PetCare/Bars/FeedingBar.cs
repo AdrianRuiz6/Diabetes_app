@@ -3,27 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GlucoseBar: MonoBehaviour
+public class FeedingBar : MonoBehaviour
 {
-    [Header("Glucose fill bar")]
-    public Image glucoseFillBar;
-    public Gradient glucoseColorGradient;
+    [Header("Feeding fill bar")]
+    public Image feedingFillBar;
+    public Gradient feedingColorGradient;
 
-    [Header("Glucose values")]
-    public float currentGlucoseValue;
-    public float maxGlucose;
-    public float minGlucose;
+    [Header("Feeding values")]
+    public float currentFeedingValue;
+    public float maxFeeding;
+    public float minFeeding;
 
     [Header("Passive decision")]
     public float timePassiveDecision;
     private float timerPassiveDesion;
-    private float passiveHitGlucose = 5;
-    private int decisionGlucose;
-
-    [Header("Modifier buttons")]
-    public Button insulineButton;
-    public Button sportButton;
-    public Button foodButton;
+    private float passiveHitFeeding = 5;
+    private int decisionFeeding;
 
     [Header("Generative coins")]
     public float timeToGenerateCoins;
@@ -36,27 +31,23 @@ public class GlucoseBar: MonoBehaviour
     public int coinsGenerateRed;
     private Color currentColor;
     public int totalCoinsGenerated;//
-    public Button glucoseBarButton;
+    public Button feedingBarButton;
     private CoinsManager coinsManager;
 
     private void OnValidate()
     {
-        currentGlucoseValue = Mathf.Clamp(currentGlucoseValue, minGlucose, maxGlucose);
+        currentFeedingValue = Mathf.Clamp(currentFeedingValue, minFeeding, maxFeeding);
     }
 
     void Start()
     {
-        UpdateGlucose(0);
-
-        insulineButton.onClick.AddListener(UseInsuline);
-        sportButton.onClick.AddListener(UseSport);
-        foodButton.onClick.AddListener(UseFood);
+        UpdateFeeding(0);
 
         timerPassiveDesion = timePassiveDecision;
 
         timerGenerateCoins = timeToGenerateCoins;
         coinsManager = GetComponent<CoinsManager>();
-        glucoseBarButton.onClick.AddListener(ExtractCoins);
+        feedingBarButton.onClick.AddListener(ExtractCoins);
     }
 
     void Update()
@@ -71,14 +62,14 @@ public class GlucoseBar: MonoBehaviour
         timerPassiveDesion -= Time.deltaTime;
         if (timerPassiveDesion <= 0)
         {
-            decisionGlucose = Random.Range(0, 2);
-            switch (decisionGlucose)
+            decisionFeeding = Random.Range(0, 2);
+            switch (decisionFeeding)
             {
                 case 0:
-                    UpdateGlucose(-passiveHitGlucose);
+                    UpdateFeeding(-passiveHitFeeding);
                     break;
                 case 1:
-                    UpdateGlucose(+passiveHitGlucose);
+                    UpdateFeeding(+passiveHitFeeding);
                     break;
                 default:
                     break;
@@ -91,9 +82,9 @@ public class GlucoseBar: MonoBehaviour
     private void GenerateCoins()
     {
         timerGenerateCoins -= Time.deltaTime;
-        if (timerGenerateCoins <= 0)
+        if(timerGenerateCoins <= 0)
         {
-            currentColor = glucoseColorGradient.Evaluate(glucoseFillBar.fillAmount);
+            currentColor = feedingColorGradient.Evaluate(feedingFillBar.fillAmount);
             //Debug.Log("Current color: " + currentColor);
             //Debug.Log("Green: " + myGradientGreen);
             //Debug.Log("Orange: " + myGradientOrange);
@@ -129,26 +120,10 @@ public class GlucoseBar: MonoBehaviour
         totalCoinsGenerated = 0;
     }
 
-    private void UpdateGlucose(float amount)
+    public void UpdateFeeding(float amount)
     {
-        currentGlucoseValue = Mathf.Clamp(currentGlucoseValue + amount, minGlucose, maxGlucose);
-        glucoseFillBar.fillAmount = currentGlucoseValue / maxGlucose;
-        glucoseFillBar.color = glucoseColorGradient.Evaluate(glucoseFillBar.fillAmount);
+        currentFeedingValue = Mathf.Clamp(currentFeedingValue + amount, minFeeding, maxFeeding);
+        feedingFillBar.fillAmount = currentFeedingValue / maxFeeding;
+        feedingFillBar.color = feedingColorGradient.Evaluate(feedingFillBar.fillAmount);
     }
-
-    public void UseFood()
-    {
-        UpdateGlucose(+15);
-    }
-
-    public void UseSport()
-    {
-        UpdateGlucose(-30);
-    }
-
-    public void UseInsuline()
-    {
-        UpdateGlucose(-15);
-    }
-
 }
