@@ -601,6 +601,7 @@ MonoBehaviour:
   foodBotPanel: {fileID: 928121388}
   petCarePanel: {fileID: 373916084}
   goBackBtn: {fileID: 836910333}
+  sendMessageBtn: {fileID: 560182771}
   InputUser: {fileID: 394413509}
   feedbackText: {fileID: 1026090294}
 --- !u!1 &118130808

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,7 @@ public class FoodFunctionality : MonoBehaviour
     private Image backgroundPetCarePanel;
 
     public Button goBackBtn;
+    public Button sendMessageBtn;
     public TMP_InputField InputUser;
     public TMP_Text feedbackText;
 
@@ -37,6 +39,7 @@ public class FoodFunctionality : MonoBehaviour
 
         foodButton.onClick.AddListener(openFoodBotPopUp);
         goBackBtn.onClick.AddListener(closeFoodBotPopUp);
+        sendMessageBtn.onClick.AddListener(FeedbackIA);
 
         feedingBarFunctionality = systemsObject.GetComponent<FeedingBar>();
         activityBarFunctionality = systemsObject.GetComponent<ActivityBar>();
@@ -97,14 +100,26 @@ public class FoodFunctionality : MonoBehaviour
 
     private void FeedbackIA()
     {
+        string response = "";
+
         // Recoger texto del talkbot y mandarselo al FoodBot obteniendo así una respuesta.
+        response = foodBot.Ask(InputUser.text);
 
         // Evaluar si la respuesta del FoodBot es válida y, si lo es, realizar las dos acciones siguientes:
+        if(response == "" ||  response == "ERROR al procesar la respuesta.")
+        {
+            feedbackText.text = "ERROR al procesar la respuesta. Prueba otra vez...";
+        }
+        else{
+            validAnswer = true;
+            DisableWindowPopUp();
 
-        // 1.-Dar feedback al usuario de su elección.
+            // 1.-Dar feedback al usuario de su elección.
+            feedbackText.text = response;
 
-        // 2.-Calcular la glucosa que actualizaría en la variable "modifierGlucoseBar".
-
+            // 2.-Calcular la glucosa que actualizaría en la variable "modifierGlucoseBar".
+            CalculateGlucose(response);
+        }
     }
 
     private void UpdateBars()
@@ -113,4 +128,15 @@ public class FoodFunctionality : MonoBehaviour
         activityBarFunctionality.UpdateActivity(modifierActivityBar);
         glucoseBarFunctionality.UpdateGlucose(modifierGlucoseBar);
     }
+
+    private void CalculateGlucose(string responseChatBot)
+    {
+
+    }
+
+    private void DisableWindowPopUp()
+    {
+
+    }
+
 }
