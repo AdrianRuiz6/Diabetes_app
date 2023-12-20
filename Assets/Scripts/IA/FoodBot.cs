@@ -1,10 +1,14 @@
 using com.studios.taprobana;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FoodBot : MonoBehaviour
 {
+
+    public TMP_Text feedback_test;
 
     private ChatCompletionsApi chatCompletionsApi;
     private readonly string apiKey = "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";
@@ -22,28 +26,25 @@ public class FoodBot : MonoBehaviour
         chatCompletionsApi.SetSystemMessage("INITIAL MESSAGE...");
     }
 
-    public string Ask(string input)
+    public async void Ask(string input)
     {
-        string response = "ERROR al procesar la respuesta.";
-
         try
         {
             // Mandar pregunta a ChatGPT.
             ChatCompletionsRequest chatCompletionsRequest = new ChatCompletionsRequest();
-            Message message = new Message(Roles.USER, input);
+            Message message = new(Roles.USER, input);
 
             chatCompletionsRequest.AddMessage(message);
 
-            // Recoger respuesta de ChatGPT.
-            ChatCompletionsResponse res = chatCompletionsApi.CreateChatCompletionsRequest(chatCompletionsRequest).Result;
-            response = res.GetResponseMessage();
-            return response;
+            ChatCompletionsResponse res = await chatCompletionsApi.CreateChatCompletionsRequest(chatCompletionsRequest);
+            feedback_test.text = res.GetResponseMessage();
+            
+
         }
         catch (OpenAiRequestException exception)
         {
             Debug.LogError(exception);
         }
-        return response;
     }
 
 
