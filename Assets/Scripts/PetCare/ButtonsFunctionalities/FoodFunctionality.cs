@@ -105,8 +105,10 @@ public class FoodFunctionality : MonoBehaviour
         // Recoger texto del talkbot y mandarselo al FoodBot obteniendo así una respuesta.
         foodBot.Ask(InputUser.text);
 
+        response = foodBot.response;
+
         // Evaluar si la respuesta del FoodBot es válida y, si lo es, realizar las dos acciones siguientes:
-        if(response == "" ||  response == "ERROR al procesar la respuesta.")
+        if(response == "")
         {
             feedbackText.text = "ERROR al procesar la respuesta. Prueba otra vez...";
         }

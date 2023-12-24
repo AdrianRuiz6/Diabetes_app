@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class FoodBot : MonoBehaviour
 {
+    private string initialSystemText;
 
-    public TMP_Text feedback_test;
+    [HideInInspector] public string response;
 
     private ChatCompletionsApi chatCompletionsApi;
     private readonly string apiKey = "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";
@@ -16,6 +17,12 @@ public class FoodBot : MonoBehaviour
     void Start()
     {
         StartConversation();
+
+        initialSystemText = "Si te envío el nombre de una comida, me dirás los hidratos de carbono" +
+            " que tiene para un niño de 8 años. Si no es una comida, responderás: 'No has escrito" +
+            " una comida, prueba otra vez'. Siempre dirás específicamente la oración: 'La " +
+            "comida \"x\" tiene x gramos de hidratos de carbono. Si no tiene hidratos, dirás que " +
+            "tiene 0 gramos.";
     }
 
     private void StartConversation()
@@ -23,13 +30,14 @@ public class FoodBot : MonoBehaviour
         // Iniciar chatGPT y mandar el mensaje de System.
         chatCompletionsApi = new(apiKey);
         chatCompletionsApi.ConversationHistoryMemory = 5;
-        chatCompletionsApi.SetSystemMessage("INITIAL MESSAGE...");
+        chatCompletionsApi.SetSystemMessage(initialSystemText);
     }
 
     public async void Ask(string input)
     {
         try
         {
+            Debug.Log(input.GetType());
             // Mandar pregunta a ChatGPT.
             ChatCompletionsRequest chatCompletionsRequest = new ChatCompletionsRequest();
             Message message = new(Roles.USER, input);
@@ -37,7 +45,7 @@ public class FoodBot : MonoBehaviour
             chatCompletionsRequest.AddMessage(message);
 
             ChatCompletionsResponse res = await chatCompletionsApi.CreateChatCompletionsRequest(chatCompletionsRequest);
-            feedback_test.text = res.GetResponseMessage();
+            response = res.GetResponseMessage();
             
 
         }
