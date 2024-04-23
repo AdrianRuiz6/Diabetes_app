@@ -100,19 +100,35 @@ public class FoodFunctionality : MonoBehaviour
 
     private void FeedbackIA()
     {
-        string response = "";
+        
 
         // Recoger texto del talkbot y mandarselo al FoodBot obteniendo así una respuesta.
+        if (InputUser.text == "")
+        {
+            return;
+        }
         foodBot.Ask(InputUser.text);
+
+        StartCoroutine(WaitResponse());
+
+        
+    }
+
+    IEnumerator WaitResponse()
+    {
+        string response = "";
+
+        yield return new WaitForSeconds(5);
 
         response = foodBot.response;
 
         // Evaluar si la respuesta del FoodBot es válida y, si lo es, realizar las dos acciones siguientes:
-        if(response == "")
+        if (response == "")
         {
             feedbackText.text = "ERROR al procesar la respuesta. Prueba otra vez...";
         }
-        else{
+        else
+        {
             validAnswer = true;
             DisableWindowPopUp();
 

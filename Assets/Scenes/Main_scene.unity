@@ -8808,7 +8808,7 @@ MonoBehaviour:
   answer3TMP: {fileID: 630270150}
   explanationAnswerTMP: {fileID: 609721347}
   timerPanel: {fileID: 1691191243}
-  timeUntilQuestions: 10
+  timeUntilQuestions: 60
   timerFillBar: {fileID: 1116854211}
   timerColorGradient:
     serializedVersion: 2
