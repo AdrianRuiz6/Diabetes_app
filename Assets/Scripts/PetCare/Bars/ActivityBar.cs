@@ -32,7 +32,7 @@ public class ActivityBar : MonoBehaviour
     private Color currentColor;
     public int totalCoinsGenerated;//
     public Button activityBarButton;
-    private CoinsManager coinsManager;
+    //private CoinsManager coinsManager;
 
     private void OnValidate()
     {
@@ -46,8 +46,8 @@ public class ActivityBar : MonoBehaviour
         timerPassiveDesion = timePassiveDecision;
 
         timerGenerateCoins = timeToGenerateCoins;
-        coinsManager = GetComponent<CoinsManager>();
-        activityBarButton.onClick.AddListener(ExtractCoins);
+        //coinsManager = GetComponent<CoinsManager>();
+        //activityBarButton.onClick.AddListener(ExtractCoins);
     }
 
     void Update()
@@ -114,11 +114,11 @@ public class ActivityBar : MonoBehaviour
         return Vector4.Distance(color1, color2) < threshold;
     }
 
-    public void ExtractCoins()
-    {
-        coinsManager.AddCoins(totalCoinsGenerated);
-        totalCoinsGenerated = 0;
-    }
+    //public void ExtractCoins()
+    //{
+    //    coinsManager.AddCoins(totalCoinsGenerated);
+    //    totalCoinsGenerated = 0;
+    //}
 
     public void UpdateActivity(float amount)
     {

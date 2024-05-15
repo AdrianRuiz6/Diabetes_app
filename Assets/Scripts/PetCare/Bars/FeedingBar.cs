@@ -32,23 +32,23 @@ public class FeedingBar : MonoBehaviour
     private Color currentColor;
     public int totalCoinsGenerated;//
     public Button feedingBarButton;
-    private CoinsManager coinsManager;
+    //private CoinsManager coinsManager;
 
     private void OnValidate()
     {
         currentFeedingValue = Mathf.Clamp(currentFeedingValue, minFeeding, maxFeeding);
     }
 
-    void Start()
-    {
-        UpdateFeeding(0);
+    //void Start()
+    //{
+    //    UpdateFeeding(0);
 
-        timerPassiveDesion = timePassiveDecision;
+    //    timerPassiveDesion = timePassiveDecision;
 
-        timerGenerateCoins = timeToGenerateCoins;
-        coinsManager = GetComponent<CoinsManager>();
-        feedingBarButton.onClick.AddListener(ExtractCoins);
-    }
+    //    timerGenerateCoins = timeToGenerateCoins;
+    //    coinsManager = GetComponent<CoinsManager>();
+    //    feedingBarButton.onClick.AddListener(ExtractCoins);
+    //}
 
     void Update()
     {
@@ -114,11 +114,11 @@ public class FeedingBar : MonoBehaviour
         return Vector4.Distance(color1, color2) < threshold;
     }
 
-    public void ExtractCoins()
-    {
-        coinsManager.AddCoins(totalCoinsGenerated);
-        totalCoinsGenerated = 0;
-    }
+    //public void ExtractCoins()
+    //{
+    //    coinsManager.AddCoins(totalCoinsGenerated);
+    //    totalCoinsGenerated = 0;
+    //}
 
     public void UpdateFeeding(float amount)
     {
