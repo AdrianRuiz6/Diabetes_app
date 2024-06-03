@@ -5,13 +5,13 @@ using BehaviorTree;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
-    public class Node_CheckInsulineActive : Node
+    public class NodeGlycemia_CheckExerciseActive : Node
     {
-        public Node_CheckInsulineActive() { }
+        public NodeGlycemia_CheckExerciseActive() { }
 
         public override NodeState Evaluate()
         {
-            if (AttributeManager.Instance.isInsulineButtonUsed)
+            if (AttributeManager.Instance.isExerciseButtonUsed)
             {
                 return NodeState.SUCCESS;
             }

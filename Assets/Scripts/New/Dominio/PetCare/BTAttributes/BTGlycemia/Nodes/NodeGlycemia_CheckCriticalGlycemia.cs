@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
-using UnityEngine.AI;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
-    public class Node_CheckCriticalGlycemia : Node
+    public class NodeGlycemia_CheckCriticalGlycemia : Node
     {
-        public Node_CheckCriticalGlycemia(){}
+        public NodeGlycemia_CheckCriticalGlycemia(){}
 
         public override NodeState Evaluate()
         {

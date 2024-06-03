@@ -26,7 +26,7 @@ public class AttributesMutex : MonoBehaviour
         mutex = false;
     }
 
-    public void Lock()
+    private void Lock()
     {
         mutex = true;
     }
@@ -39,5 +39,6 @@ public class AttributesMutex : MonoBehaviour
     public void WaitForMutex()
     {
         while(mutex) { }
+        Lock();
     }
 }

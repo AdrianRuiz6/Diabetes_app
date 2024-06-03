@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
+using Master.Domain.Events;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
-    public class Node_ApplyFoodActive : Node
+    public class NodeGlycemia_ApplyInsulineActive : Node
     {
-        public Node_ApplyFoodActive() { }
+        public NodeGlycemia_ApplyInsulineActive() { }
 
         public override NodeState Evaluate()
         {
-            AttributeManager.Instance.ModifyGlycemia(+5);
+            GameEventsPetCare.OnModifyGlycemia?.Invoke(-5);
             return NodeState.SUCCESS;
         }
     }

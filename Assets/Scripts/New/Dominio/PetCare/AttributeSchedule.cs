@@ -26,14 +26,20 @@ public class AttributeSchedule : MonoBehaviour
     void Start()
     {
         updateInterval = 300; // 5 minutos
-        StartCoroutine(TimerAttributes());
+        StartCoroutine(TimerAttributes(updateInterval));
     }
 
-    private IEnumerator TimerAttributes()
+    public void UpdateTimer(float newTime)
+    {
+        StopAllCoroutines();
+        StartCoroutine(TimerAttributes(newTime));
+    }
+
+    private IEnumerator TimerAttributes(float time)
     {
         while (true)
         {
-            yield return new WaitForSeconds(updateInterval);
+            yield return new WaitForSeconds(time);
             GameEventsPetCare.OnExecutingAttributes?.Invoke();
         }
     }

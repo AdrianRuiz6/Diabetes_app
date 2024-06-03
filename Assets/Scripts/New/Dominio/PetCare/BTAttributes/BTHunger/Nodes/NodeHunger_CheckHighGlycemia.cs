@@ -1,17 +1,17 @@
+using BehaviorTree;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BehaviorTree;
 
-namespace Master.Domain.BehaviorTree.Glycemia
+namespace Master.Domain.BehaviorTree.Hunger
 {
-    public class Node_CheckFoodActive : Node
+    public class NodeHunger_CheckHighGlycemia : Node
     {
-        public Node_CheckFoodActive() { }
+        public NodeHunger_CheckHighGlycemia() { }
 
         public override NodeState Evaluate()
         {
-            if (AttributeManager.Instance.isFoodButtonUsed)
+            if (AttributeManager.Instance.glycemiaValue >= 250)
             {
                 return NodeState.SUCCESS;
             }

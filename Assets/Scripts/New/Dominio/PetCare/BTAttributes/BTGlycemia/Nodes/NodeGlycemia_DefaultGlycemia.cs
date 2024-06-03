@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
+using Master.Domain.Events;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
-    public class Node_RandomGlycemia : Node
+    public class NodeGlycemia_DefaultGlycemia : Node
     {
-        public Node_RandomGlycemia() { }
+        public NodeGlycemia_DefaultGlycemia() { }
 
         public override NodeState Evaluate()
         {
@@ -21,8 +22,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
             {
                 randomGlycemia = 5;
             }
-
-            AttributeManager.Instance.ModifyGlycemia(randomGlycemia);
+            GameEventsPetCare.OnModifyGlycemia?.Invoke(randomGlycemia);
             return NodeState.SUCCESS;
         }
     }

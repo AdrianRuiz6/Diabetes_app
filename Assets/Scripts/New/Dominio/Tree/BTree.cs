@@ -28,7 +28,6 @@ namespace BehaviorTree
         private void Evaluate()
         {
             AttributesMutex.Instance.WaitForMutex();
-            AttributesMutex.Instance.Lock();
             _root.Evaluate();
             AttributesMutex.Instance.Unlock();
         }
