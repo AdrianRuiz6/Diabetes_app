@@ -68,8 +68,12 @@ public class AISimulator : MonoBehaviour
 
     private void SimulateTime()
     {
-        UpdateTimers();
+        SimulateTimers();
+        SimulateAttributes();
+    }
 
+    private void SimulateAttributes()
+    {
         TimeSpan timePassed = DateTime.Now - _lastShutDownTime;
         int intervalsPassed = (int)(timePassed.TotalSeconds / 300);
 
@@ -80,11 +84,11 @@ public class AISimulator : MonoBehaviour
             {
                 continue;
             }
-            if(_iterationAmountInsulin > 0)
+            if (_iterationAmountInsulin > 0)
                 _iterationAmountInsulin--;
-            if(_iterationAmountExercise > 0)
+            if (_iterationAmountExercise > 0)
                 _iterationAmountExercise--;
-            if(_iterationAmountFood > 0)
+            if (_iterationAmountFood > 0)
                 _iterationAmountFood--;
             _countAttributes = 0;
         }
@@ -95,57 +99,78 @@ public class AISimulator : MonoBehaviour
         _countAttributes++;
     }
 
-    private void UpdateTimers()
+    private void SimulateTimers()
     {
-        // Updates timer of the attributes AI.
         TimeSpan timePassed = DateTime.Now - _lastShutDownTime;
+
+        SimulateTimeAttribute(timePassed);
+
+        // Update cooldown and effects for each button
+        foreach (KeyValuePair<string, DateTime?> button in buttonsCD)
+        {
+            SimulataTimeButtons(button, timePassed);
+        }
+    }
+
+    private void SimulateTimeAttribute(TimeSpan timePassed)
+    {
+        // Calculate the time passed since the last shutdown
         float currentTime = 300 - (float)(timePassed.TotalSeconds % 300);
 
+        // Update the attribute timers
         AttributeSchedule.Instance.UpdateTimer(currentTime);
+    }
 
-        // Updates buttons.
-        foreach(KeyValuePair<string, DateTime?> button in buttonsCD)
+    private void SimulataTimeButtons(KeyValuePair<string, DateTime?> button, TimeSpan timePassed)
+    {
+        if (button.Value == null)
+            return;
+
+        // Time passed since last time user pressed the button.
+        TimeSpan timeButtonPassed = DateTime.Now - button.Value.Value;
+        float secondsPassed = (float)timeButtonPassed.TotalSeconds;
+
+        // Update the cooldown timers
+        if (secondsPassed < 3600)
         {
-            TimeSpan? timebuttonPassed = null;
-            if (button.Value != null)
-            {
-                // Updates timer of the buttons CD.
-                timebuttonPassed = DateTime.Now - button.Value;
-                float secondsPassed = (float)(timePassed.TotalSeconds);
-                if (secondsPassed < 3600)
-                {
-                    GameEventsPetCare.OnActivateCoolDown?.Invoke(button.Key, 3600 - secondsPassed);
-                }
+            GameEventsPetCare.OnActivateCoolDown?.Invoke(button.Key, 3600 - secondsPassed);
+        }
 
-                // Updates intervals and timer of the attriute buttons long term effects. TODO
-                if (secondsPassed < 1800)
-                {
-                    if(button.Key == "ButtonInsulin")
+        // Update the long-term effects timers for the attribute buttons and their states on previous intervals.
+        if (secondsPassed < 1800)
+        {
+            int iterations = (int)(timeButtonPassed.TotalSeconds / 300);
+            float remainingTime = 1800 - secondsPassed;
+
+            switch (button.Key)
+            {
+                case "ButtonInsulin":
+                    _iterationAmountInsulin = iterations;
+                    if (_iterationAmountInsulin > 0)
                     {
-                        _iterationAmountInsulin = (int)(timePassed.TotalSeconds / 300);
-                        if (_iterationAmountFood > 0)
-                        {
-                            AttributeManager.Instance.ActivateExerciseButton(simulated: true, time: 1800 - secondsPassed);
-                        }
+                        AttributeManager.Instance.ActivateInsulinButton(simulated: true, time: remainingTime);
                     }
-                    if(button.Key == "ButtonExercise")
+                    break;
+
+                case "ButtonExercise":
+                    _iterationAmountExercise = iterations;
+                    if (_iterationAmountExercise > 0)
                     {
-                        _iterationAmountExercise = (int)(timePassed.TotalSeconds / 300);
-                        if (_iterationAmountFood > 0)
-                        {
-                            AttributeManager.Instance.ActivateExerciseButton(simulated: true, time: 1800 - secondsPassed);
-                        }
+                        AttributeManager.Instance.ActivateExerciseButton(simulated: true, time: remainingTime);
                     }
-                    if(button.Key == "ButtonFood")
+                    break;
+
+                case "ButtonFood":
+                    _iterationAmountFood = iterations;
+                    if (_iterationAmountFood > 0)
                     {
-                        _iterationAmountFood = (int)(timePassed.TotalSeconds / 300);
-                        if(_iterationAmountFood > 0)
-                        {
-                            AttributeManager.Instance.ActivateFoodButton(simulated: true, time: 1800 - secondsPassed);
-                        }
+                        AttributeManager.Instance.ActivateFoodButton(simulated: true, time: remainingTime);
                     }
-                }
+                    break;
             }
         }
     }
 }
+
+
+// Coges el último

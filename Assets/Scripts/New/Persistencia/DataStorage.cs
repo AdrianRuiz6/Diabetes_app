@@ -9,8 +9,6 @@ using UnityEngine;
 
 public static class DataStorage
 {
-    
-
     public static void SaveCoins(int coins)
     {
         string path = $"{Application.persistentDataPath}/CoinsData.txt";
@@ -119,5 +117,20 @@ public static class DataStorage
 
 
         return result.ProductState;
+    }
+
+    public static void SaveUserPerformance(Dictionary<string, FixedSizeQueue<char>> userPerformance) //TODO
+    {
+
+    }
+
+    public static Dictionary<string, FixedSizeQueue<char>> LoadUserPerformance() // TODO
+    {
+        return LoadUserPerformance();
+    }
+
+    public static List<Question> LoadQuestion() // TODO
+    {
+        return LoadQuestion();
     }
 }

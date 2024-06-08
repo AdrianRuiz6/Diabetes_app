@@ -27,7 +27,7 @@ public class CarbohydratesParser : MonoBehaviour
         {
             string text = AIFoodResult.text;
             int carbohydrates = ExtractNumberFromText(text);
-            AttributeManager.Instance.ActivateFoodButton(carbohydrates);
+            AttributeManager.Instance.ActivateFoodButton(carbohydratesAmount: carbohydrates);
         }
     }
 
