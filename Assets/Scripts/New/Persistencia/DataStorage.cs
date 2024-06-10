@@ -129,8 +129,8 @@ public static class DataStorage
         return LoadUserPerformance();
     }
 
-    public static List<Question> LoadQuestion() // TODO
+    public static List<Question> LoadQuestions() // TODO: return null si no puede cargar
     {
-        return LoadQuestion();
+        return LoadQuestions();
     }
 }

@@ -7,7 +7,7 @@ public class UserPerformanceManager : MonoBehaviour
 {
     public static UserPerformanceManager Instance;
 
-    private Dictionary<string, FixedSizeQueue<char>> userPerformance;
+    private Dictionary<string, FixedSizeQueue<char>> _userTopicPerformance;
 
     void Awake()
     {
@@ -26,19 +26,22 @@ public class UserPerformanceManager : MonoBehaviour
 
     private void InitializePerformance()
     {
-        UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(), userPerformance);
+        UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(), _userTopicPerformance);
 
-        foreach(var kvp in userPerformance)
+        foreach(var kvp in _userTopicPerformance)
         {
-            // TODO
+            while(kvp.Value.Count() < 10)
+            {
+                kvp.Value.Enqueue('P');
+            }
         }
     }
 
-    private FixedSizeQueue<char> GetTopicPerformance(string topic)
+    public FixedSizeQueue<char> GetTopicPerformance(string topic)
     {
-        if (userPerformance.TryGetValue(topic, out FixedSizeQueue<char> performance))
+        if (_userTopicPerformance.TryGetValue(topic, out FixedSizeQueue<char> specificTopicPerformance))
         {
-            return performance;
+            return specificTopicPerformance;
         }
         else
         {
@@ -46,12 +49,18 @@ public class UserPerformanceManager : MonoBehaviour
         }
     }
 
-    private void UpdatePerformance(List<Question> iterationQuestions)
+    public bool HasPendingAnswers(string topic)
+    {
+        FixedSizeQueue<char> topicPerformanceQueue = GetTopicPerformance(topic);
+        return topicPerformanceQueue.Contains('P');
+    }
+
+    public void UpdatePerformance(List<Question> iterationQuestions)
     {
         foreach(var question in iterationQuestions)
         {
-            FixedSizeQueue<char> performance = GetTopicPerformance(question.topic);
-            // TODO
+            FixedSizeQueue<char> specificTopicPerformance = GetTopicPerformance(question.topic);
+            specificTopicPerformance.Enqueue(question.resultAnswer);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FixedSizeQueue<T> : IEnumerable<T>
 {
-    private readonly int maxSize = QuestionsManager.Instance.maxQuestionIndex;
+    private readonly int maxSize = QuestionManager.Instance.maxQuestionIndex;
     private readonly Queue<T> queue;
 
     public FixedSizeQueue()
@@ -21,9 +21,19 @@ public class FixedSizeQueue<T> : IEnumerable<T>
         queue.Enqueue(item);
     }
 
+    public bool Contains(T item)
+    {
+        return queue.Contains(item);
+    }
+
     public void Clear()
     {
         queue.Clear();
+    }
+
+    public int Count()
+    {
+        return queue.Count;
     }
 
     public IEnumerator<T> GetEnumerator()

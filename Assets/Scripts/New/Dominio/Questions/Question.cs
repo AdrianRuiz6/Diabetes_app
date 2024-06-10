@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.XPath;
 using UnityEngine;
 
 public class Question : MonoBehaviour
@@ -12,7 +13,7 @@ public class Question : MonoBehaviour
     public string correctAnswer { get; private set; }
     public string advice { get; private set; }
 
-    public string userAnswer { get; set; }
+    public char resultAnswer { get; private set; }
 
     public Question(string topic, string question, string answer1, string answer2, string answer3, string correctAnswer, string advice)
     {
@@ -24,6 +25,25 @@ public class Question : MonoBehaviour
         this.correctAnswer = correctAnswer;
         this.advice = advice;
 
-        this.userAnswer = string.Empty;
+        this.resultAnswer = ' ';
+    }
+
+    public void answerQuestion(string answer)
+    {
+        if(string.Equals(answer, correctAnswer))
+        {
+            resultAnswer = 'S';
+        }
+        else
+        {
+            resultAnswer = 'F';
+        }
+    }
+
+    public bool isCorrect()
+    {
+        if(resultAnswer == 'S')
+            return true;
+        return false;
     }
 }
