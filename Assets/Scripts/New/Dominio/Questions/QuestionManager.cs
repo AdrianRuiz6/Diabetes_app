@@ -233,4 +233,14 @@ public class QuestionManager : MonoBehaviour
 
         GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
     }
+
+    public void RandomizeOrderQuestions()
+    {
+        UtilityFunctions.RandomizeList(_iterationQuestions);
+
+        foreach(Question question in  _iterationQuestions)
+        {
+            question.RandomizeOrderAnswer();
+        }
+    }
 }

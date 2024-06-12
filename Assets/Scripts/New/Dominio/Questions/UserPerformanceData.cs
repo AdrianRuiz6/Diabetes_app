@@ -1,19 +1,16 @@
-using Master.Domain.States;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class UserPerformanceData : MonoBehaviour
+public class UserPerformanceData
 {
-    public Dictionary<string, FixedSizeQueue<char>> userPerformance;
+    public string topic;
+    public List<char> performanceData;
 
-    public UserPerformanceData()
+    public UserPerformanceData(string playerName, List<char> performanceData)
     {
-        userPerformance = new Dictionary<string, FixedSizeQueue<char>>();
-    }
-    public UserPerformanceData(Dictionary<string, FixedSizeQueue<char>> newUserPerformance)
-    {
-        UtilityFunctions.CopyDictionaryPerformance(newUserPerformance, userPerformance);
+        this.topic = playerName;
+        this.performanceData = performanceData;
     }
 }

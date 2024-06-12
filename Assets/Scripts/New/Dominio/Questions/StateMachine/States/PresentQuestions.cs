@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class PresentQuestions : State // TODO: aqui se barajean las respuestas y las preguntas.
 {
@@ -8,7 +9,12 @@ public class PresentQuestions : State // TODO: aqui se barajean las respuestas y
 
     public override void Execute(CAgent agent)
     {
-        throw new System.NotImplementedException();
+        QuestionManager.Instance.RandomizeOrderQuestions();
+
+        GameEventsQuestions.OnFinalizedCreationQuestions?.Invoke();
+
+        _newState = "WaitForRestart";
+        agent.Change_state(new WaitForRestart());
     }
 
     public override void OnExit()

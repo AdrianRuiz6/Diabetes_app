@@ -6,5 +6,5 @@ using UnityEngine;
 [System.Serializable]
 public class ProductDataList
 {
-    public List<ProductData> products;
+    public List<ProductData> products = new List<ProductData>();
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.States;
 using Master.Domain.Events;
+using Unity.VisualScripting;
 
 namespace Master.Domain.Economy
 {
@@ -15,6 +16,19 @@ namespace Master.Domain.Economy
         private Color _sellingColor;
 
         private Button _myButton;
+
+        private void Awake()
+        {
+            GameEventsEconomy.OnProductEquiped += OtherProductEquiped;
+        }
+        private void OnDestroy()
+        {
+            // Guardado datos producto.
+            DataStorage.SaveProduct(_productName, _productState);
+
+            // Cierre de eventos.
+            GameEventsEconomy.OnProductEquiped -= OtherProductEquiped;
+        }
 
         void Start()
         {
@@ -30,7 +44,10 @@ namespace Master.Domain.Economy
             _productState = DataStorage.LoadProduct(_productName);
             if(_productState == ProductState.Equiped)
             {
-                GameEventsEconomy.OnProductEquiped?.Invoke(_sellingColor);
+                GameEventsEconomy.OnProductEquiped?.Invoke(_productName, _sellingColor);
+            }else if(_productState == ProductState.Purchased)
+            {
+                GameEventsEconomy.OnProductBought?.Invoke(_productName);
             }
         }
 
@@ -57,19 +74,21 @@ namespace Master.Domain.Economy
         {
             _productState = ProductState.Purchased;
             EconomyManager.Instance.SubstractCoins(_sellingPrice);
-            GameEventsEconomy.OnProductBought?.Invoke(true);
+            GameEventsEconomy.OnProductBought?.Invoke(_productName);
         }
 
         private void EquipProduct()
         {
             _productState = ProductState.Equiped;
-            GameEventsEconomy.OnProductEquiped?.Invoke(_sellingColor);
+            GameEventsEconomy.OnProductEquiped?.Invoke(_productName, _sellingColor);
         }
 
-        private void OnDestroy()
+        private void OtherProductEquiped(string productName, Color color)
         {
-            // Guardado datos producto.
-            DataStorage.SaveProduct_____(_productName, _productState);
+            if(productName != _productName && _productState == ProductState.Equiped)
+            {
+                _productState = ProductState.Purchased;
+            }
         }
     }
 }

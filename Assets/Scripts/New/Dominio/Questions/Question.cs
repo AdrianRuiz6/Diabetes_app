@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.XPath;
 using UnityEngine;
 
@@ -45,5 +46,20 @@ public class Question : MonoBehaviour
         if(resultAnswer == 'S')
             return true;
         return false;
+    }
+
+    public void RandomizeOrderAnswer() // Uso del algoritmo de Fisher-Yates.
+    {
+        System.Random random = new System.Random();
+        List<string> auxAnswerList = new List<string>();
+        auxAnswerList.Add(answer1);
+        auxAnswerList.Add(answer2);
+        auxAnswerList.Add(answer3);
+
+        UtilityFunctions.RandomizeList(auxAnswerList);
+
+        answer1 = auxAnswerList[0];
+        answer2 = auxAnswerList[1];
+        answer1 = auxAnswerList[2];
     }
 }

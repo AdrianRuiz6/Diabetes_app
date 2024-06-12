@@ -6,24 +6,23 @@ using UnityEngine;
 public class CAgent : MonoBehaviour
 {
     private State currentState;
+    public bool executing { get; private set; }
 
     void Awake()
     {
         GameEventsQuestions.OnExecuteQuestionSearch += ExecuteQuestionSearch;
+        GameEventsQuestions.OnFinalizedCreationQuestions += FinalizeQuestionSearch;
     }
 
     private void OnDestroy()
     {
         GameEventsQuestions.OnExecuteQuestionSearch -= ExecuteQuestionSearch;
+        GameEventsQuestions.OnFinalizedCreationQuestions -= FinalizeQuestionSearch;
     }
 
     void Start()
     {
-        ExecuteQuestionSearch();
-    }
-
-    public void ExecuteQuestionSearch()
-    {
+        executing = true;
         currentState = new CheckUserPerformance();
     }
 
@@ -36,5 +35,15 @@ public class CAgent : MonoBehaviour
     {
         currentState.OnExit();
         currentState = newState;
+    }
+
+    private void ExecuteQuestionSearch()
+    {
+        executing = true;
+    }
+
+    private void FinalizeQuestionSearch()
+    {
+        executing = false;
     }
 }

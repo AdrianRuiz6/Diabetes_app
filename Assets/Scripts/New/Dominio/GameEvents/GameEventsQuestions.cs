@@ -7,4 +7,5 @@ public static class GameEventsQuestions
 {
     public static Action OnNotLoadedSheetQuestions;
     public static Action OnExecuteQuestionSearch;
+    public static Action OnFinalizedCreationQuestions;
 }

@@ -12,6 +12,18 @@ public class FixedSizeQueue<T> : IEnumerable<T>
         this.queue = new Queue<T>();
     }
 
+    public FixedSizeQueue(List<T> list)
+    {
+        this.queue = new Queue<T>();
+        if (list != null)
+        {
+            foreach (T element in list)
+            {
+                queue.Enqueue(element);
+            }
+        }
+    }
+
     public void Enqueue(T item)
     {
         if (queue.Count == maxSize)

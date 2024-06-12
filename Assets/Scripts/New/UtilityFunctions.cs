@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public static class UtilityFunctions
@@ -39,6 +40,19 @@ public static class UtilityFunctions
         foreach (var item in source)
         {
             destination.Add(item);
+        }
+    }
+
+    public static void RandomizeList<T>(List<T> listToRandomize)
+    {
+        System.Random random = new System.Random();
+
+        for (int i = listToRandomize.Count - 1; i > 0; i--)
+        {
+            int j = random.Next(i + 1);
+            T temp = listToRandomize[i];
+            listToRandomize[i] = listToRandomize[j];
+            listToRandomize[j] = temp;
         }
     }
 }
