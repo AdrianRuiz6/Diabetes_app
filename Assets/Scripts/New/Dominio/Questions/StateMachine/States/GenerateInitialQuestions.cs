@@ -6,7 +6,7 @@ public class GenerateInitialQuestions : State
 {
     private string _newState;
 
-    public override void Execute(CAgent agent)
+    public override void Execute(AgentQuestions agent)
     {
         QuestionManager.Instance.SelectRandomQuestions();
 

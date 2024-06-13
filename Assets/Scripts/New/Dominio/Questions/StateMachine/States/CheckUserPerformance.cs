@@ -6,7 +6,7 @@ public class CheckUserPerformance : State
 {
     private string _newState;
 
-    public override void Execute(CAgent agent)
+    public override void Execute(AgentQuestions agent)
     {
         FixedSizeQueue<char> topicPerformance = new FixedSizeQueue<char>();
         bool isPerformanceComplete = true;

@@ -31,8 +31,8 @@ public class QuestionManager : MonoBehaviour
 
     void Start()
     {
-        _allQuestions = null;
-        _iterationQuestions = null;
+        _allQuestions = new Dictionary<string, List<Question>>();
+        _iterationQuestions = new List<Question>();
         currentQuestionIndex = 0;
 
         InitializeQuestions();
@@ -43,9 +43,10 @@ public class QuestionManager : MonoBehaviour
         List<Question> allQuestionsList = new List<Question>();
         UtilityFunctions.CopyList(DataStorage.LoadQuestions(), allQuestionsList);
 
-        if (_allQuestions == null)
+        if (allQuestionsList == null || allQuestionsList.Count == 0)
         {
-            GameEventsQuestions.OnNotLoadedSheetQuestions?.Invoke(); //TODO EN EL OTRO LADO
+            StartCoroutine(TimerRetry());
+            return;
         }
 
         foreach (Question question in allQuestionsList)
@@ -60,6 +61,14 @@ public class QuestionManager : MonoBehaviour
                 _allQuestions.Add(question.topic, questions);
             }
         }
+
+        GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
+    }
+
+    IEnumerator TimerRetry()
+    {
+        yield return new WaitForSeconds(5);
+        InitializeQuestions();
     }
 
     #region Calculate Proportions
@@ -221,14 +230,15 @@ public class QuestionManager : MonoBehaviour
         }
         else
         {
+            SearchNewQuestions();
             return null;
         }
     }
 
-    public void ResetQuestions()
+    private void SearchNewQuestions()
     {
         UserPerformanceManager.Instance.UpdatePerformance(_iterationQuestions);
-        _iterationQuestions = null;
+        _iterationQuestions = new List<Question>();
         currentQuestionIndex = 0;
 
         GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
@@ -242,5 +252,10 @@ public class QuestionManager : MonoBehaviour
         {
             question.RandomizeOrderAnswer();
         }
+    }
+
+    public string GetCorrectAnswer()
+    {
+        return _iterationQuestions[currentQuestionIndex].correctAnswer;
     }
 }

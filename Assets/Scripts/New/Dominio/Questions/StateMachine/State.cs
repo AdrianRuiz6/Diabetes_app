@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class State
 {
-    public abstract void Execute(CAgent agent);
+    public abstract void Execute(AgentQuestions agent);
     public abstract void OnExit();
 }

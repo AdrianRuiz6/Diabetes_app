@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Android.Gradle;
 using UnityEngine;
 
-public class CAgent : MonoBehaviour
+public class AgentQuestions : MonoBehaviour
 {
     private State currentState;
     public bool executing { get; private set; }
@@ -22,13 +22,16 @@ public class CAgent : MonoBehaviour
 
     void Start()
     {
-        executing = true;
+        executing = false;
         currentState = new CheckUserPerformance();
     }
 
     void Update()
     {
-        currentState.Execute(this);
+        if (executing == true)
+        {
+            currentState.Execute(this);
+        }
     }
 
     public void Change_state(State newState)

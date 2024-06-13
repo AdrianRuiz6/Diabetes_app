@@ -5,7 +5,11 @@ using UnityEngine;
 
 public static class GameEventsQuestions
 {
-    public static Action OnNotLoadedSheetQuestions;
+    // FSM work.
     public static Action OnExecuteQuestionSearch;
     public static Action OnFinalizedCreationQuestions;
+
+    // UI work.
+    public static Action OnFinalizedTimer;
+    public static Action OnFinalizedQuestions;
 }

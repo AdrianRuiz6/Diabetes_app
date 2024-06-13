@@ -6,7 +6,7 @@ public class ProcessQuestions : State
 {
     private string _newState;
 
-    public override void Execute(CAgent agent)
+    public override void Execute(AgentQuestions agent)
     {
         Dictionary<string, float> appareanceProportions = new Dictionary<string, float>();
         Dictionary<string, int> questionCount = new Dictionary<string, int>();

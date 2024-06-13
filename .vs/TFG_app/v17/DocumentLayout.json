@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\questions\\statemachine\\states\\checkuserperformance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\statemachine\\states\\checkuserperformance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\shop\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\shop\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\questions\\userperformancemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\userperformancemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\shop\\productdatalist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\shop\\productdatalist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\presentacion\\ui_product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\ui_product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\statemachine\\agentquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\statemachine\\agentquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,58 +26,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ProductDataList.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Shop\\ProductDataList.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Shop\\ProductDataList.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Shop\\ProductDataList.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Shop\\ProductDataList.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAA/AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T22:13:34.488Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "DataStorage.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "ViewState": "AQIAACgAAAAAAAAAAAAAwFkAAAAAAAAA",
+              "Title": "CheckUserPerformance.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\CheckUserPerformance.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\CheckUserPerformance.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\CheckUserPerformance.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\CheckUserPerformance.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAQwBEAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T22:13:09.672Z",
+              "WhenOpened": "2024-06-13T02:02:19.938Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "UI_product.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\UI_product.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\UI_product.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\UI_product.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\UI_product.cs",
-              "ViewState": "AQIAABEAAAAAAAAAAAAQwCEAAAAFAAAA",
+              "Title": "AgentQuestions.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAzwCsAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T22:05:38.281Z",
+              "WhenOpened": "2024-06-13T01:49:01.586Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ProductService.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Shop\\ProductService.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Shop\\ProductService.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Shop\\ProductService.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Shop\\ProductService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAC4AAABYAAAA",
+              "Title": "UserPerformanceManager.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
+              "ViewState": "AQIAACgAAAAAAAAAAAAYwDgAAAAzAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T21:49:30.607Z",
+              "WhenOpened": "2024-06-13T01:48:56.608Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "QuestionManager.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
+              "ViewState": "AQIAAC4AAAAAAAAAAAAswD8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-13T01:48:56.279Z",
               "EditorCaption": ""
             }
           ]

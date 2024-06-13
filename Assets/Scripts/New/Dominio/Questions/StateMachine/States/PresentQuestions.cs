@@ -7,7 +7,7 @@ public class PresentQuestions : State // TODO: aqui se barajean las respuestas y
 {
     private string _newState;
 
-    public override void Execute(CAgent agent)
+    public override void Execute(AgentQuestions agent)
     {
         QuestionManager.Instance.RandomizeOrderQuestions();
 

@@ -6,7 +6,7 @@ public class WaitForRestart : State
 {
     private string _newState;
 
-    public override void Execute(CAgent agent)
+    public override void Execute(AgentQuestions agent)
     {
         if (agent.executing == true)
         {

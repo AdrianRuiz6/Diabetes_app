@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Xml.XPath;
 using UnityEngine;
 
-public class Question : MonoBehaviour
+public class Question
 {
     public string topic { get; private set; }
     public string question { get; private set; }

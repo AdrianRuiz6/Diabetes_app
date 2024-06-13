@@ -26,6 +26,8 @@ public class UserPerformanceManager : MonoBehaviour
 
     private void InitializePerformance()
     {
+        _userTopicPerformance = new Dictionary<string, FixedSizeQueue<char>>();
+
         UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(), _userTopicPerformance);
 
         foreach(var kvp in _userTopicPerformance)
