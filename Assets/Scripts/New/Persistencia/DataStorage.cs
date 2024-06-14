@@ -1,5 +1,6 @@
 using Master.Domain.Economy;
 using Master.Domain.States;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -10,36 +11,44 @@ using UnityEngine;
 
 public static class DataStorage
 {
+    public static void SaveDisconnectionDate()
+    {
+        PlayerPrefs.SetString("DisconnectionDate", DateTime.Now.ToString());
+    }
+
+    public static DateTime LoadDisconnectionDate()
+    {
+        return DateTime.Parse(PlayerPrefs.GetString("DisconnectionDate", DateTime.Now.ToString()));
+    }
+
+    public static void SaveCurrentScore(int currentScore)
+    {
+        PlayerPrefs.SetInt("CurrentScore", currentScore);
+    }
+
+    public static int LoadCurrentScore()
+    {
+        return PlayerPrefs.GetInt("CurrentScore", 0);
+    }
+
+    public static void SaveHigherScore(int currentScore)
+    {
+        PlayerPrefs.SetInt("HigherScore", currentScore);
+    }
+
+    public static int LoadHigherScore()
+    {
+        return PlayerPrefs.GetInt("HigherScore", 0);
+    }
+
     public static void SaveCoins(int coins)
     {
-        string path = $"{Application.persistentDataPath}/CoinsData.txt";
-        CoinsData coinsData = new CoinsData(coins);
-        string json = JsonUtility.ToJson(coinsData);
-
-        using (StreamWriter streamWriter = new StreamWriter(path))
-        {
-            streamWriter.Write(json);
-        }
+        PlayerPrefs.SetInt("Coins", coins);
     }
 
     public static int LoadCoins()
     {
-        string path = $"{Application.persistentDataPath}/CoinsData.txt";
-        CoinsData result = new CoinsData();
-        if (!File.Exists(path))
-            return result.Coins;
-
-        string existingJson = null;
-        if (File.Exists(path))
-        {
-            using (StreamReader streamReader = new StreamReader(path))
-            {
-                existingJson = streamReader.ReadToEnd();
-                result = JsonUtility.FromJson<CoinsData>(existingJson);
-            }
-        }
-
-        return result.Coins;
+        return PlayerPrefs.GetInt("Coins", 0);
     }
 
     public static void SaveProduct(string nameProduct, ProductState productState)

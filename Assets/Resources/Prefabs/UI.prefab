@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timerPanel: {fileID: 0}
-  _secondsUntilQuestions: 10
+  _secondsUntilQuestions: 5
   _timerFillBar: {fileID: 0}
   _timerColorGradient:
     serializedVersion: 2
@@ -93,12 +93,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _numberQuestion_TMP: {fileID: 0}
   _questionTitle_TMP: {fileID: 0}
-  _answer1_Btn: {fileID: 0}
+  _answer1_Object: {fileID: 0}
   _answer1_TMP: {fileID: 0}
-  _answer2_Btn: {fileID: 0}
+  _answer2_Object: {fileID: 0}
   _answer2_TMP: {fileID: 0}
-  _answer3_Btn: {fileID: 0}
+  _answer3_Object: {fileID: 0}
   _answer3_TMP: {fileID: 0}
-  _advice_Btn: {fileID: 0}
+  _advicePanel: {fileID: 0}
+  _openAdvice_Btn: {fileID: 0}
+  _closeAdvice_Btn: {fileID: 0}
   _advice_TMP: {fileID: 0}
   _nextQuestion_Btn: {fileID: 0}

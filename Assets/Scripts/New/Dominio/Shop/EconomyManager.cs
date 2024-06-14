@@ -47,11 +47,6 @@ namespace Master.Domain.Economy
             return _coins;
         }
 
-        private void TimerToGetCoins()
-        {
-
-        }
-
         private void OnDestroy()
         {
             DataStorage.SaveCoins(_coins);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Master.Domain.Events;
+using Master.Domain.Economy;
 
 public class UI_Question : MonoBehaviour
 {
@@ -123,14 +125,18 @@ public class UI_Question : MonoBehaviour
 
         if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
-            // TODO: recompensa.
+            // Recompensa.
+            EconomyManager.Instance.AddCoins(50);
+            ScoreManager.Instance.AddScore(50);
             CorrectAnswer(_answer1_Image);
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
+            ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer1_Image);
             CorrectAnswer(_answer2_Image);
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
+            ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer1_Image);
             CorrectAnswer(_answer3_Image);
         }
@@ -146,16 +152,20 @@ public class UI_Question : MonoBehaviour
 
         if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
+            ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer2_Image);
             CorrectAnswer(_answer1_Image);
         }
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
-            // TODO: recompensa.
+            // Recompensa.
+            EconomyManager.Instance.AddCoins(50);
+            ScoreManager.Instance.AddScore(50);
             CorrectAnswer(_answer2_Image);
         }
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
+            ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer2_Image);
             CorrectAnswer(_answer3_Image);
         }
@@ -171,17 +181,21 @@ public class UI_Question : MonoBehaviour
 
         if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
+            ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer3_Image);
             CorrectAnswer(_answer1_Image);
         }
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
+            ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer3_Image);
             CorrectAnswer(_answer2_Image);
         }
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
-            // TODO: recompensa.
+            // Recompensa.
+            EconomyManager.Instance.AddCoins(50);
+            ScoreManager.Instance.AddScore(50);
             CorrectAnswer(_answer3_Image);
         }
 

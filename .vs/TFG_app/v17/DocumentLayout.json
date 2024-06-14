@@ -3,32 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\score\\scoremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\score\\scoremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\presentacion\\questions\\ui_question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\questions\\ui_question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\userperformancemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\userperformancemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\statemachine\\states\\processquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\statemachine\\states\\processquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\utilityfunctions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\utilityfunctions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\gameevents\\gameeventsquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\gameevents\\gameeventsquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\presentacion\\score\\currentscore_ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\score\\currentscore_ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,97 +22,44 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "DataStorage.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "ViewState": "AQIAAHIAAAAAAAAAAAAkwI8AAAA6AAAA",
+              "DocumentIndex": 2,
+              "Title": "CurrentScore_UI.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Score\\CurrentScore_UI.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\Score\\CurrentScore_UI.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Score\\CurrentScore_UI.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\Score\\CurrentScore_UI.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-14T00:49:26.733Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ProcessQuestions.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\ProcessQuestions.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\ProcessQuestions.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\ProcessQuestions.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\States\\ProcessQuestions.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAASAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-13T23:55:36.819Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "UtilityFunctions.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\UtilityFunctions.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\UtilityFunctions.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\UtilityFunctions.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\UtilityFunctions.cs",
-              "ViewState": "AQIAACEAAAAAAAAAAAAAADcAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-13T23:22:55.979Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Question.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "ViewState": "AQIAABEAAAAAAAAAAAAqwBAAAAAcAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-13T22:42:56.939Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "GameEventsQuestions.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\GameEvents\\GameEventsQuestions.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\GameEvents\\GameEventsQuestions.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\GameEvents\\GameEventsQuestions.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\GameEvents\\GameEventsQuestions.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAoAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-13T22:38:37.515Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-14T02:42:55.088Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "QuestionManager.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "ViewState": "AQIAAE0AAAAAAAAAAAAgwJwAAAAZAAAA",
+              "Title": "ScoreManager.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Score\\ScoreManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Score\\ScoreManager.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Score\\ScoreManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Score\\ScoreManager.cs",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAmwGMAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-13T22:20:29.43Z",
+              "WhenOpened": "2024-06-14T02:39:39.225Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UserPerformanceManager.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\UserPerformanceManager.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAAgwDAAAAAtAAAA",
+              "DocumentIndex": 1,
+              "Title": "UI_Question.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "ViewState": "AQIAAKwAAAAAAAAAAADwv70AAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-14T00:24:45.509Z",
+              "WhenOpened": "2024-06-14T02:37:26.341Z",
               "EditorCaption": ""
             }
           ]
