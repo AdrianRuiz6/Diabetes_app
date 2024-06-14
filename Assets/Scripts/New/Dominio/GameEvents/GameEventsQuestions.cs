@@ -10,6 +10,6 @@ public static class GameEventsQuestions
     public static Action OnFinalizedCreationQuestions;
 
     // UI work.
-    public static Action OnFinalizedTimer;
-    public static Action OnFinalizedQuestions;
+    public static Action OnStartQuestionUI;
+    public static Action OnStartTimerUI;
 }

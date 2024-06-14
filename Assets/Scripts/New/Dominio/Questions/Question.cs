@@ -31,7 +31,7 @@ public class Question
 
     public void answerQuestion(string answer)
     {
-        if(string.Equals(answer, correctAnswer))
+        if (string.Equals(answer, correctAnswer))
         {
             resultAnswer = 'S';
         }
@@ -43,7 +43,7 @@ public class Question
 
     public bool isCorrect()
     {
-        if(resultAnswer == 'S')
+        if (resultAnswer == 'S')
             return true;
         return false;
     }
@@ -60,6 +60,6 @@ public class Question
 
         answer1 = auxAnswerList[0];
         answer2 = auxAnswerList[1];
-        answer1 = auxAnswerList[2];
+        answer3 = auxAnswerList[2];
     }
 }

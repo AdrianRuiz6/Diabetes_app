@@ -3016,7 +3016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6630632, g: 0.8490566, b: 0.66082233, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7337,7 +7337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6630632, g: 0.8490566, b: 0.66082233, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11196,7 +11196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6630632, g: 0.8490566, b: 0.66082233, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11528,7 +11528,7 @@ PrefabInstance:
       objectReference: {fileID: 231648053}
     - target: {fileID: 211180855071301780, guid: a0a0f1d886e31c441a0bb524061365c5, type: 3}
       propertyPath: _secondsUntilQuestions
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2939794669868973676, guid: a0a0f1d886e31c441a0bb524061365c5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11610,6 +11610,18 @@ PrefabInstance:
       propertyPath: _answer3_TMP
       value: 
       objectReference: {fileID: 630270150}
+    - target: {fileID: 6658401846174871694, guid: a0a0f1d886e31c441a0bb524061365c5, type: 3}
+      propertyPath: _answer1_Object
+      value: 
+      objectReference: {fileID: 1277774382}
+    - target: {fileID: 6658401846174871694, guid: a0a0f1d886e31c441a0bb524061365c5, type: 3}
+      propertyPath: _answer2_Object
+      value: 
+      objectReference: {fileID: 2048347673}
+    - target: {fileID: 6658401846174871694, guid: a0a0f1d886e31c441a0bb524061365c5, type: 3}
+      propertyPath: _answer3_Object
+      value: 
+      objectReference: {fileID: 521185765}
     - target: {fileID: 6658401846174871694, guid: a0a0f1d886e31c441a0bb524061365c5, type: 3}
       propertyPath: _openAdvice_Btn
       value: 

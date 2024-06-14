@@ -40,6 +40,7 @@ public class QuestionManager : MonoBehaviour
 
     public void InitializeQuestions()
     {
+        List<string> allTopics = new List<string>();
         List<Question> allQuestionsList = new List<Question>();
         UtilityFunctions.CopyList(DataStorage.LoadQuestions(), allQuestionsList);
 
@@ -62,6 +63,13 @@ public class QuestionManager : MonoBehaviour
             }
         }
 
+        foreach (var kvp in _allQuestions)
+        {
+            allTopics.Add(kvp.Key);
+        }
+
+        UserPerformanceManager.Instance.InitializePerformance(allTopics);
+
         GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
     }
 
@@ -78,7 +86,7 @@ public class QuestionManager : MonoBehaviour
         Dictionary<string, float> topicAccuracy = CalculateAccuracy();
 
         // Calculates inverse percentage based on topicAccuracy. 
-        Dictionary<string, float> inverseTopicAccuracy = CalculateInverse(topicAccuracy);
+        Dictionary<string, float> inverseTopicAccuracy = CalculatePriority(topicAccuracy);
 
         // Normalizes inverse percentages.
         Dictionary<string, float> normalizedProportions = CalculateNormal(inverseTopicAccuracy);
@@ -92,37 +100,46 @@ public class QuestionManager : MonoBehaviour
 
         foreach (var topic in _allQuestions.Keys)
         {
-            List<Question> topicQuestions = _allQuestions[topic];
-            int correctAnswers = 0;
-            foreach (var question in topicQuestions)
+            FixedSizeQueue<char> userPerformanceTopic = UserPerformanceManager.Instance.GetTopicPerformance(topic);
+
+            if(userPerformanceTopic.Count() != 0)
             {
-                if (question.isCorrect())
-                    correctAnswers++;
+                int correctAnswers = 0;
+                foreach (char answer in userPerformanceTopic)
+                {
+                    if (answer == 'S')
+                        correctAnswers++;
+                }
+                float accuracy = (float)correctAnswers / maxQuestionIndex * 100;
+                topicAccuracy[topic] = accuracy;
+                Debug.Log($"Accuracy for {topic}: {accuracy}");
             }
-            float accuracy = (float)(correctAnswers / maxQuestionIndex) * 100;
-            topicAccuracy[topic] = accuracy;
         }
         return topicAccuracy;
     }
 
-    private Dictionary<string, float> CalculateInverse(Dictionary<string, float> topicAccuracy)
+    private Dictionary<string, float> CalculatePriority(Dictionary<string, float> topicAccuracy)
     {
-        Dictionary<string, float> inverseAccuracy = new Dictionary<string, float>();
+        Dictionary<string, float> topicPriority = new Dictionary<string, float>();
         foreach (var topic in topicAccuracy.Keys)
         {
-            inverseAccuracy[topic] = 100 - topicAccuracy[topic];
+            float priority = 100 - topicAccuracy[topic];
+            topicPriority[topic] = priority;
+            Debug.Log($"Priority for {topic}: {priority}");
         }
 
-        return inverseAccuracy;
+        return topicPriority;
     }
 
-    private Dictionary<string, float> CalculateNormal(Dictionary<string, float> inverseAccuracy)
+    private Dictionary<string, float> CalculateNormal(Dictionary<string, float> topicPriority)
     {
-        float sumInverseAccuracy = inverseAccuracy.Values.Sum();
+        float sumPriority = topicPriority.Values.Sum();
         Dictionary<string, float> proportions = new Dictionary<string, float>();
-        foreach (var topic in inverseAccuracy.Keys)
+        foreach (var topic in topicPriority.Keys)
         {
-            proportions[topic] = (inverseAccuracy[topic] / sumInverseAccuracy) * 100;
+            float proportion = (topicPriority[topic] / sumPriority) * 10;
+            proportions[topic] = proportion;
+            Debug.Log($"Proportion for {topic}: {proportion}");
         }
 
         return proportions;
@@ -136,7 +153,8 @@ public class QuestionManager : MonoBehaviour
         // Calculates the amount of questions per topic.
         foreach (var topic in appearanceProportions.Keys)
         {
-            amountQuestionsPerTopic[topic] = (int)Mathf.Round(appearanceProportions[topic] / 10);
+            amountQuestionsPerTopic[topic] = Mathf.RoundToInt(appearanceProportions[topic]);
+            Debug.Log($"Amount of questions for {topic}: {amountQuestionsPerTopic[topic]}"); // Debug Log
         }
 
         int totalAmountQuestions = amountQuestionsPerTopic.Values.Sum();
@@ -145,12 +163,13 @@ public class QuestionManager : MonoBehaviour
         {
             if (totalAmountQuestions > 10)
             {
-                List<string> descendingTopicAmount = appearanceProportions.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
+                List<string> descendingTopicAmount = amountQuestionsPerTopic.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
 
                 foreach (var topic in descendingTopicAmount)
                 {
                     amountQuestionsPerTopic[topic]--;
                     totalAmountQuestions--;
+                    Debug.Log($"Decreased questions for {topic}: {amountQuestionsPerTopic[topic]}"); // Debug Log
 
                     if (totalAmountQuestions == 10)
                         break;
@@ -158,12 +177,13 @@ public class QuestionManager : MonoBehaviour
             }
             else if (totalAmountQuestions < 10)
             {
-                List<string> descendingTopicAmount = appearanceProportions.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
+                List<string> ascendingTopicAmount = amountQuestionsPerTopic.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
 
-                foreach (var topic in descendingTopicAmount)
+                foreach (var topic in ascendingTopicAmount)
                 {
                     amountQuestionsPerTopic[topic]++;
                     totalAmountQuestions++;
+                    Debug.Log($"Increased questions for {topic}: {amountQuestionsPerTopic[topic]}"); // Debug Log
 
                     if (totalAmountQuestions == 10)
                         break;
@@ -185,7 +205,14 @@ public class QuestionManager : MonoBehaviour
                 foreach (string topic in _allQuestions.Keys)
                 {
                     if (UserPerformanceManager.Instance.HasPendingAnswers(topic))
-                        amountQuestionsPerTopic[topic] += 1;
+                        if (amountQuestionsPerTopic.ContainsKey(topic))
+                        {
+                            amountQuestionsPerTopic[topic]++;
+                        }
+                        else
+                        {
+                            amountQuestionsPerTopic.Add(topic, 1);
+                        }
 
                     if (amountQuestionsPerTopic.Values.Sum() == 10)
                         break;
@@ -195,9 +222,12 @@ public class QuestionManager : MonoBehaviour
 
         foreach (string topic in amountQuestionsPerTopic.Keys)
         {
-            while (amountQuestionsPerTopic[topic] > 0)
+            int amount = amountQuestionsPerTopic[topic];
+
+            while (amount > 0)
             {
                 AddRandomQuestion(topic, amountQuestionsPerTopic);
+                amount--;
             }
         }
     }
@@ -217,16 +247,15 @@ public class QuestionManager : MonoBehaviour
         } while (repeatedQuestion && attempts < maxAttempts);
 
         _iterationQuestions.Add(newQuestion);
-        amountQuestionsPerTopic[topic]--;
     }
 
     public Question NextQuestion()
     {
-        currentQuestionIndex += 1;
-
         if (currentQuestionIndex < maxQuestionIndex)
         {
-            return _iterationQuestions[currentQuestionIndex];
+            Question nextQuestion = _iterationQuestions[currentQuestionIndex];
+            currentQuestionIndex += 1;
+            return nextQuestion;
         }
         else
         {
@@ -248,7 +277,7 @@ public class QuestionManager : MonoBehaviour
     {
         UtilityFunctions.RandomizeList(_iterationQuestions);
 
-        foreach(Question question in  _iterationQuestions)
+        foreach (Question question in _iterationQuestions)
         {
             question.RandomizeOrderAnswer();
         }
@@ -256,6 +285,6 @@ public class QuestionManager : MonoBehaviour
 
     public string GetCorrectAnswer()
     {
-        return _iterationQuestions[currentQuestionIndex].correctAnswer;
+        return _iterationQuestions[currentQuestionIndex - 1].correctAnswer;
     }
 }

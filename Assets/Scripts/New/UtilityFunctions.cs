@@ -6,6 +6,8 @@ using UnityEngine;
 
 public static class UtilityFunctions
 {
+    private static System.Random random = new System.Random();
+
     public static void CopyDictionaryPerformance<TKey, TValue>(Dictionary<TKey, FixedSizeQueue<TValue>> source, Dictionary<TKey, FixedSizeQueue<TValue>> destination)
     {
         destination.Clear();
@@ -45,8 +47,6 @@ public static class UtilityFunctions
 
     public static void RandomizeList<T>(List<T> listToRandomize)
     {
-        System.Random random = new System.Random();
-
         for (int i = listToRandomize.Count - 1; i > 0; i--)
         {
             int j = random.Next(i + 1);

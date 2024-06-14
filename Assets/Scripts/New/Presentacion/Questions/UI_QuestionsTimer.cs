@@ -16,12 +16,24 @@ public class UI_QuestionsTimer : MonoBehaviour
 
     private bool _isTimerActive;
 
+    void Awake()
+    {
+        // Events
+        GameEventsQuestions.OnStartTimerUI += StartTimer;
+    }
+
+    void OnDestroy()
+    {
+        // Events
+        GameEventsQuestions.OnStartTimerUI -= StartTimer;
+    }
+
     private void OnValidate()
     {
         _timer = Mathf.Clamp(_timer, 0, _secondsUntilQuestions);
     }
 
-    void OnEnable()
+    private void Start()
     {
         StartTimer();
     }
@@ -30,33 +42,29 @@ public class UI_QuestionsTimer : MonoBehaviour
     {
         if (_isTimerActive)
         {
-            UpdateTimer();
-        }
-    }
-
-    private void UpdateTimer()
-    {
-        if (_timer <= 0)
-        {
-            FinalizeTimer();
-        }
-        else
-        {
-            _timer -= Time.deltaTime;
-            UpdateTimerBar();
+            if (_timer <= 0)
+            {
+                FinalizeTimer();
+            }
+            else
+            {
+                _timer -= Time.deltaTime;
+                UpdateTimerBar();
+            }
         }
     }
 
     private void StartTimer()
     {
         _timer = _secondsUntilQuestions;
+        UpdateTimerBar();
         _isTimerActive = true;
     }
 
     private void FinalizeTimer()
     {
         _isTimerActive = false;
-        GameEventsQuestions.OnFinalizedTimer?.Invoke();
+        GameEventsQuestions.OnStartQuestionUI?.Invoke();
     }
 
     private void TimerToClock()

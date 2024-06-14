@@ -23,7 +23,6 @@ public class AgentQuestions : MonoBehaviour
     void Start()
     {
         executing = false;
-        currentState = new CheckUserPerformance();
     }
 
     void Update()
@@ -42,6 +41,7 @@ public class AgentQuestions : MonoBehaviour
 
     private void ExecuteQuestionSearch()
     {
+        currentState = new CheckUserPerformance();
         executing = true;
     }
 

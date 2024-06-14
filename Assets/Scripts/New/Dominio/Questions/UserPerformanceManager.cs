@@ -7,7 +7,7 @@ public class UserPerformanceManager : MonoBehaviour
 {
     public static UserPerformanceManager Instance;
 
-    private Dictionary<string, FixedSizeQueue<char>> _userTopicPerformance;
+    private Dictionary<string, FixedSizeQueue<char>> _userPerformance;
 
     void Awake()
     {
@@ -20,34 +20,33 @@ public class UserPerformanceManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        InitializePerformance();
     }
 
-    private void InitializePerformance()
+    public void InitializePerformance(List<string> allTopics)
     {
-        _userTopicPerformance = new Dictionary<string, FixedSizeQueue<char>>();
+        _userPerformance = new Dictionary<string, FixedSizeQueue<char>>();
 
-        UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(), _userTopicPerformance);
+        UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(allTopics), _userPerformance);
 
-        foreach(var kvp in _userTopicPerformance)
+        foreach(var kvp in _userPerformance)
         {
             while(kvp.Value.Count() < 10)
             {
                 kvp.Value.Enqueue('P');
             }
         }
+
     }
 
     public FixedSizeQueue<char> GetTopicPerformance(string topic)
     {
-        if (_userTopicPerformance.TryGetValue(topic, out FixedSizeQueue<char> specificTopicPerformance))
+        if (_userPerformance.TryGetValue(topic, out FixedSizeQueue<char> specificTopicPerformance))
         {
             return specificTopicPerformance;
         }
         else
         {
-            return null;
+            return new FixedSizeQueue<char>();
         }
     }
 
@@ -64,5 +63,10 @@ public class UserPerformanceManager : MonoBehaviour
             FixedSizeQueue<char> specificTopicPerformance = GetTopicPerformance(question.topic);
             specificTopicPerformance.Enqueue(question.resultAnswer);
         }
+    }
+
+    void OnDestroy()
+    {
+        DataStorage.SaveUserPerformance(_userPerformance);
     }
 }

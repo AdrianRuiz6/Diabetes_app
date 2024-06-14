@@ -7,18 +7,25 @@ using UnityEngine.UI;
 public class UI_Question : MonoBehaviour
 {
     private int _numberQuestionCounter;
+    private Question currentQuestion;
 
     [SerializeField] private TMP_Text _numberQuestion_TMP;
 
     [SerializeField] private TMP_Text _questionTitle_TMP;
 
-    [SerializeField] private Button _answer1_Btn;
+    [SerializeField] private GameObject _answer1_Object;
+    private Button _answer1_Btn;
+    private Image _answer1_Image;
     [SerializeField] private TMP_Text _answer1_TMP;
 
-    [SerializeField] private Button _answer2_Btn;
+    [SerializeField] private GameObject _answer2_Object;
+    private Button _answer2_Btn;
+    private Image _answer2_Image;
     [SerializeField] private TMP_Text _answer2_TMP;
 
-    [SerializeField] private Button _answer3_Btn;
+    [SerializeField] private GameObject _answer3_Object;
+    private Button _answer3_Btn;
+    private Image _answer3_Image;
     [SerializeField] private TMP_Text _answer3_TMP;
 
     [SerializeField] private GameObject _advicePanel;
@@ -28,8 +35,14 @@ public class UI_Question : MonoBehaviour
 
     [SerializeField] private Button _nextQuestion_Btn;
 
+    void Awake()
+    {
+        GameEventsQuestions.OnFinalizedCreationQuestions += PrepareNextQuestion;
+    }
+
     void OnDestroy()
     {
+        // Buttons
         _answer1_Btn.onClick.RemoveAllListeners();
         _answer2_Btn.onClick.RemoveAllListeners();
         _answer3_Btn.onClick.RemoveAllListeners();
@@ -37,15 +50,20 @@ public class UI_Question : MonoBehaviour
         _openAdvice_Btn.onClick.RemoveAllListeners();
         _closeAdvice_Btn.onClick.RemoveAllListeners();
         _nextQuestion_Btn.onClick.RemoveAllListeners();
-    }
 
-    private void OnEnable()
-    {
-        _numberQuestionCounter = 1;
+        // Events
+        GameEventsQuestions.OnFinalizedCreationQuestions -= PrepareNextQuestion;
     }
 
     void Start()
     {
+        _answer1_Btn = _answer1_Object.GetComponent<Button>();
+        _answer1_Image = _answer1_Object.GetComponent<Image>();
+        _answer2_Btn = _answer2_Object.GetComponent<Button>();
+        _answer2_Image = _answer2_Object.GetComponent<Image>();
+        _answer3_Btn = _answer3_Object.GetComponent<Button>();
+        _answer3_Image = _answer3_Object.GetComponent<Image>();
+
         _answer1_Btn.onClick.AddListener(Answer1);
         _answer2_Btn.onClick.AddListener(Answer2);
         _answer3_Btn.onClick.AddListener(Answer3);
@@ -53,26 +71,34 @@ public class UI_Question : MonoBehaviour
         _nextQuestion_Btn.onClick.AddListener(PrepareNextQuestion);
         _openAdvice_Btn.onClick.AddListener(ToggleAdvicePanel);
         _closeAdvice_Btn.onClick.AddListener(ToggleAdvicePanel);
+
+        _numberQuestionCounter = 1;
     }
 
     private void PrepareNextQuestion()
     {
+        ActivateTargetableAllButtons();
+        RestartColorAllButtons();
+
         _nextQuestion_Btn.gameObject.SetActive(false);
         _openAdvice_Btn.gameObject.SetActive(false);
 
-        Question newQuestion = QuestionManager.Instance.NextQuestion();
+        currentQuestion = QuestionManager.Instance.NextQuestion();
 
-        if(newQuestion == null)
+        if(currentQuestion == null)
         {
-            GameEventsQuestions.OnFinalizedQuestions?.Invoke();
+            _numberQuestionCounter = 1;
+            GameEventsQuestions.OnStartTimerUI?.Invoke();
         }else
         {
             _numberQuestion_TMP.SetText("Pregunta número " + _numberQuestionCounter.ToString());
-            _questionTitle_TMP.SetText(newQuestion.question);
-            _answer1_TMP.SetText(newQuestion.answer1);
-            _answer2_TMP.SetText(newQuestion.answer2);
-            _answer3_TMP.SetText(newQuestion.answer3);
-            _advice_TMP.SetText(newQuestion.advice);
+            _questionTitle_TMP.SetText(currentQuestion.question);
+            _answer1_TMP.SetText(currentQuestion.answer1);
+            _answer2_TMP.SetText(currentQuestion.answer2);
+            _answer3_TMP.SetText(currentQuestion.answer3);
+            _advice_TMP.SetText(currentQuestion.advice);
+
+            Debug.Log("Pregunta número " + _numberQuestionCounter + ": " + currentQuestion.topic);
 
             _numberQuestionCounter++;
         }
@@ -92,18 +118,21 @@ public class UI_Question : MonoBehaviour
 
     private void Answer1()
     {
-        if(QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.ToString()))
+        currentQuestion.answerQuestion(_answer1_TMP.text);
+        DeactivateTargetableAllButtons();
+
+        if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
             // TODO: recompensa.
-            CorrectAnswer(_answer1_Btn);
-        }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.ToString()))
+            CorrectAnswer(_answer1_Image);
+        }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
-            WrongAnswer(_answer1_Btn);
-            CorrectAnswer(_answer2_Btn);
-        }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.ToString()))
+            WrongAnswer(_answer1_Image);
+            CorrectAnswer(_answer2_Image);
+        }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
-            WrongAnswer(_answer1_Btn);
-            CorrectAnswer(_answer3_Btn);
+            WrongAnswer(_answer1_Image);
+            CorrectAnswer(_answer3_Image);
         }
 
         _nextQuestion_Btn.gameObject.SetActive(true);
@@ -112,20 +141,23 @@ public class UI_Question : MonoBehaviour
 
     private void Answer2()
     {
-        if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.ToString()))
+        currentQuestion.answerQuestion(_answer2_TMP.text);
+        DeactivateTargetableAllButtons();
+
+        if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
-            WrongAnswer(_answer2_Btn);
-            CorrectAnswer(_answer1_Btn);
+            WrongAnswer(_answer2_Image);
+            CorrectAnswer(_answer1_Image);
         }
-        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.ToString()))
+        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
             // TODO: recompensa.
-            CorrectAnswer(_answer2_Btn);
+            CorrectAnswer(_answer2_Image);
         }
-        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.ToString()))
+        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
-            WrongAnswer(_answer2_Btn);
-            CorrectAnswer(_answer3_Btn);
+            WrongAnswer(_answer2_Image);
+            CorrectAnswer(_answer3_Image);
         }
 
         _nextQuestion_Btn.gameObject.SetActive(true);
@@ -134,41 +166,57 @@ public class UI_Question : MonoBehaviour
 
     private void Answer3()
     {
-        if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.ToString()))
+        currentQuestion.answerQuestion(_answer3_TMP.text);
+        DeactivateTargetableAllButtons();
+
+        if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
-            WrongAnswer(_answer3_Btn);
-            CorrectAnswer(_answer1_Btn);
+            WrongAnswer(_answer3_Image);
+            CorrectAnswer(_answer1_Image);
         }
-        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.ToString()))
+        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
-            WrongAnswer(_answer3_Btn);
-            CorrectAnswer(_answer2_Btn);
+            WrongAnswer(_answer3_Image);
+            CorrectAnswer(_answer2_Image);
         }
-        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.ToString()))
+        else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
             // TODO: recompensa.
-            CorrectAnswer(_answer3_Btn);
+            CorrectAnswer(_answer3_Image);
         }
 
         _nextQuestion_Btn.gameObject.SetActive(true);
         _openAdvice_Btn.gameObject.SetActive(true);
     }
 
-    private void CorrectAnswer(Button btn)
+    private void CorrectAnswer(Image img)
     {
-        ColorBlock cb = btn.colors;
-
-        cb.normalColor = Color.green;
-
-        btn.colors = cb;
+        img.color = Color.green;
     }
 
-    private void WrongAnswer(Button btn)
+    private void WrongAnswer(Image img)
     {
-        ColorBlock cb = btn.colors;
+        img.color = Color.red;
+    }
 
-        cb.normalColor = Color.red;
+    private void ActivateTargetableAllButtons()
+    {
+        _answer1_Btn.interactable = true;
+        _answer2_Btn.interactable = true;
+        _answer3_Btn.interactable = true;
+    }
 
-        btn.colors = cb;
+    private void DeactivateTargetableAllButtons()
+    {
+        _answer1_Btn.interactable = false;
+        _answer2_Btn.interactable = false;
+        _answer3_Btn.interactable = false;
+    }
+
+    private void RestartColorAllButtons()
+    {
+        _answer1_Image.color = Color.white;
+        _answer2_Image.color = Color.white;
+        _answer3_Image.color = Color.white;
     }
 }

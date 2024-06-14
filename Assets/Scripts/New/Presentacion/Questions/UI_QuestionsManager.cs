@@ -13,16 +13,16 @@ public class UI_QuestionsManager : MonoBehaviour
     void Awake()
     {
         // Events
-        GameEventsQuestions.OnFinalizedTimer += ActivateQuestionsPanel;
-        GameEventsQuestions.OnFinalizedQuestions += ActivateTimerPanel;
-        GameEventsQuestions.OnFinalizedCreationQuestions += ActivateProblemLoadingPanel;
+        GameEventsQuestions.OnStartQuestionUI += ActivateQuestionsPanel;
+        GameEventsQuestions.OnStartTimerUI += ActivateTimerPanel;
+        GameEventsQuestions.OnFinalizedCreationQuestions += TurnFalseProblemsLoading;
     }
 
     void OnDestroy()
     {
         // Events
-        GameEventsQuestions.OnFinalizedTimer -= ActivateQuestionsPanel;
-        GameEventsQuestions.OnFinalizedQuestions -= ActivateTimerPanel;
+        GameEventsQuestions.OnStartQuestionUI -= ActivateQuestionsPanel;
+        GameEventsQuestions.OnStartTimerUI -= ActivateTimerPanel;
         GameEventsQuestions.OnFinalizedCreationQuestions -= TurnFalseProblemsLoading;
     }
 
@@ -32,6 +32,7 @@ public class UI_QuestionsManager : MonoBehaviour
 
         DeactivateAllPanels();
         ActivateTimerPanel();
+        GameEventsQuestions.OnStartTimerUI?.Invoke();
     }
 
     private void TurnFalseProblemsLoading()

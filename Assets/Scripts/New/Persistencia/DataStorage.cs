@@ -118,13 +118,20 @@ public static class DataStorage
     }
 
 
-    public static Dictionary<string, FixedSizeQueue<char>> LoadUserPerformance()
+    public static Dictionary<string, FixedSizeQueue<char>> LoadUserPerformance(List<string> allTopics)
     {
         string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
         Dictionary<string, FixedSizeQueue<char>> userPerformance = new Dictionary<string, FixedSizeQueue<char>>();
 
         if (!File.Exists(path))
-            return new Dictionary<string, FixedSizeQueue<char>>();
+        {
+            foreach (string topic in allTopics)
+            {
+                userPerformance.Add(topic, new FixedSizeQueue<char>());
+            }
+
+            return userPerformance;
+        }
 
         string existingJson = null;
         using (StreamReader streamReader = new StreamReader(path))
@@ -139,6 +146,14 @@ public static class DataStorage
             FixedSizeQueue<char> queue = new FixedSizeQueue<char>(data.performanceData);
 
             userPerformance.Add(data.topic, queue);
+        }
+
+        foreach (string topic in allTopics)
+        {
+            if(userPerformance.ContainsKey(topic) == false)
+            {
+                userPerformance.Add(topic, new FixedSizeQueue<char>());
+            }
         }
 
         return userPerformance;
