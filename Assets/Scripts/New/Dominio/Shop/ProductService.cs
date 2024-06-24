@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.States;
 using Master.Domain.Events;
-using Unity.VisualScripting;
 
 namespace Master.Domain.Economy
 {
@@ -19,7 +16,7 @@ namespace Master.Domain.Economy
 
         private void Awake()
         {
-            GameEventsEconomy.OnProductEquiped += OtherProductEquiped;
+            GameEventsEconomy.OnProductEquipped += OtherProductEquiped;
         }
         private void OnDestroy()
         {
@@ -27,7 +24,7 @@ namespace Master.Domain.Economy
             DataStorage.SaveProduct(_productName, _productState);
 
             // Cierre de eventos.
-            GameEventsEconomy.OnProductEquiped -= OtherProductEquiped;
+            GameEventsEconomy.OnProductEquipped -= OtherProductEquiped;
         }
 
         void Start()
@@ -44,7 +41,7 @@ namespace Master.Domain.Economy
             _productState = DataStorage.LoadProduct(_productName);
             if(_productState == ProductState.Equiped)
             {
-                GameEventsEconomy.OnProductEquiped?.Invoke(_productName, _sellingColor);
+                GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
             }else if(_productState == ProductState.Purchased)
             {
                 GameEventsEconomy.OnProductBought?.Invoke(_productName);
@@ -67,6 +64,11 @@ namespace Master.Domain.Economy
             else if(_productState == ProductState.Purchased)
             {
                 EquipProduct();
+            }else if(_productState==ProductState.Equiped)
+            {
+                _productState = ProductState.Purchased;
+                GameEventsEconomy.OnProductBought?.Invoke(_productName);
+                GameEventsEconomy.OnProductEquipped?.Invoke("Base");
             }
         }
 
@@ -80,10 +82,10 @@ namespace Master.Domain.Economy
         private void EquipProduct()
         {
             _productState = ProductState.Equiped;
-            GameEventsEconomy.OnProductEquiped?.Invoke(_productName, _sellingColor);
+            GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
         }
 
-        private void OtherProductEquiped(string productName, Color color)
+        private void OtherProductEquiped(string productName)
         {
             if(productName != _productName && _productState == ProductState.Equiped)
             {

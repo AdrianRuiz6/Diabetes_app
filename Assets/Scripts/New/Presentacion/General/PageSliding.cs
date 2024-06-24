@@ -8,13 +8,15 @@ using UnityEngine.EventSystems;
 public class PageSwiper : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     private Vector3 panelLocation;
-    public float percentThreshold = 0.2f;
-    public float easing = 0.5f;
-    public int totalPages = 1;
-    private int currentPage = 2;
+    [SerializeField] private float percentThreshold = 0.2f;
+    [SerializeField] private float easing = 0.5f;
+    [SerializeField] private int totalPages = 1;
+    [SerializeField] private int initialPage = 1;
+    private int currentPage = 1;
 
     void Start()
     {
+        currentPage = initialPage;
         panelLocation = transform.position;
     }
     public void OnDrag(PointerEventData data)

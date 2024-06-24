@@ -9,7 +9,7 @@ namespace Master.Domain.Events
     public static class GameEventsEconomy
     {
         public static Action<int> OnCoinsUpdated;
-        public static Action<string, Color> OnProductEquiped;
+        public static Action<string> OnProductEquipped;
         public static Action<string> OnProductBought;
     }
 }

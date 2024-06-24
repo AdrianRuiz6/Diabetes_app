@@ -19,11 +19,6 @@ public class UI_coins : MonoBehaviour
         GameEventsEconomy.OnCoinsUpdated -= OnCoinsUpdated;
     }
 
-    private void Start()
-    {
-        
-    }
-
     private void OnCoinsUpdated(int coins)
     {
         _coinsAmountText.text = coins.ToString();

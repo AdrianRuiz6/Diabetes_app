@@ -8,7 +8,6 @@ using Master.Domain.Economy;
 
 public class UI_Question : MonoBehaviour
 {
-    private int _numberQuestionCounter;
     private Question currentQuestion;
 
     [SerializeField] private TMP_Text _numberQuestion_TMP;
@@ -73,8 +72,6 @@ public class UI_Question : MonoBehaviour
         _nextQuestion_Btn.onClick.AddListener(PrepareNextQuestion);
         _openAdvice_Btn.onClick.AddListener(ToggleAdvicePanel);
         _closeAdvice_Btn.onClick.AddListener(ToggleAdvicePanel);
-
-        _numberQuestionCounter = 1;
     }
 
     private void PrepareNextQuestion()
@@ -89,20 +86,17 @@ public class UI_Question : MonoBehaviour
 
         if(currentQuestion == null)
         {
-            _numberQuestionCounter = 1;
             GameEventsQuestions.OnStartTimerUI?.Invoke();
         }else
         {
-            _numberQuestion_TMP.SetText("Pregunta número " + _numberQuestionCounter.ToString());
+            _numberQuestion_TMP.SetText((QuestionManager.Instance.currentQuestionIndex).ToString());
             _questionTitle_TMP.SetText(currentQuestion.question);
             _answer1_TMP.SetText(currentQuestion.answer1);
             _answer2_TMP.SetText(currentQuestion.answer2);
             _answer3_TMP.SetText(currentQuestion.answer3);
             _advice_TMP.SetText(currentQuestion.advice);
 
-            Debug.Log("Pregunta número " + _numberQuestionCounter + ": " + currentQuestion.topic);
-
-            _numberQuestionCounter++;
+            Debug.Log("Pregunta número " + QuestionManager.Instance.currentQuestionIndex + ": " + currentQuestion.topic);
         }
     }
 

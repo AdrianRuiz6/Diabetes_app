@@ -16,24 +16,28 @@ public class UI_product : MonoBehaviour
 
     private bool _isBought;
 
+    private Vector3 _buttonsPosition;
+
     private void Awake()
     {
-        GameEventsEconomy.OnProductEquiped += OnProductEquiped;
+        GameEventsEconomy.OnProductEquipped += OnProductEquiped;
         GameEventsEconomy.OnProductBought += OnProductBought;
 
         _boughtName = "Bought_icon_" + _productName;
         _equipedName = "Equiped_icon_" + _productName;
+
+        _buttonsPosition = new Vector3(-3.4000001f, -41.2999992f, 0.998049974f);
 
         _isBought = false;
     }
 
     void OnDestroy()
     {
-        GameEventsEconomy.OnProductEquiped -= OnProductEquiped;
+        GameEventsEconomy.OnProductEquipped -= OnProductEquiped;
         GameEventsEconomy.OnProductBought -= OnProductBought;
     }
 
-    private void OnProductEquiped(string productName, Color sellingColor)
+    private void OnProductEquiped(string productName)
     {
         DeleteBoughtIcon();
 
@@ -41,9 +45,9 @@ public class UI_product : MonoBehaviour
         {
             _isBought = true;
 
-            GameObject equipedIconInstance = Instantiate(_EquipedIcon, transform.position, transform.rotation);
+            GameObject equipedIconInstance = Instantiate(_EquipedIcon, _buttonsPosition, transform.rotation);
             equipedIconInstance.name = _equipedName;
-            equipedIconInstance.transform.SetParent(transform);
+            equipedIconInstance.transform.SetParent(transform, false);
         }
         else
         {
@@ -57,13 +61,15 @@ public class UI_product : MonoBehaviour
 
     private void OnProductBought(string productName)
     {
+        DeleteEquipedIcon();
+
         if(productName == _productName)
         {
             _isBought = true;
 
-            GameObject boughtIconInstance = Instantiate(_BoughtIcon, transform.position, transform.rotation);
+            GameObject boughtIconInstance = Instantiate(_BoughtIcon, _buttonsPosition, transform.rotation);
             boughtIconInstance.name = _boughtName;
-            boughtIconInstance.transform.SetParent(transform);
+            boughtIconInstance.transform.SetParent(transform, false);
         }
     }
 
