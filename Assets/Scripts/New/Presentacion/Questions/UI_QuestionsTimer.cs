@@ -20,12 +20,16 @@ public class UI_QuestionsTimer : MonoBehaviour
     {
         // Events
         GameEventsQuestions.OnStartTimerUI += StartTimer;
+        GameEventsQuestions.OnModifyTimer += ModifyCurrentTimer;
     }
 
     void OnDestroy()
     {
         // Events
         GameEventsQuestions.OnStartTimerUI -= StartTimer;
+        GameEventsQuestions.OnModifyTimer -= ModifyCurrentTimer;
+
+        DataStorage.SaveTimeLeftQuestionTimer(_timer);
     }
 
     private void OnValidate()
@@ -35,7 +39,10 @@ public class UI_QuestionsTimer : MonoBehaviour
 
     private void Start()
     {
-        StartTimer();
+        if(_timer == 0)
+        {
+            StartTimer();
+        }
     }
 
     void Update()
@@ -134,6 +141,18 @@ public class UI_QuestionsTimer : MonoBehaviour
 
     private void ModifyCurrentTimer(float newTimerValue)
     {
-        _timer = newTimerValue;
+        _isTimerActive = false;
+        if (newTimerValue <= 0)
+        {
+            FinalizeTimer();
+        }
+        else
+        {
+            Debug.Log(_timer);
+            _isTimerActive = true;
+            _timer = newTimerValue;
+            Debug.Log(_timer);
+            UpdateTimerBar();
+        }
     }
 }

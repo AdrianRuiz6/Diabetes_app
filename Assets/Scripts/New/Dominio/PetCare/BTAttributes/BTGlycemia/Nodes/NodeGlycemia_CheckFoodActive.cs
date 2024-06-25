@@ -11,7 +11,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
-            if (AttributeManager.Instance.isFoodButtonUsed)
+            if (AttributeManager.Instance.isFoodEffectActive)
             {
                 return NodeState.SUCCESS;
             }

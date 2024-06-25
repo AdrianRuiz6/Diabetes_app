@@ -21,6 +21,104 @@ public static class DataStorage
         return DateTime.Parse(PlayerPrefs.GetString("DisconnectionDate", DateTime.Now.ToString()));
     }
 
+    public static void SaveTimeLeftQuestionTimer(float timeLeft)
+    {
+        PlayerPrefs.SetFloat("LeftTimeQuestionTimer", timeLeft);
+    }
+
+    public static float LoadTimeLeftQuestionTimer()
+    {
+        return PlayerPrefs.GetFloat("LeftTimeQuestionTimer", 0);
+    }
+
+    public static void SaveTimeLeftIntervalIA(float timePassed)
+    {
+        PlayerPrefs.SetFloat("TimeLeft", timePassed);
+    }
+
+    public static float LoadTimeLeftIntervalIA()
+    {
+        return PlayerPrefs.GetFloat("TimeLeft", 0);
+    }
+
+    public static void SaveLastTimeInsulinUsed(DateTime? lastTimeInsulinUsed)
+    {
+        PlayerPrefs.SetString("LastTimeInsulinUsed", lastTimeInsulinUsed.ToString());
+    }
+
+    public static DateTime? LoadLastTimeInsulinUsed()
+    {
+        String timeSaved = PlayerPrefs.GetString("LastTimeInsulinUsed", null);
+        if (timeSaved != null)
+        {
+            return DateTime.Parse(timeSaved);
+        }
+
+        return null;
+    }
+
+    public static void SaveLastTimeExerciseUsed(DateTime? lastTimeExerciseUsed)
+    {
+        PlayerPrefs.SetString("LastTimeExerciseUsed", lastTimeExerciseUsed.ToString());
+    }
+
+    public static DateTime? LoadLastTimeExerciseUsed()
+    {
+        String timeSaved = PlayerPrefs.GetString("LastTimeExerciseUsed", null);
+        if (timeSaved != null)
+        {
+            return DateTime.Parse(timeSaved);
+        }
+
+        return null;
+    }
+
+    public static void SaveLastTimeFoodUsed(DateTime? lastTimeFoodUsed)
+    {
+        PlayerPrefs.SetString("LastTimeFoodUsed", lastTimeFoodUsed.ToString());
+    }
+
+    public static DateTime? LoadLastTimeFoodUsed()
+    {
+        String timeSaved = PlayerPrefs.GetString("LastTimeFoodUsed", null);
+        if (timeSaved != null)
+        {
+            return DateTime.Parse(timeSaved);
+        }
+
+        return null;
+    }
+
+    public static void SaveGlycemia(float glycemiaValue)
+    {
+        PlayerPrefs.SetFloat("Glycemia", glycemiaValue);
+    }
+
+    public static float LoadGlycemia()
+    {
+        return PlayerPrefs.GetFloat("Glycemia", 120);
+    }
+
+    public static void SaveActivity(float activityValue)
+    {
+        PlayerPrefs.SetFloat("Activity", activityValue);
+    }
+
+    public static float LoadActivity()
+    {
+        return PlayerPrefs.GetFloat("Activity", 50);
+    }
+
+    public static void SaveHunger(float hungerValue)
+    {
+        PlayerPrefs.SetFloat("Hunger", hungerValue);
+    }
+
+    public static float LoadHunger()
+    {
+        return PlayerPrefs.GetFloat("Hunger", 50);
+    }
+
     public static void SaveCurrentScore(int currentScore)
     {
         PlayerPrefs.SetInt("CurrentScore", currentScore);
@@ -126,7 +224,6 @@ public static class DataStorage
         }
     }
 
-
     public static Dictionary<string, FixedSizeQueue<char>> LoadUserPerformance(List<string> allTopics)
     {
         string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
@@ -167,7 +264,6 @@ public static class DataStorage
 
         return userPerformance;
     }
-
 
     public static List<Question> LoadQuestions()
     {

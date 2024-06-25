@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,13 @@ public class UI_QuestionsManager : MonoBehaviour
 
         DeactivateAllPanels();
         ActivateTimerPanel();
-        GameEventsQuestions.OnStartTimerUI?.Invoke();
+
+        float previousTimeLeft = DataStorage.LoadTimeLeftQuestionTimer();
+        DateTime lastTimeDisconnected = DataStorage.LoadDisconnectionDate();
+        TimeSpan timeDisconnected = DateTime.Now - lastTimeDisconnected;
+        float currentTimeLeft = previousTimeLeft - (float)timeDisconnected.TotalSeconds;
+
+        GameEventsQuestions.OnModifyTimer?.Invoke(currentTimeLeft);
     }
 
     private void TurnFalseProblemsLoading()

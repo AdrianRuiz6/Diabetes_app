@@ -16,7 +16,7 @@ namespace Master.Domain.Economy
 
         private void Awake()
         {
-            GameEventsEconomy.OnProductEquipped += OtherProductEquiped;
+            GameEventsEconomy.OnProductEquipped += OtherProductEquipped;
         }
         private void OnDestroy()
         {
@@ -24,7 +24,7 @@ namespace Master.Domain.Economy
             DataStorage.SaveProduct(_productName, _productState);
 
             // Cierre de eventos.
-            GameEventsEconomy.OnProductEquipped -= OtherProductEquiped;
+            GameEventsEconomy.OnProductEquipped -= OtherProductEquipped;
         }
 
         void Start()
@@ -39,7 +39,7 @@ namespace Master.Domain.Economy
 
             // Cargar datos producto.
             _productState = DataStorage.LoadProduct(_productName);
-            if(_productState == ProductState.Equiped)
+            if(_productState == ProductState.Equipped)
             {
                 GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
             }else if(_productState == ProductState.Purchased)
@@ -64,7 +64,7 @@ namespace Master.Domain.Economy
             else if(_productState == ProductState.Purchased)
             {
                 EquipProduct();
-            }else if(_productState==ProductState.Equiped)
+            }else if(_productState==ProductState.Equipped)
             {
                 _productState = ProductState.Purchased;
                 GameEventsEconomy.OnProductBought?.Invoke(_productName);
@@ -81,13 +81,13 @@ namespace Master.Domain.Economy
 
         private void EquipProduct()
         {
-            _productState = ProductState.Equiped;
+            _productState = ProductState.Equipped;
             GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
         }
 
-        private void OtherProductEquiped(string productName)
+        private void OtherProductEquipped(string productName)
         {
-            if(productName != _productName && _productState == ProductState.Equiped)
+            if(productName != _productName && _productState == ProductState.Equipped)
             {
                 _productState = ProductState.Purchased;
             }

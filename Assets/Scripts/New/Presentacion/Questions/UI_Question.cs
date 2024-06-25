@@ -36,6 +36,11 @@ public class UI_Question : MonoBehaviour
 
     [SerializeField] private Button _nextQuestion_Btn;
 
+    [SerializeField] private GameObject _winPointsPrefab;
+    [SerializeField] private GameObject _loosePointsPrefab;
+    [SerializeField] private GameObject _winCoinsPrefab;
+    [SerializeField] private GameObject _parentAnimations;
+
     void Awake()
     {
         GameEventsQuestions.OnFinalizedCreationQuestions += PrepareNextQuestion;
@@ -120,16 +125,27 @@ public class UI_Question : MonoBehaviour
         if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
             // Recompensa.
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_winCoinsPrefab, new Vector3(localMousePosition.x - 6, localMousePosition.y, localMousePosition.z), _parentAnimations);
+            AnimationManager.Instance.PlayAnimation(_winPointsPrefab, new Vector3(localMousePosition.x + 6, localMousePosition.y, localMousePosition.z), _parentAnimations);
+
             EconomyManager.Instance.AddCoins(50);
             ScoreManager.Instance.AddScore(50);
+
             CorrectAnswer(_answer1_Image);
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, _parentAnimations);
+
             ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer1_Image);
             CorrectAnswer(_answer2_Image);
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, _parentAnimations);
+
             ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer1_Image);
             CorrectAnswer(_answer3_Image);
@@ -146,6 +162,9 @@ public class UI_Question : MonoBehaviour
 
         if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, _parentAnimations);
+
             ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer2_Image);
             CorrectAnswer(_answer1_Image);
@@ -153,12 +172,19 @@ public class UI_Question : MonoBehaviour
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
             // Recompensa.
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_winCoinsPrefab, new Vector3(localMousePosition.x - 6, localMousePosition.y, localMousePosition.z), _parentAnimations);
+            AnimationManager.Instance.PlayAnimation(_winPointsPrefab, new Vector3(localMousePosition.x + 6, localMousePosition.y, localMousePosition.z), _parentAnimations);
+
             EconomyManager.Instance.AddCoins(50);
             ScoreManager.Instance.AddScore(50);
             CorrectAnswer(_answer2_Image);
         }
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, _parentAnimations);
+
             ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer2_Image);
             CorrectAnswer(_answer3_Image);
@@ -175,12 +201,18 @@ public class UI_Question : MonoBehaviour
 
         if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, _parentAnimations);
+
             ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer3_Image);
             CorrectAnswer(_answer1_Image);
         }
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, _parentAnimations);
+
             ScoreManager.Instance.SubstractScore(25);
             WrongAnswer(_answer3_Image);
             CorrectAnswer(_answer2_Image);
@@ -188,6 +220,10 @@ public class UI_Question : MonoBehaviour
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
             // Recompensa.
+            Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
+            AnimationManager.Instance.PlayAnimation(_winCoinsPrefab, new Vector3(localMousePosition.x - 6, localMousePosition.y, localMousePosition.z), _parentAnimations);
+            AnimationManager.Instance.PlayAnimation(_winPointsPrefab, new Vector3(localMousePosition.x + 6, localMousePosition.y, localMousePosition.z), _parentAnimations);
+
             EconomyManager.Instance.AddCoins(50);
             ScoreManager.Instance.AddScore(50);
             CorrectAnswer(_answer3_Image);

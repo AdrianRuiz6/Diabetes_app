@@ -7,77 +7,62 @@ using UnityEngine.UI;
 
 public class Cooldown : MonoBehaviour
 {
-    [SerializeField] private string _my_ID;
-
-    private float _time = 3600;
-
-    private DateTime? _timeButtonPressed;
-
-    private Button _button;
+    [SerializeField] private string _myID;
     private Image _image;
+
+    private bool _isInCD;
 
     void Start()
     {
-        _timeButtonPressed = null;
-
         _image = GetComponent<Image>();
-
-        _button = GetComponent<Button>();
-        _button.onClick.AddListener(ActivateCooldown);
+        _isInCD = false;
     }
 
     private void Awake()
     {
-        GameEventsPetCare.OnActivateCoolDown += ActivateCoolDownRemotely;
+        GameEventsPetCare.OnActivateCoolDown += ActivateCoolDown;
+        GameEventsPetCare.OnDeactivateCoolDown += DeactivateCoolDown;
     }
 
-    // TODO: guardar hora (en DataStorage) en la que se activó el botón con el ID de esta instancia.
-    // Cargar en el otro lado (AISimulator)
     void OnDestroy() 
     {
-        GameEventsPetCare.OnActivateCoolDown -= ActivateCoolDownRemotely;
+        GameEventsPetCare.OnActivateCoolDown -= ActivateCoolDown;
+        GameEventsPetCare.OnDeactivateCoolDown -= DeactivateCoolDown;
+    }
 
-        if (_timeButtonPressed != null)
+    void Update()
+    {
+        if (_isInCD)
         {
-            PlayerPrefs.SetString(_my_ID, _timeButtonPressed.Value.ToString());
+            ActivateEffect();
         }
-        else
+    }
+
+    private void ActivateCoolDown(string externalID)
+    {
+        if(externalID == _myID)
         {
-            PlayerPrefs.SetString(_my_ID, "null"); // Guarda "null" si el valor es null
+            _isInCD = true;
         }
-        PlayerPrefs.Save();
     }
 
-    private void ActivateCooldown()
+    private void DeactivateCoolDown(string externalID)
     {
-        _image.color = Color.grey;
-        _button.enabled = false;
-        StartCoroutine(Timer(_time));
-    }
-
-    private void DisableCooldown()
-    {
-        _image.color = Color.white;
-        _button.enabled = true;
-    }
-
-    private IEnumerator Timer(float time)
-    {
-        _timeButtonPressed = DateTime.Now;
-        yield return new WaitForSeconds(time);
-
-        _timeButtonPressed = null;
-        DisableCooldown();
-    }
-
-    private void ActivateCoolDownRemotely(string externalID, float externalTime)
-    {
-        if(externalID == _my_ID)
+        if(externalID == _myID)
         {
-            StopAllCoroutines();
-            _image.color = Color.grey;
-            _button.enabled = false;
-            StartCoroutine(Timer(externalTime));
+            _isInCD = false;
+
+            DeactivateEffect();
         }
+    }
+
+    private void ActivateEffect()
+    {
+        // TODO: efecto de activado.
+    }
+
+    private void DeactivateEffect()
+    {
+        // TODO: efecto de desactivado.
     }
 }

@@ -8,7 +8,7 @@ namespace Master.Domain.States
     {
         NotPurchased,
         Purchased,
-        Equiped
+        Equipped
     }
 }
 

@@ -1,21 +1,36 @@
 using Master.Domain.Events;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AttributeManager : MonoBehaviour
 {
     public static AttributeManager Instance;
 
-    public float glycemiaValue { get; private set; } //TODO: guardar y cargar los valores en json o playerPrefs.
-    public float activityValue { get; private set; } //TODO: guardar y cargar los valores en json o playerPrefs.
-    public float hungerValue { get; private set; } //TODO: guardar y cargar los valores en json o playerPrefs.
-    public bool isInsulineButtonUsed { get; private set; }
-    public bool isExerciseButtonUsed { get; private set; }
-    public bool isFoodButtonUsed { get; private set; }
+    [SerializeField] private Button _insulinButton;
+    [SerializeField] private Button _exerciseButton;
+    [SerializeField] private Button _foodButton;
 
-    private float timeEffectsButton;
+    public float glycemiaValue { get; private set; }
+    public float activityValue { get; private set; }
+    public float hungerValue { get; private set; }
 
+    [HideInInspector] public DateTime? lastTimeInsulinUsed { get; private set; }
+    [HideInInspector] public DateTime? lastTimeExerciseUsed { get; private set; }
+    [HideInInspector] public DateTime? lastTimeFoodUsed { get; private set; }
+
+    [HideInInspector] public bool isInsulinButtonUsed { get; private set; }
+    [HideInInspector] public bool isExerciseButtonUsed { get; private set; }
+    [HideInInspector] public bool isFoodButtonUsed { get; private set; }
+
+    [HideInInspector] public bool isInsulinEffectActive { get; set; }
+    [HideInInspector] public bool isExerciseEffectActive { get; set; }
+    [HideInInspector] public bool isFoodEffectActive { get; set; }
+
+    [HideInInspector] public float timeButtonsCD { get; private set; }
+    [HideInInspector] public float timeEffectButtons { get; private set; }
 
     void Awake()
     {
@@ -28,10 +43,6 @@ public class AttributeManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        GameEventsPetCare.OnModifyGlycemia += ModifyGlycemia;
-        GameEventsPetCare.OnModifyActivity += ModifyActivity;
-        GameEventsPetCare.OnModifyHunger += ModifyHunger;
     }
 
     void OnDestroy()
@@ -39,110 +50,182 @@ public class AttributeManager : MonoBehaviour
         GameEventsPetCare.OnModifyGlycemia -= ModifyGlycemia;
         GameEventsPetCare.OnModifyActivity -= ModifyActivity;
         GameEventsPetCare.OnModifyHunger -= ModifyHunger;
+
+        DataStorage.SaveGlycemia(glycemiaValue);
+        DataStorage.SaveActivity(activityValue);
+        DataStorage.SaveHunger(hungerValue);
+
+        DataStorage.SaveLastTimeInsulinUsed(lastTimeInsulinUsed);
+        DataStorage.SaveLastTimeExerciseUsed(lastTimeExerciseUsed);
+        DataStorage.SaveLastTimeFoodUsed(lastTimeFoodUsed);
     }
 
     void Start()
     {
-        timeEffectsButton = 1800; // 30 minutos
+        timeButtonsCD = 3600; // 60 minutos
+        timeEffectButtons = 1800; // 30 minutos
 
-        glycemiaValue = 120; // TODO: hacer clamp
-        activityValue = 50; // TODO: hacer clamp
-        hungerValue = 50; // TODO: hacer clamp
+        _insulinButton.onClick.AddListener(ActivateInsulinButton);
+        _exerciseButton.onClick.AddListener(ActivateExerciseButton);
+        //_foodButton.onClick.AddListener(); TODO
 
-        isInsulineButtonUsed = false;
-        isExerciseButtonUsed = false;
-        isFoodButtonUsed = false;
+        glycemiaValue = DataStorage.LoadGlycemia();
+        GameEventsPetCare.OnModifyGlycemia?.Invoke(0);
+        activityValue = DataStorage.LoadActivity();
+        GameEventsPetCare.OnModifyActivity?.Invoke(0);
+        hungerValue = DataStorage.LoadHunger();
+        GameEventsPetCare.OnModifyHunger?.Invoke(0);
+
+        lastTimeInsulinUsed = DataStorage.LoadLastTimeInsulinUsed();
+        lastTimeExerciseUsed = DataStorage.LoadLastTimeExerciseUsed();
+        lastTimeFoodUsed = DataStorage.LoadLastTimeFoodUsed();
+
+        DateTime? currentTime = DateTime.Now;
+        TimeSpan? timePassed = null;
+
+        if(lastTimeInsulinUsed != null)
+        {
+            timePassed = currentTime - lastTimeInsulinUsed;
+            if ((float)timePassed.Value.TotalSeconds < timeButtonsCD)
+            {
+                isInsulinButtonUsed = true;
+                GameEventsPetCare.OnActivateCoolDown?.Invoke("Insulin");
+                StartCoroutine(ResetInsulinButton(timeButtonsCD - (float)timePassed.Value.Seconds));
+
+                if ((float)timePassed.Value.TotalSeconds < timeEffectButtons)
+                {
+                    StartCoroutine(ActivateInsulinEffect(timeEffectButtons - (float)timePassed.Value.Seconds));
+                }
+            }
+            else
+            {
+                isInsulinButtonUsed = false;
+                GameEventsPetCare.OnDeactivateCoolDown?.Invoke("Insulin");
+            }
+        }
+
+        if (lastTimeExerciseUsed != null)
+        {
+            timePassed = currentTime - lastTimeExerciseUsed;
+            if ((float)timePassed.Value.TotalSeconds < timeButtonsCD)
+            {
+                isExerciseButtonUsed = true;
+                GameEventsPetCare.OnActivateCoolDown?.Invoke("Exercise");
+                StartCoroutine(ResetExerciseButton(timeButtonsCD - (float)timePassed.Value.Seconds));
+
+                if ((float)timePassed.Value.TotalSeconds < timeEffectButtons)
+                {
+                    StartCoroutine(ActivateExerciseEffect(timeEffectButtons - (float)timePassed.Value.Seconds));
+                }
+            }
+            else
+            {
+                isExerciseButtonUsed = false;
+                GameEventsPetCare.OnDeactivateCoolDown?.Invoke("Exercise");
+            }
+        }
+        
+        if (lastTimeFoodUsed != null)
+        {
+            timePassed = currentTime - lastTimeFoodUsed;
+            if ((float)timePassed.Value.TotalSeconds < timeButtonsCD)
+            {
+                isFoodButtonUsed = true;
+                GameEventsPetCare.OnActivateCoolDown?.Invoke("Food");
+                StartCoroutine(ResetFoodButton(timeButtonsCD - (float)timePassed.Value.Seconds));
+
+                if ((float)timePassed.Value.TotalSeconds < timeEffectButtons)
+                {
+                    StartCoroutine(ActivateFoodEffect(timeEffectButtons - (float)timePassed.Value.Seconds));
+                }
+            }
+            else
+            {
+                isFoodButtonUsed = false;
+                GameEventsPetCare.OnDeactivateCoolDown?.Invoke("Food");
+            }
+        }
+        
     }
 
     private void ModifyGlycemia(int value)
     {
-        glycemiaValue += value;
+        glycemiaValue = Mathf.Clamp(glycemiaValue + value, 20, 350);
     }
 
     private void ModifyActivity(int value)
     {
-        activityValue += value;
+        activityValue = Mathf.Clamp(activityValue + value, 0, 100);
     }
 
     private void ModifyHunger(int value)
     {
-        hungerValue += value;
+        hungerValue = Mathf.Clamp(hungerValue + value, 0, 100);
     }
 
-    public void ActivateInsulinButton(bool simulated = false, float time = 0)
+    public void ActivateInsulinButton()
     {
-        isInsulineButtonUsed = true;
-        if (!simulated)
-        {
-            ModifyGlycemia(-40);
+        isInsulinButtonUsed = true;
+        lastTimeInsulinUsed = DateTime.Now;
 
-            time = timeEffectsButton;
-        }
+        GameEventsPetCare.OnActivateCoolDown?.Invoke("Insulin");
+        ModifyGlycemia(-40);
 
-        if (time > 0)
-        {
-            StartCoroutine(ResetInsulinButton(time));
-        }
+        StartCoroutine(ResetInsulinButton(timeButtonsCD));
+        StartCoroutine(ActivateInsulinEffect(timeEffectButtons));
     }
 
     public void DeactivateInsulinButton()
     {
-        isInsulineButtonUsed = false;
+        isInsulinButtonUsed = false;
+        GameEventsPetCare.OnDeactivateCoolDown?.Invoke("Insulin");
     }
 
-    public void ActivateExerciseButton(bool simulated = false, float time = 0)
+    public void ActivateExerciseButton()
     {
         isExerciseButtonUsed = true;
+        lastTimeExerciseUsed = DateTime.Now;
 
-        if (!simulated)
-        {
-            ModifyGlycemia(-30);
-            ModifyActivity(30);
-            ModifyHunger(10);
+        GameEventsPetCare.OnActivateCoolDown?.Invoke("Exercise");
+        ModifyGlycemia(-30);
+        ModifyActivity(30);
+        ModifyHunger(10);
 
-            time = timeEffectsButton;
-        }
-
-        if (time > 0)
-        {
-            StartCoroutine(ResetExerciseButton(time));
-        }
-
+        StartCoroutine(ResetExerciseButton(timeButtonsCD));
+        StartCoroutine(ActivateExerciseEffect(timeEffectButtons));
     }
 
     public void DeactivateExerciseButton()
     {
         isExerciseButtonUsed = false;
+        GameEventsPetCare.OnDeactivateCoolDown?.Invoke("Exercise");
     }
 
-    public void ActivateFoodButton(bool simulated = false, float time = 0, int carbohydratesAmount = 0)
+    public void ActivateFoodButton(int carbohydratesAmount)
     {
         isFoodButtonUsed = true;
+        lastTimeFoodUsed = DateTime.Now;
 
-        if (!simulated)
-        {
-            if (carbohydratesAmount == 0)
-                ModifyGlycemia(0);
-            else if (carbohydratesAmount <= 30)
-                ModifyGlycemia(40);
-            else if (carbohydratesAmount <= 70)
-                ModifyGlycemia(80);
-            else
-                ModifyGlycemia(120);
-            ModifyHunger(-30);
+        GameEventsPetCare.OnActivateCoolDown?.Invoke("Food");
+        if (carbohydratesAmount == 0)
+            ModifyGlycemia(0);
+        else if (carbohydratesAmount <= 30)
+            ModifyGlycemia(40);
+        else if (carbohydratesAmount <= 70)
+            ModifyGlycemia(80);
+        else
+            ModifyGlycemia(120);
+        ModifyHunger(-30);
 
-            time = timeEffectsButton;
-        }
-
-        if(time > 0)
-        {
-            StartCoroutine(ResetFoodButton(time));
-        }
+        StartCoroutine(ResetFoodButton(timeButtonsCD));
+        StartCoroutine(ActivateFoodEffect(timeEffectButtons));
     }
 
     public void DeactivateFoodButton()
     {
         isFoodButtonUsed = false;
+        GameEventsPetCare.OnDeactivateCoolDown?.Invoke("Food");
+
     }
 
     private IEnumerator ResetInsulinButton(float time)
@@ -161,5 +244,26 @@ public class AttributeManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         DeactivateFoodButton();
+    }
+
+    private IEnumerator ActivateInsulinEffect(float time)
+    {
+        isInsulinEffectActive = true;
+        yield return new WaitForSeconds(time);
+        isInsulinEffectActive = false;
+    }
+
+    private IEnumerator ActivateExerciseEffect(float time)
+    {
+        isExerciseEffectActive = true;
+        yield return new WaitForSeconds(time);
+        isExerciseEffectActive = false;
+    }
+
+    private IEnumerator ActivateFoodEffect(float time)
+    {
+        isFoodEffectActive = true;
+        yield return new WaitForSeconds(time);
+        isFoodEffectActive = false;
     }
 }

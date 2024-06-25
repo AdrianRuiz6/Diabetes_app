@@ -11,7 +11,7 @@ namespace Master.Domain.BehaviorTree.Activity
 
         public override NodeState Evaluate()
         {
-            if (AttributeManager.Instance.isExerciseButtonUsed)
+            if (AttributeManager.Instance.isExerciseEffectActive)
             {
                 return NodeState.SUCCESS;
             }

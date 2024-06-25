@@ -9,10 +9,10 @@ public class UI_product : MonoBehaviour
 {
     [SerializeField] private string _productName;
     [SerializeField] private GameObject _BoughtIcon;
-    [SerializeField] private GameObject _EquipedIcon;
+    [SerializeField] private GameObject _EquippedIcon;
 
     private string _boughtName;
-    private string _equipedName;
+    private string _equippedName;
 
     private bool _isBought;
 
@@ -20,11 +20,11 @@ public class UI_product : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsEconomy.OnProductEquipped += OnProductEquiped;
+        GameEventsEconomy.OnProductEquipped += OnProductEquipped;
         GameEventsEconomy.OnProductBought += OnProductBought;
 
         _boughtName = "Bought_icon_" + _productName;
-        _equipedName = "Equiped_icon_" + _productName;
+        _equippedName = "Equipped_icon_" + _productName;
 
         _buttonsPosition = new Vector3(-3.4000001f, -41.2999992f, 0.998049974f);
 
@@ -33,26 +33,25 @@ public class UI_product : MonoBehaviour
 
     void OnDestroy()
     {
-        GameEventsEconomy.OnProductEquipped -= OnProductEquiped;
+        GameEventsEconomy.OnProductEquipped -= OnProductEquipped;
         GameEventsEconomy.OnProductBought -= OnProductBought;
     }
 
-    private void OnProductEquiped(string productName)
+    private void OnProductEquipped(string productName)
     {
-        DeleteBoughtIcon();
-
         if (productName == _productName)
         {
+            DeleteBoughtIcon();
             _isBought = true;
 
-            GameObject equipedIconInstance = Instantiate(_EquipedIcon, _buttonsPosition, transform.rotation);
-            equipedIconInstance.name = _equipedName;
-            equipedIconInstance.transform.SetParent(transform, false);
+            GameObject equippedIconInstance = Instantiate(_EquippedIcon, _buttonsPosition, transform.rotation);
+            equippedIconInstance.name = _equippedName;
+            equippedIconInstance.transform.SetParent(transform, false);
         }
         else
         {
-            DeleteEquipedIcon();
-            if(_isBought == true)
+            DeleteEquippedIcon();
+            if (_isBought == true)
             {
                 OnProductBought(_productName);
             }
@@ -61,10 +60,9 @@ public class UI_product : MonoBehaviour
 
     private void OnProductBought(string productName)
     {
-        DeleteEquipedIcon();
-
-        if(productName == _productName)
+        if (productName == _productName)
         {
+            DeleteEquippedIcon();
             _isBought = true;
 
             GameObject boughtIconInstance = Instantiate(_BoughtIcon, _buttonsPosition, transform.rotation);
@@ -81,11 +79,11 @@ public class UI_product : MonoBehaviour
             Destroy(boughtIconToDestroy);
     }
 
-    private void DeleteEquipedIcon()
+    private void DeleteEquippedIcon()
     {
-        GameObject EquipedIconToDestroy = GameObject.Find(_equipedName);
+        GameObject EquipedIconToDestroy = GameObject.Find(_equippedName);
 
-        if(EquipedIconToDestroy != null)
+        if (EquipedIconToDestroy != null)
             Destroy(EquipedIconToDestroy);
     }
 }

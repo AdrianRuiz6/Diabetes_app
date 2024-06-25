@@ -12,4 +12,5 @@ public static class GameEventsQuestions
     // UI work.
     public static Action OnStartQuestionUI;
     public static Action OnStartTimerUI;
+    public static Action<float> OnModifyTimer;
 }

@@ -2,175 +2,104 @@ using Master.Domain.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AISimulator : MonoBehaviour
 {
-    private DateTime _lastShutDownTime; //TODO: guardar en playerPrefs
-    private int _countAttributes;
+    private int _iterationsTotal;
 
-    private Dictionary<string, DateTime?> buttonsCD;
-    private DateTime? _buttonInsulinTimeCD, _buttonExerciseTimeCD, _buttonFoodTimeCD;
-    [SerializeField] private string _IDInsulinCD = "ButtonInsulin";
-    [SerializeField] private string _IDExerciseCD = "ButtonExercise";
-    [SerializeField] private string _IDFoodCD = "ButtonFood";
+    private int _iterationsEffectsInsulin;
+    private bool _isInsulinActivated;
+    private int _iterationsEffectsExercise;
+    private bool _isExerciseActivated;
+    private int _iterationsEffectsFood;
+    private bool _isFoodActivated;
 
-    private int _iterationAmountInsulin;
-    private int _iterationAmountExercise;
-    private int _iterationAmountFood;
+    private int _timeIntervalAI;
+    private float _initialTimerSeconds;
 
-    void Awake() 
+    void Start()
     {
-        GameEventsPetCare.OnExecutedAttribute += UpdateInterval;
+        _timeIntervalAI = 300; // 5 minutos.
 
-        // TODO: cargar los CD de los botones en el DataStorage.
-        buttonsCD = new Dictionary<string, DateTime?>
+        Simulate();
+    }
+
+    private void Simulate()
+    {
+        CalculateIterationsButtons();
+        SimulateIntervals();
+        AttributeSchedule.Instance.UpdateTimer(_initialTimerSeconds);
+    }
+
+    private void CalculateIterationsButtons()
+    {
+        DateTime? currentTime = DateTime.Now;
+        TimeSpan? timePassed = null;
+        float secondsPassed;
+        float restTimeEffects;
+        DateTime? lastTimeDisconnected = DataStorage.LoadDisconnectionDate();
+        float timeLeftPreviousInterval = DataStorage.LoadTimeLeftIntervalIA();
+
+        _isInsulinActivated = AttributeManager.Instance.isInsulinEffectActive;
+        _isExerciseActivated = AttributeManager.Instance.isExerciseEffectActive;
+        _isFoodActivated = AttributeManager.Instance.isFoodEffectActive;
+
+        timePassed = currentTime - lastTimeDisconnected;
+        secondsPassed = (float)timePassed.Value.TotalSeconds + timeLeftPreviousInterval;
+        _iterationsTotal = (int)secondsPassed / _timeIntervalAI;
+        _initialTimerSeconds = (float)secondsPassed % _timeIntervalAI;
+
+        timePassed = AttributeManager.Instance.lastTimeInsulinUsed - lastTimeDisconnected;
+        secondsPassed = (float)timePassed.Value.TotalSeconds;
+        restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
+        if(restTimeEffects > 0)
         {
-            { _IDInsulinCD, _buttonInsulinTimeCD },
-            { _IDExerciseCD, _buttonExerciseTimeCD },
-            { _IDFoodCD, _buttonFoodTimeCD }
-        };
+            AttributeManager.Instance.isInsulinEffectActive = true;
+            _iterationsEffectsInsulin = (int)restTimeEffects / _timeIntervalAI;
+        }
 
-        foreach(KeyValuePair<string, DateTime?> button in buttonsCD)
+        timePassed = AttributeManager.Instance.lastTimeExerciseUsed - lastTimeDisconnected;
+        secondsPassed = (float)timePassed.Value.TotalSeconds;
+        restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
+        if (restTimeEffects > 0)
         {
-            string savedValue;
+            AttributeManager.Instance.isExerciseEffectActive = true;
+            _iterationsEffectsInsulin = (int)restTimeEffects / _timeIntervalAI;
+        }
 
-            savedValue = PlayerPrefs.GetString(button.Key, "null");
-            if (savedValue == "null")
-                buttonsCD[button.Key] = null;
-            else
-                buttonsCD[button.Key] = DateTime.Parse(savedValue, null, System.Globalization.DateTimeStyles.RoundtripKind);
-
+        timePassed = AttributeManager.Instance.lastTimeFoodUsed - lastTimeDisconnected;
+        secondsPassed = (float)timePassed.Value.TotalSeconds;
+        restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
+        if (restTimeEffects > 0)
+        {
+            AttributeManager.Instance.isFoodEffectActive = true;
+            _iterationsEffectsInsulin = (int)restTimeEffects / _timeIntervalAI;
         }
     }
 
-    private void Start()
+    private void SimulateIntervals()
     {
-        _iterationAmountInsulin = 0;
-        _iterationAmountExercise = 0;
-        _iterationAmountFood = 0;
-
-        _countAttributes = 0;
-        OnApplicationStart();
-    }
-    void OnDestroy()
-    {
-        GameEventsPetCare.OnExecutedAttribute += UpdateInterval;
-        //TODO: guardar lastShutDownTime en playerPrefs
-    }
-    private void OnApplicationStart()
-    {
-        //TODO: cargar lastShutDownTime en playerPrefs
-        SimulateTime();
-    }
-
-    private void SimulateTime()
-    {
-        SimulateTimers();
-        SimulateAttributes();
-    }
-
-    private void SimulateAttributes()
-    {
-        TimeSpan timePassed = DateTime.Now - _lastShutDownTime;
-        int intervalsPassed = (int)(timePassed.TotalSeconds / 300);
-
-        while (intervalsPassed != 0)
+        for(int iteration = 0; iteration < _iterationsTotal;  iteration++)
         {
             GameEventsPetCare.OnExecutingAttributes?.Invoke();
-            while (_countAttributes != 3)
+
+            _iterationsEffectsInsulin--;
+            _iterationsEffectsExercise--;
+            _iterationsEffectsFood--;
+
+            if(_iterationsEffectsInsulin <= 0 && !_isInsulinActivated)
             {
-                continue;
+                AttributeManager.Instance.isInsulinEffectActive = false;
             }
-            if (_iterationAmountInsulin > 0)
-                _iterationAmountInsulin--;
-            if (_iterationAmountExercise > 0)
-                _iterationAmountExercise--;
-            if (_iterationAmountFood > 0)
-                _iterationAmountFood--;
-            _countAttributes = 0;
-        }
-    }
-
-    private void UpdateInterval()
-    {
-        _countAttributes++;
-    }
-
-    private void SimulateTimers()
-    {
-        TimeSpan timePassed = DateTime.Now - _lastShutDownTime;
-
-        SimulateTimeAttribute(timePassed);
-
-        // Update cooldown and effects for each button
-        foreach (KeyValuePair<string, DateTime?> button in buttonsCD)
-        {
-            SimulataTimeButtons(button, timePassed);
-        }
-    }
-
-    private void SimulateTimeAttribute(TimeSpan timePassed)
-    {
-        // Calculate the time passed since the last shutdown
-        float currentTime = 300 - (float)(timePassed.TotalSeconds % 300);
-
-        // Update the attribute timers
-        AttributeSchedule.Instance.UpdateTimer(currentTime);
-    }
-
-    private void SimulataTimeButtons(KeyValuePair<string, DateTime?> button, TimeSpan timePassed)
-    {
-        if (button.Value == null)
-            return;
-
-        // Time passed since last time user pressed the button.
-        TimeSpan timeButtonPassed = DateTime.Now - button.Value.Value;
-        float secondsPassed = (float)timeButtonPassed.TotalSeconds;
-
-        // Update the cooldown timers
-        if (secondsPassed < 3600)
-        {
-            GameEventsPetCare.OnActivateCoolDown?.Invoke(button.Key, 3600 - secondsPassed);
-        }
-
-        // Update the long-term effects timers for the attribute buttons and their states on previous intervals.
-        if (secondsPassed < 1800)
-        {
-            int iterations = (int)(timeButtonPassed.TotalSeconds / 300);
-            float remainingTime = 1800 - secondsPassed;
-
-            switch (button.Key)
+            if(_iterationsEffectsExercise <= 0 && !_isExerciseActivated)
             {
-                case "ButtonInsulin":
-                    _iterationAmountInsulin = iterations;
-                    if (_iterationAmountInsulin > 0)
-                    {
-                        AttributeManager.Instance.ActivateInsulinButton(simulated: true, time: remainingTime);
-                    }
-                    break;
-
-                case "ButtonExercise":
-                    _iterationAmountExercise = iterations;
-                    if (_iterationAmountExercise > 0)
-                    {
-                        AttributeManager.Instance.ActivateExerciseButton(simulated: true, time: remainingTime);
-                    }
-                    break;
-
-                case "ButtonFood":
-                    _iterationAmountFood = iterations;
-                    if (_iterationAmountFood > 0)
-                    {
-                        AttributeManager.Instance.ActivateFoodButton(simulated: true, time: remainingTime);
-                    }
-                    break;
+                AttributeManager.Instance.isExerciseEffectActive = false;
+            }
+            if(_iterationsEffectsFood <= 0 && !_isFoodActivated)
+            {
+                AttributeManager.Instance.isFoodEffectActive = false;
             }
         }
     }
 }
-
-
-// Coges el último

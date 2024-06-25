@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\presentacion\\questions\\ui_question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\statemachine\\agentquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\statemachine\\agentquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\presentacion\\questions\\ui_question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\questions\\ui_question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\questions\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,33 +30,69 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UI_Question.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "ViewState": "AQIAAC4AAAAAAAAAAAAkwEEAAAA/AAAA",
+              "DocumentIndex": 1,
+              "Title": "AgentQuestions.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-24T10:41:36.263Z",
+              "WhenOpened": "2024-06-25T15:49:40.129Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "DataStorage.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
+              "ViewState": "AQIAAJEAAAAAAAAAAAAQwNUAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-25T14:21:22.012Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Question.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-25T14:23:15.063Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "QuestionManager.cs",
               "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
               "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "ViewState": "AQIAAPYAAAAAAAAAAAAAAEcAAAAAAAAA",
+              "ViewState": "AQIAACUAAAAAAAAAAAAcwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-24T10:41:06.839Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-25T14:19:55.679Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UI_Question.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
+              "ViewState": "AQIAAE0AAAAAAAAAAAAAAN8AAABoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-25T11:41:42.919Z"
             }
           ]
         }

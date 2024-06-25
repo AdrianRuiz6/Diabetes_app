@@ -11,7 +11,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
-            if (AttributeManager.Instance.isInsulineButtonUsed)
+            if (AttributeManager.Instance.isInsulinEffectActive)
             {
                 return NodeState.SUCCESS;
             }
