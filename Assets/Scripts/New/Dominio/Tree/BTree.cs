@@ -9,15 +9,16 @@ namespace BehaviorTree
     public abstract class BTree : MonoBehaviour
     {
         private Node _root = null;
+        private int _counterEvaluates = 0;
 
         void Awake()
         {
-            GameEventsPetCare.OnExecutingAttributes += Evaluate;
+            GameEventsPetCare.OnExecutingAttributes += ExecutingAttribute;
         }
 
         void OnDestroy()
         {
-            GameEventsPetCare.OnExecutingAttributes -= Evaluate;
+            GameEventsPetCare.OnExecutingAttributes -= ExecutingAttribute;
         }
 
         protected virtual void Start()
@@ -25,11 +26,22 @@ namespace BehaviorTree
             _root = SetUpTree();
         }
 
-        private void Evaluate()
+        void Update()
         {
-            AttributesMutex.Instance.WaitForMutex();
-            _root.Evaluate();
-            AttributesMutex.Instance.Unlock();
+            while (_counterEvaluates > 0)
+            {
+                NodeState result = _root.Evaluate();
+                while (result == NodeState.RUNNING)
+                {
+                    result = _root.Evaluate();
+                }
+                _counterEvaluates -= 1;
+            }
+        }
+
+        private void ExecutingAttribute()
+        {
+            _counterEvaluates += 1;
         }
 
         protected abstract Node SetUpTree();

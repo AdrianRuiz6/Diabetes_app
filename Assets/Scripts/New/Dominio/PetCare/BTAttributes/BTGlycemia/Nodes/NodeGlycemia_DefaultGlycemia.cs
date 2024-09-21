@@ -12,6 +12,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
+            Debug.LogWarning("ATRIBUTE: DEFAULT_Glycemia");  // TODO: BORRAR
             int randomGlycemia = 0;
             int randomValue = Random.Range(1, 3);
             if(randomValue == 1)

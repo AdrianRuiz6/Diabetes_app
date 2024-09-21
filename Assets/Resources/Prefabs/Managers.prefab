@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 1806231439209476673}
   - component: {fileID: 6706250716652470542}
   - component: {fileID: 2763575365694265059}
+  - component: {fileID: 6836564635383689594}
+  - component: {fileID: 8090205279878190996}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -128,3 +130,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34f4ca83af6e0db4a905311270174add, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6836564635383689594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7059818412560394266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32243f0a7928d13438574f27f9e95081, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _insulinButton: {fileID: 0}
+  _exerciseButton: {fileID: 0}
+  _foodButton: {fileID: 0}
+--- !u!114 &8090205279878190996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7059818412560394266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1917af4e79d8fb0449250def2db2707a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateInterval: 1

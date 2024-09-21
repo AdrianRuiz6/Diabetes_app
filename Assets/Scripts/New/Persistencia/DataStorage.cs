@@ -48,8 +48,8 @@ public static class DataStorage
 
     public static DateTime? LoadLastTimeInsulinUsed()
     {
-        String timeSaved = PlayerPrefs.GetString("LastTimeInsulinUsed", null);
-        if (timeSaved != null)
+        String timeSaved = PlayerPrefs.GetString("LastTimeInsulinUsed", string.Empty);
+        if (timeSaved != string.Empty)
         {
             return DateTime.Parse(timeSaved);
         }
@@ -64,8 +64,8 @@ public static class DataStorage
 
     public static DateTime? LoadLastTimeExerciseUsed()
     {
-        String timeSaved = PlayerPrefs.GetString("LastTimeExerciseUsed", null);
-        if (timeSaved != null)
+        String timeSaved = PlayerPrefs.GetString("LastTimeExerciseUsed", string.Empty);
+        if (timeSaved != string.Empty)
         {
             return DateTime.Parse(timeSaved);
         }
@@ -80,8 +80,8 @@ public static class DataStorage
 
     public static DateTime? LoadLastTimeFoodUsed()
     {
-        String timeSaved = PlayerPrefs.GetString("LastTimeFoodUsed", null);
-        if (timeSaved != null)
+        String timeSaved = PlayerPrefs.GetString("LastTimeFoodUsed", string.Empty);
+        if (timeSaved != string.Empty)
         {
             return DateTime.Parse(timeSaved);
         }
@@ -96,7 +96,8 @@ public static class DataStorage
 
     public static float LoadGlycemia()
     {
-        return PlayerPrefs.GetFloat("Glycemia", 120);
+        // return PlayerPrefs.GetFloat("Glycemia", 120); TODO: ponerlo en json
+        return 120;
     }
 
     public static void SaveActivity(float activityValue)
@@ -106,7 +107,8 @@ public static class DataStorage
 
     public static float LoadActivity()
     {
-        return PlayerPrefs.GetFloat("Activity", 50);
+        //return PlayerPrefs.GetFloat("Activity", 50); TODO: ponerlo en json
+        return 50;
     }
 
     public static void SaveHunger(float hungerValue)
@@ -116,7 +118,8 @@ public static class DataStorage
 
     public static float LoadHunger()
     {
-        return PlayerPrefs.GetFloat("Hunger", 50);
+        //return PlayerPrefs.GetFloat("Hunger", 50); TODO: ponerlo en json
+        return 50;
     }
 
     public static void SaveCurrentScore(int currentScore)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using BehaviorTree;
 
 namespace Master.Domain.BehaviorTree.Glycemia
@@ -10,6 +11,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
+            Debug.LogWarning("ATRIBUTE: CHECK INSULINE");  // TODO: BORRAR
             if (AttributeManager.Instance.activityValue <= 20)
             {
                 return NodeState.SUCCESS;

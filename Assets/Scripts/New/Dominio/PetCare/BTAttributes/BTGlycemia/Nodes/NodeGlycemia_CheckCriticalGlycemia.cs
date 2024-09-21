@@ -11,6 +11,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
+            Debug.LogWarning("ATRIBUTE: CHECK CRITICAL GLYCEMIA");  // TODO: BORRAR
             if (AttributeManager.Instance.glycemiaValue <= 40)
             {
                 return NodeState.SUCCESS;

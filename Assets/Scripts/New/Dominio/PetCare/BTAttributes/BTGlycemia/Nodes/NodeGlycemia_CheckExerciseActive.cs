@@ -11,6 +11,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
+            Debug.LogWarning("ATRIBUTE: CHECK EXERCISE");  // TODO: BORRAR
             if (AttributeManager.Instance.isExerciseEffectActive)
             {
                 return NodeState.SUCCESS;

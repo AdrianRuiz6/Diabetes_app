@@ -12,7 +12,6 @@ namespace Master.Domain.Events
         public static Action<int> OnModifyGlycemia;
         public static Action<int> OnModifyActivity;
         public static Action<int> OnModifyHunger;
-        public static Action<string> OnActivateCoolDown;
-        public static Action<string> OnDeactivateCoolDown;
+        public static Action<string, float> OnStartTimerCD;
     }
 }

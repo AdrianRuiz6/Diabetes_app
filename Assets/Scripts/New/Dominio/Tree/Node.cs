@@ -36,7 +36,7 @@ namespace BehaviorTree
 
         private Dictionary<string, object> _dataContext = new Dictionary<string, object>();  //Estructura para compartir datos entre los nodos. Diferencia con FSMs
 
-        public void setData(string key, object value)  //Para asociar un string a un valor que qeramos y se almacene ene l doccionario.
+        public void setData(string key, object value)  //Para asociar un string a un valor que queramos y se almacene ene l doccionario.
         {
             _dataContext[key] = value;
         }

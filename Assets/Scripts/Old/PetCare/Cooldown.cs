@@ -8,61 +8,76 @@ using UnityEngine.UI;
 public class Cooldown : MonoBehaviour
 {
     [SerializeField] private string _myID;
-    private Image _image;
+    [SerializeField] private Image _backgroundImageCD;
+    [SerializeField] private Image _iconImageCD;
 
+    private Button _button;
     private bool _isInCD;
+
+    private float _time;
+    private float _maxTime;
+    private float _fillAmount;
 
     void Start()
     {
-        _image = GetComponent<Image>();
+        _button = GetComponent<Button>();
+
+        _maxTime = AttributeManager.Instance.timeButtonsCD;
         _isInCD = false;
+        _backgroundImageCD.enabled = false;
+        _iconImageCD.enabled = false;
     }
 
     private void Awake()
     {
-        GameEventsPetCare.OnActivateCoolDown += ActivateCoolDown;
-        GameEventsPetCare.OnDeactivateCoolDown += DeactivateCoolDown;
+        GameEventsPetCare.OnStartTimerCD += StartTimerCD;
     }
 
-    void OnDestroy() 
+    void OnDestroy()
     {
-        GameEventsPetCare.OnActivateCoolDown -= ActivateCoolDown;
-        GameEventsPetCare.OnDeactivateCoolDown -= DeactivateCoolDown;
+        GameEventsPetCare.OnStartTimerCD -= StartTimerCD;
     }
 
     void Update()
     {
-        if (_isInCD)
+        if (_time > 0)
         {
-            ActivateEffect();
-        }
-    }
+            _time -= Time.deltaTime;
 
-    private void ActivateCoolDown(string externalID)
-    {
-        if(externalID == _myID)
-        {
-            _isInCD = true;
-        }
-    }
+            // Visualilzación radial del CoolDown.
+            _fillAmount = _time / _maxTime;
+            _fillAmount = Mathf.Clamp01(_fillAmount);
 
-    private void DeactivateCoolDown(string externalID)
-    {
-        if(externalID == _myID)
+            _backgroundImageCD.fillAmount = _fillAmount;
+            _iconImageCD.fillAmount = _fillAmount;
+        }
+
+        if (_time <= 0)
         {
             _isInCD = false;
+            _backgroundImageCD.enabled = false;
+            _iconImageCD.enabled = false;
+        }
 
-            DeactivateEffect();
+        if (_isInCD)
+        {
+            _button.interactable = false;
+        }
+        else
+        {
+            _button.interactable = true;
         }
     }
 
-    private void ActivateEffect()
+    private void StartTimerCD(string externalID, float timeCD)
     {
-        // TODO: efecto de activado.
-    }
+        if (externalID == _myID)
+        {
+            _isInCD = true;
+            _time = timeCD;
 
-    private void DeactivateEffect()
-    {
-        // TODO: efecto de desactivado.
+            _backgroundImageCD.enabled = true;
+            _iconImageCD.enabled = true;
+        }
     }
 }

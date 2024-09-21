@@ -11,6 +11,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
+            Debug.LogWarning("ATRIBUTE: CHECK FOOD");  // TODO: BORRAR
             if (AttributeManager.Instance.isFoodEffectActive)
             {
                 return NodeState.SUCCESS;

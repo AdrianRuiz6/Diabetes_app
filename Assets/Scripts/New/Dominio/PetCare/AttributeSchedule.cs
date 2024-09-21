@@ -9,7 +9,8 @@ public class AttributeSchedule : MonoBehaviour
     public static AttributeSchedule Instance;
     private DateTime _lastTimeInterval;
 
-    private float _updateInterval;
+    public float UpdateInterval = 60; // TODO: Cambiar a 500
+    private float _currentUpdateInterval;
 
     void Awake()
     {
@@ -27,7 +28,7 @@ public class AttributeSchedule : MonoBehaviour
     private void OnDestroy()
     {
         TimeSpan timePassedInterval = DateTime.Now - _lastTimeInterval;
-        float timeRestInterval = _updateInterval - (float)timePassedInterval.TotalSeconds;
+        float timeRestInterval = _currentUpdateInterval - (float)timePassedInterval.TotalSeconds;
 
         DataStorage.SaveTimeLeftIntervalIA(timeRestInterval);
     }
@@ -35,7 +36,7 @@ public class AttributeSchedule : MonoBehaviour
     public void UpdateTimer(float newTime)
     {
         StopAllCoroutines();
-        _updateInterval = newTime;
+        _currentUpdateInterval = newTime;
         StartCoroutine(TimerAttributes(newTime));
     }
 
@@ -48,8 +49,8 @@ public class AttributeSchedule : MonoBehaviour
         while (true)
         {
             _lastTimeInterval = DateTime.Now;
-            _updateInterval = 500;
-            yield return new WaitForSeconds(_updateInterval);
+            _currentUpdateInterval = UpdateInterval;
+            yield return new WaitForSeconds(_currentUpdateInterval);
             GameEventsPetCare.OnExecutingAttributes?.Invoke();
         }
     }

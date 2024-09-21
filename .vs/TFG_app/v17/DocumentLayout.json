@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\persistencia\\datastorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\presentacion\\general\\pagesliding.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\general\\pagesliding.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|c:\\users\\arues\\onedrive\\escritorio\\tfg_app\\assets\\scripts\\new\\dominio\\questions\\statemachine\\agentquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\statemachine\\agentquestions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\presentacion\\petcare\\buttons\\buttonspetcare.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\petcare\\buttons\\buttonspetcare.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\presentacion\\questions\\ui_question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\questions\\ui_question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\presentacion\\petcare\\buttons\\button_insulin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\petcare\\buttons\\button_insulin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\questionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\petcare\\attributemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\petcare\\attributemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\dominio\\questions\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\dominio\\questions\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\assets\\scripts\\new\\presentacion\\petcare\\buttons\\button_exercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{533CCDEE-5D9C-67FD-1622-BB48F2D945FD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\presentacion\\petcare\\buttons\\button_exercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,69 +30,68 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AgentQuestions.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\StateMachine\\AgentQuestions.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAhAAAA",
+              "DocumentIndex": 0,
+              "Title": "PageSliding.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\General\\PageSliding.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\General\\PageSliding.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\General\\PageSliding.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\General\\PageSliding.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABgAAABLAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T15:49:40.129Z",
+              "WhenOpened": "2024-09-15T18:45:07.62Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DataStorage.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Persistencia\\DataStorage.cs",
-              "ViewState": "AQIAAJEAAAAAAAAAAAAQwNUAAAAJAAAA",
+              "DocumentIndex": 1,
+              "Title": "ButtonsPetCare.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\ButtonsPetCare.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\ButtonsPetCare.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\ButtonsPetCare.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\ButtonsPetCare.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAABQwCMAAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T14:21:22.012Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T17:42:45.711Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Question.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\Question.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAAAAAA",
+              "Title": "Button_Exercise.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Exercise.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Exercise.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Exercise.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Exercise.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T14:23:15.063Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "QuestionManager.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\Questions\\QuestionManager.cs",
-              "ViewState": "AQIAACUAAAAAAAAAAAAcwAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T14:19:55.679Z"
+              "WhenOpened": "2024-09-15T15:53:41.536Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "UI_Question.cs",
-              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\Questions\\UI_Question.cs",
-              "ViewState": "AQIAAE0AAAAAAAAAAAAAAN8AAABoAAAA",
+              "Title": "Button_Insulin.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Insulin.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Insulin.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Insulin.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Presentacion\\PetCare\\Buttons\\Button_Insulin.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T11:41:42.919Z"
+              "WhenOpened": "2024-09-15T15:53:41.22Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AttributeManager.cs",
+              "DocumentMoniker": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\PetCare\\AttributeManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Dominio\\PetCare\\AttributeManager.cs",
+              "ToolTip": "C:\\Users\\arues\\OneDrive\\Escritorio\\TFG_app\\Assets\\Scripts\\New\\Dominio\\PetCare\\AttributeManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\New\\Dominio\\PetCare\\AttributeManager.cs",
+              "ViewState": "AQIAAOIAAAAAAAAAAADgv/sAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-14T16:31:25.524Z"
             }
           ]
         }

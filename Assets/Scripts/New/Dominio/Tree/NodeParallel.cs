@@ -10,24 +10,39 @@ public class NodeParallel : Node
 
     public override NodeState Evaluate()
     {
+        bool hasSuccess = false;
         bool anyChildIsRunning = false;
         foreach (Node child in children)
         {
             switch (child.Evaluate())
             {
                 case NodeState.FAILURE:
-                    continue;
+                    break;
                 case NodeState.SUCCESS:
-                    continue;
+                    hasSuccess = true;
+                    break;
                 case NodeState.RUNNING:
                     anyChildIsRunning = true;
-                    continue;
+                    break;
                 default:
                     state = NodeState.SUCCESS;
                     return state;
             }
         }
-        state = anyChildIsRunning ? NodeState.RUNNING : NodeState.SUCCESS;
+
+        if (anyChildIsRunning)
+        {
+            state = NodeState.RUNNING;
+        }
+        else if (hasSuccess)
+        {
+            state = NodeState.SUCCESS;
+        }
+        else
+        {
+            state = NodeState.FAILURE;
+        }
+
         return state;
     }
 }

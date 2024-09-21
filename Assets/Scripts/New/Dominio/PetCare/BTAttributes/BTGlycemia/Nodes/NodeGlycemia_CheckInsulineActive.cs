@@ -11,6 +11,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate()
         {
+            Debug.LogWarning("ATRIBUTE: CHECK INSULINE");  // TODO: BORRAR
             if (AttributeManager.Instance.isInsulinEffectActive)
             {
                 return NodeState.SUCCESS;
