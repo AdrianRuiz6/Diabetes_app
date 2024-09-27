@@ -6,5 +6,5 @@ using UnityEngine;
 public static class GameEventsScore
 {
     public static Action<int> OnModifyCurrentScore;
-    public static Action<int> OnModifyHigherScore;
+    public static Action<int> OnModifyHighestScore;
 }

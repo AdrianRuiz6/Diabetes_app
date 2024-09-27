@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,10 +9,10 @@ namespace BehaviorTree
         public NodeSelector() : base() { }
         public NodeSelector(List<Node> children): base(children) { }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(DateTime currentTime)
         {
             foreach (Node child in children)
-                switch (child.Evaluate())
+                switch (child.Evaluate(currentTime))
                 {
                     case NodeState.FAILURE:
                         continue;

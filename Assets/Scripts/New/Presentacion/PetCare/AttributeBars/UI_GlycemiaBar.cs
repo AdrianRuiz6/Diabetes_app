@@ -1,4 +1,5 @@
 using Master.Domain.Events;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class UI_GlycemiaBar : MonoBehaviour
         GameEventsPetCare.OnModifyGlycemia -= UpdateVisualBar;
     }
 
-    private void UpdateVisualBar(int newGlucoseValue)
+    private void UpdateVisualBar(int newGlucoseValue, DateTime? currentDataTime)
     {
         _currentHungerValue = Mathf.Clamp(_currentHungerValue + newGlucoseValue, 0, 100);
         float amount = _currentHungerValue / _maxGlucose;

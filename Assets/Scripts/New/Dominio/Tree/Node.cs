@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -29,7 +30,7 @@ namespace BehaviorTree
             }
         }
 
-        public virtual NodeState Evaluate() => NodeState.FAILURE;  //La declaramos 'virtual' para que cada Nodo luego implemente su propia evaluación
+        public virtual NodeState Evaluate(DateTime currentDateTime) => NodeState.FAILURE;  //La declaramos 'virtual' para que cada Nodo luego implemente su propia evaluación
 
 
         //Manejo de datos compartidos entre nodos en el árbol

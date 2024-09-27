@@ -1,4 +1,5 @@
 using BehaviorTree;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,13 +9,13 @@ public class NodeParallel : Node
     public NodeParallel() : base() { }
     public NodeParallel(List<Node> children) : base(children) { }
 
-    public override NodeState Evaluate()
+    public override NodeState Evaluate(DateTime currentTime)
     {
         bool hasSuccess = false;
         bool anyChildIsRunning = false;
         foreach (Node child in children)
         {
-            switch (child.Evaluate())
+            switch (child.Evaluate(currentTime))
             {
                 case NodeState.FAILURE:
                     break;

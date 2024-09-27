@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 using Master.Domain.Events;
+using System;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
@@ -10,9 +11,9 @@ namespace Master.Domain.BehaviorTree.Glycemia
     {
         public NodeGlycemia_ApplyFoodActive() { }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(DateTime currentDateTime)
         {
-            GameEventsPetCare.OnModifyGlycemia?.Invoke(+5);
+            GameEventsPetCare.OnModifyGlycemia?.Invoke(+5, currentDateTime);
             return NodeState.SUCCESS;
         }
     }

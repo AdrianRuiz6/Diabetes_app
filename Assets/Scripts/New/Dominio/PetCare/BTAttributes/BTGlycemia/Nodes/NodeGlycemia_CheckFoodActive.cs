@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
+using System;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
@@ -9,7 +10,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
     {
         public NodeGlycemia_CheckFoodActive() { }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(DateTime currentDateTime)
         {
             Debug.LogWarning("ATRIBUTE: CHECK FOOD");  // TODO: BORRAR
             if (AttributeManager.Instance.isFoodEffectActive)

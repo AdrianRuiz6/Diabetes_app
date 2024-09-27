@@ -1,4 +1,5 @@
 using Master.Domain.Events;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class UI_HungerBar : MonoBehaviour
         GameEventsPetCare.OnModifyHunger -= UpdateVisualBar;
     }
 
-    private void UpdateVisualBar(int newHungerValue)
+    private void UpdateVisualBar(int newHungerValue, DateTime? currentDateTime)
     {
         _currentHungerValue = Mathf.Clamp(_currentHungerValue + newHungerValue, 0, 100);
         float amount = _currentHungerValue / _maxHunger;

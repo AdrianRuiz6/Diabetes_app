@@ -1,3 +1,4 @@
+using DG.Tweening.Plugins.Core.PathCore;
 using Master.Domain.Economy;
 using Master.Domain.States;
 using System;
@@ -8,9 +9,241 @@ using System.Linq;
 using System.Net;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public static class DataStorage
 {
+    #region Graph
+    #region Initial and Finish time
+    public static void SaveInitialTime(TimeSpan initialTime)
+    {
+        int hour = initialTime.Hours;
+        PlayerPrefs.SetInt("InitialTime", hour);
+    }
+
+    public static TimeSpan LoadInitialTime()
+    {
+        int hour = PlayerPrefs.GetInt("InitialTime", 9);
+        return new TimeSpan(hour, 0, 0);
+    }
+
+    public static void SaveFinishTime(TimeSpan finishTime)
+    {
+        int hour = finishTime.Hours;
+        PlayerPrefs.SetInt("FinishTime", hour);
+    }
+
+    public static TimeSpan LoadFinishTime()
+    {
+        int hour = PlayerPrefs.GetInt("FinishTime", 23);
+        return new TimeSpan(hour, 0, 0);
+    }
+    #endregion
+
+    #region ButtonGraph
+    public static void SaveInsulinGraph(DateTime dateTime, string information)
+    {
+        string path = $"{Application.persistentDataPath}/InsulinGraphData.txt";
+        SaveButtonGraph(dateTime, information, path);
+    }
+
+    public static List<ButtonData> LoadInsulinGraph()
+    {
+        string path = $"{Application.persistentDataPath}/InsulinGraphData.txt";
+        return LoadButtonGraph(path);
+    }
+    public static void SaveFoodGraph(DateTime dateTime, string information)
+    {
+        string path = $"{Application.persistentDataPath}/FoodGraphData.txt";
+        SaveButtonGraph(dateTime, information, path);
+    }
+
+    public static List<ButtonData> LoadFoodGraph()
+    {
+        string path = $"{Application.persistentDataPath}/FoodGraphData.txt";
+        return LoadButtonGraph(path);
+    }
+
+    public static void SaveExerciseGraph(DateTime dateTime, string information)
+    {
+        string path = $"{Application.persistentDataPath}/ExerciseGraphData.txt";
+        SaveButtonGraph(dateTime, information, path);
+    }
+
+    public static List<ButtonData> LoadExerciseGraph()
+    {
+        string path = $"{Application.persistentDataPath}/ExerciseGraphData.txt";
+        return LoadButtonGraph(path);
+    }
+
+    private static void SaveButtonGraph(DateTime dateTime, string information, string path)
+    {
+        int thresholdDays = 10;
+        ButtonDataList originalButtonList = new ButtonDataList();
+        ButtonDataList newbuttonList = new ButtonDataList();
+        DateTime currentTime = DateTime.Now;
+        DateTime thresholdDate = currentTime.AddDays(-thresholdDays);
+
+        if (File.Exists(path))
+        {
+            string existingJson = File.ReadAllText(path);
+            originalButtonList = JsonUtility.FromJson<ButtonDataList>(existingJson) ?? new ButtonDataList();
+        }
+
+        foreach (ButtonData buttonData in originalButtonList.buttonList)
+        {
+            DateTime currentDateAndTime = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            if (currentDateAndTime < thresholdDate)
+            {
+                continue;
+            }
+            else
+            {
+                newbuttonList.buttonList.Add(buttonData);
+            }
+        }
+
+        ButtonData newButtonData = new ButtonData(dateTime, information);
+        newbuttonList.buttonList.Add(newButtonData);
+
+        string json = JsonUtility.ToJson(newbuttonList, true);
+        using (StreamWriter streamWriter = new StreamWriter(path))
+        {
+            streamWriter.Write(json);
+        }
+    }
+
+    private static List<ButtonData> LoadButtonGraph(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return new List<ButtonData>();
+        }
+
+        string existingJson = null;
+        using (StreamReader streamReader = new StreamReader(path))
+        {
+            existingJson = streamReader.ReadToEnd();
+        }
+
+        ButtonDataList buttonList = JsonUtility.FromJson<ButtonDataList>(existingJson);
+
+        return buttonList.buttonList;
+    }
+    #endregion
+
+    #region AttributeGraph
+    public static void SaveGlycemiaGraph(DateTime dateTime, int number)
+    {
+        string path = $"{Application.persistentDataPath}/GlycemiaGraphData.txt";
+        SaveAttributeGraph(dateTime, number, path);
+    }
+    
+    public static List<AttributeData> LoadGlycemiaGraph()
+    {
+        string path = $"{Application.persistentDataPath}/GlycemiaGraphData.txt";
+        return LoadAttributeGraph(path);
+    }
+    public static void SaveHungerGraph(DateTime dateTime, int number)
+    {
+        string path = $"{Application.persistentDataPath}/HungerGraphData.txt";
+        SaveAttributeGraph(dateTime, number, path);
+    }
+    
+    public static List<AttributeData> LoadHungerGraph()
+    {
+        string path = $"{Application.persistentDataPath}/HungerGraphData.txt";
+        return LoadAttributeGraph(path);
+    }
+
+    public static void SaveActivityGraph(DateTime dateTime, int number)
+    {
+        string path = $"{Application.persistentDataPath}/ActivityGraphData.txt";
+        SaveAttributeGraph(dateTime, number, path);
+    }
+    
+    public static List<AttributeData> LoadActivityGraph()
+    {
+        string path = $"{Application.persistentDataPath}/ActivityGraphData.txt";
+        return LoadAttributeGraph(path);
+    }
+
+    private static void SaveAttributeGraph(DateTime dateTime, int number, string path)
+    {
+        int thresholdDays = 10;
+        AttributeDataList originalAttributeList = new AttributeDataList();
+        AttributeDataList newAttributeList = new AttributeDataList();
+        DateTime currentTime = DateTime.Now;
+        DateTime thresholdDate = currentTime.AddDays(-thresholdDays);
+
+        if (File.Exists(path))
+        {
+            string existingJson = File.ReadAllText(path);
+            originalAttributeList = JsonUtility.FromJson<AttributeDataList>(existingJson) ?? new AttributeDataList();
+        }
+
+        foreach (AttributeData attributeData in originalAttributeList.attributeList)
+        {
+            DateTime currentDateAndTime = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            if (currentDateAndTime < thresholdDate)
+            {
+                continue;
+            }
+            else
+            {
+                newAttributeList.attributeList.Add(attributeData);
+            }
+        }
+
+        AttributeData newAttributeData = new AttributeData(dateTime, number);
+        newAttributeList.attributeList.Add(newAttributeData);
+
+        string json = JsonUtility.ToJson(newAttributeList, true);
+        using (StreamWriter streamWriter = new StreamWriter(path))
+        {
+            streamWriter.Write(json);
+        }
+    }
+
+    private static List<AttributeData> LoadAttributeGraph(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return new List<AttributeData>();
+        }
+
+        string existingJson = null;
+        using(StreamReader streamReader = new StreamReader(path))
+        {
+            existingJson = streamReader.ReadToEnd();
+        }
+
+        AttributeDataList attributeList = JsonUtility.FromJson<AttributeDataList>(existingJson);
+
+        return attributeList.attributeList;
+    }
+    #endregion
+    #endregion
+    public static void SaveIsFirstUsage()
+    {
+        PlayerPrefs.SetInt("IsFirstUsage", 1);
+    }
+
+    public static bool LoadIsFirstUsage()
+    {
+        int firstUsage = PlayerPrefs.GetInt("IsFirstUsage", 0);
+
+        if(firstUsage == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
     public static void SaveDisconnectionDate()
     {
         PlayerPrefs.SetString("DisconnectionDate", DateTime.Now.ToString());
@@ -31,12 +264,12 @@ public static class DataStorage
         return PlayerPrefs.GetFloat("LeftTimeQuestionTimer", 0);
     }
 
-    public static void SaveTimeLeftIntervalIA(float timePassed)
+    public static void SaveRestTimeIntervalSimulator(float timePassed)
     {
         PlayerPrefs.SetFloat("TimeLeft", timePassed);
     }
 
-    public static float LoadTimeLeftIntervalIA()
+    public static float LoadRestTimeIntervalSimulator()
     {
         return PlayerPrefs.GetFloat("TimeLeft", 0);
     }
@@ -94,9 +327,9 @@ public static class DataStorage
         PlayerPrefs.SetFloat("Glycemia", glycemiaValue);
     }
 
-    public static float LoadGlycemia()
+    public static int LoadGlycemia()
     {
-        // return PlayerPrefs.GetFloat("Glycemia", 120); TODO: ponerlo en json
+        //return PlayerPrefs.GetInt("Glycemia", AttributeManager.Instance.initialGlycemiaValue);
         return 120;
     }
 
@@ -105,9 +338,9 @@ public static class DataStorage
         PlayerPrefs.SetFloat("Activity", activityValue);
     }
 
-    public static float LoadActivity()
+    public static int LoadActivity()
     {
-        //return PlayerPrefs.GetFloat("Activity", 50); TODO: ponerlo en json
+        //return PlayerPrefs.GetInt("Activity", AttributeManager.Instance.initialActivityValue);
         return 50;
     }
 
@@ -116,9 +349,9 @@ public static class DataStorage
         PlayerPrefs.SetFloat("Hunger", hungerValue);
     }
 
-    public static float LoadHunger()
+    public static int LoadHunger()
     {
-        //return PlayerPrefs.GetFloat("Hunger", 50); TODO: ponerlo en json
+        //return PlayerPrefs.GetInt("Hunger", AttributeManager.Instance.initialHungerValue);
         return 50;
     }
 
@@ -132,12 +365,12 @@ public static class DataStorage
         return PlayerPrefs.GetInt("CurrentScore", 0);
     }
 
-    public static void SaveHigherScore(int currentScore)
+    public static void SaveHighestScore(int currentScore)
     {
         PlayerPrefs.SetInt("HigherScore", currentScore);
     }
 
-    public static int LoadHigherScore()
+    public static int LoadHighestScore()
     {
         return PlayerPrefs.GetInt("HigherScore", 0);
     }
@@ -219,7 +452,7 @@ public static class DataStorage
             dataList.userPerformanceList.Add(data);
         }
 
-        string json = JsonUtility.ToJson(dataList);
+        string json = JsonUtility.ToJson(dataList, true);
 
         using (StreamWriter streamWriter = new StreamWriter(path))
         {
@@ -271,7 +504,7 @@ public static class DataStorage
     public static List<Question> LoadQuestions()
     {
         string url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmL6z_aRoGzC_IM7f85ga5WoVNv99d4oUYIsjTrLzUgKLUuzc4xXIY8n_TakI-OQ/pub?gid=180804845&single=true&output=csv";
-        string fileCSV = Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
+        string fileCSV = System.IO.Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
 
         List<Question> questions = new List<Question>();
 

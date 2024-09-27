@@ -2,14 +2,15 @@ using Master.Domain.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 
 public class AttributeSchedule : MonoBehaviour
 {
     public static AttributeSchedule Instance;
-    private DateTime _lastTimeInterval;
+    private DateTime _lastTimeInterval = DateTime.Now;
 
-    public float UpdateInterval = 60; // TODO: Cambiar a 500
+    public float UpdateInterval = 500; // TODO: Cambiar a 500: 5 minutos
     private float _currentUpdateInterval;
 
     void Awake()
@@ -23,14 +24,17 @@ public class AttributeSchedule : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        _currentUpdateInterval = UpdateInterval;
+        _lastTimeInterval.AddSeconds(-UpdateInterval);
     }
 
     private void OnDestroy()
     {
         TimeSpan timePassedInterval = DateTime.Now - _lastTimeInterval;
-        float timeRestInterval = _currentUpdateInterval - (float)timePassedInterval.TotalSeconds;
+        float restTimeInterval = _currentUpdateInterval - (float)timePassedInterval.TotalSeconds;
 
-        DataStorage.SaveTimeLeftIntervalIA(timeRestInterval);
+        DataStorage.SaveRestTimeIntervalSimulator(restTimeInterval);
     }
 
     public void UpdateTimer(float newTime)
@@ -44,14 +48,14 @@ public class AttributeSchedule : MonoBehaviour
     {
         _lastTimeInterval = DateTime.Now;
         yield return new WaitForSeconds(timeFirstInterval);
-        GameEventsPetCare.OnExecutingAttributes?.Invoke();
+        GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
 
         while (true)
         {
             _lastTimeInterval = DateTime.Now;
             _currentUpdateInterval = UpdateInterval;
             yield return new WaitForSeconds(_currentUpdateInterval);
-            GameEventsPetCare.OnExecutingAttributes?.Invoke();
+            GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
         }
     }
 }

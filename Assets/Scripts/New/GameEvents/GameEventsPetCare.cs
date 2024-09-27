@@ -7,11 +7,11 @@ namespace Master.Domain.Events
 {
     public static class GameEventsPetCare
     {
-        public static Action OnExecutingAttributes;
+        public static Action <DateTime>OnExecutingAttributes;
         public static Action OnExecutedAttribute;
-        public static Action<int> OnModifyGlycemia;
-        public static Action<int> OnModifyActivity;
-        public static Action<int> OnModifyHunger;
+        public static Action<int, DateTime?> OnModifyGlycemia;
+        public static Action<int, DateTime?> OnModifyActivity;
+        public static Action<int, DateTime?> OnModifyHunger;
         public static Action<string, float> OnStartTimerCD;
     }
 }

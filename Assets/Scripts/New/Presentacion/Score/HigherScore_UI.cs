@@ -9,12 +9,12 @@ public class HigherScore_UI : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsScore.OnModifyHigherScore += ModifyHigherScoreTMP;
+        GameEventsScore.OnModifyHighestScore += ModifyHigherScoreTMP;
     }
 
     private void OnDestroy()
     {
-        GameEventsScore.OnModifyHigherScore -= ModifyHigherScoreTMP;
+        GameEventsScore.OnModifyHighestScore -= ModifyHigherScoreTMP;
     }
 
     void Start()

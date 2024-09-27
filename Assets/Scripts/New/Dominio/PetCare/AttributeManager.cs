@@ -12,9 +12,12 @@ public class AttributeManager : MonoBehaviour
 
     private Mutex mutex = new Mutex();
 
-    public float glycemiaValue { get; private set; }
-    public float activityValue { get; private set; }
-    public float hungerValue { get; private set; }
+    public int initialGlycemiaValue { get; private set; }
+    public int initialActivityValue { get; private set; }
+    public int initialHungerValue { get; private set; }
+    public int glycemiaValue { get; private set; }
+    public int activityValue { get; private set; }
+    public int hungerValue { get; private set; }
 
     [HideInInspector] public DateTime? lastTimeInsulinUsed { get; private set; }
     [HideInInspector] public DateTime? lastTimeExerciseUsed { get; private set; }
@@ -68,12 +71,16 @@ public class AttributeManager : MonoBehaviour
         timeButtonsCD = 20; // TODO: 60 minutos 3600
         timeEffectButtons = 15; // TODO: 30 minutos 1800
 
+        initialGlycemiaValue = 120;
+        initialActivityValue = 75;
+        initialHungerValue = 25;
+
         glycemiaValue = DataStorage.LoadGlycemia();
-        GameEventsPetCare.OnModifyGlycemia?.Invoke(0);
+        GameEventsPetCare.OnModifyGlycemia?.Invoke(0, null);
         activityValue = DataStorage.LoadActivity();
-        GameEventsPetCare.OnModifyActivity?.Invoke(0);
+        GameEventsPetCare.OnModifyActivity?.Invoke(0, null);
         hungerValue = DataStorage.LoadHunger();
-        GameEventsPetCare.OnModifyHunger?.Invoke(0);
+        GameEventsPetCare.OnModifyHunger?.Invoke(0, null);
 
         lastTimeInsulinUsed = DataStorage.LoadLastTimeInsulinUsed();
         lastTimeExerciseUsed = DataStorage.LoadLastTimeExerciseUsed();
@@ -148,7 +155,24 @@ public class AttributeManager : MonoBehaviour
         AISimulator.Instance.Simulate();
     }
 
-    private void ModifyGlycemia(int value)
+    void Update()
+    {
+        TimeSpan currentTime = DateTime.Now.TimeOfDay;
+
+        if(currentTime == LimitHours.Instance.initialTime)
+        {
+            RestartAttributes(DateTime.Now.AddHours(LimitHours.Instance.initialTime.Hours));
+        }
+    }
+
+    public void RestartAttributes(DateTime currentTime)
+    {
+        ModifyGlycemia(initialGlycemiaValue - glycemiaValue, currentTime);
+        ModifyActivity(initialActivityValue - activityValue, currentTime);
+        ModifyHunger(initialHungerValue - hungerValue, currentTime);
+    }
+
+    private void ModifyGlycemia(int value, DateTime? currentDateTime = null)
     {
         mutex.WaitOne();
         try
@@ -162,7 +186,7 @@ public class AttributeManager : MonoBehaviour
         
     }
 
-    private void ModifyActivity(int value)
+    private void ModifyActivity(int value, DateTime? currentDateTime = null)
     {
         mutex.WaitOne();
         try
@@ -175,7 +199,7 @@ public class AttributeManager : MonoBehaviour
         }
     }
 
-    private void ModifyHunger(int value)
+    private void ModifyHunger(int value, DateTime? currentDateTime = null)
     {
         mutex.WaitOne();
         try
@@ -195,7 +219,7 @@ public class AttributeManager : MonoBehaviour
 
         int affectedGlycemia = value * -85;
         Debug.Log($"INSULIN BUTTON -Affected glycemia-: {affectedGlycemia}");
-        ModifyGlycemia(affectedGlycemia);
+        ModifyGlycemia(affectedGlycemia, DateTime.Now);
 
         StartCoroutine(ResetInsulinButton(timeButtonsCD));
         StartCoroutine(ActivateInsulinEffect(timeEffectButtons));
@@ -214,21 +238,21 @@ public class AttributeManager : MonoBehaviour
         switch (intensity)
         {
             case "Intensidad baja":
-                ModifyGlycemia(-30);
-                ModifyActivity(30);
-                ModifyHunger(10);
+                ModifyGlycemia(-30, DateTime.Now);
+                ModifyActivity(30, DateTime.Now);
+                ModifyHunger(10, DateTime.Now);
                 Debug.Log($"EXERCISE BUTTON -Level of intensity-: {intensity}");
                 break;
             case "Intensidad media":
-                ModifyGlycemia(-75);
-                ModifyActivity(50);
-                ModifyHunger(20);
+                ModifyGlycemia(-75, DateTime.Now);
+                ModifyActivity(50, DateTime.Now);
+                ModifyHunger(20, DateTime.Now);
                 Debug.Log($"EXERCISE BUTTON -Level of intensity-: {intensity}");
                 break;
             case "Intensidad alta":
-                ModifyGlycemia(-110);
-                ModifyActivity(70);
-                ModifyHunger(30);
+                ModifyGlycemia(-110, DateTime.Now);
+                ModifyActivity(70, DateTime.Now);
+                ModifyHunger(30, DateTime.Now);
                 Debug.Log($"EXERCISE BUTTON -Level of intensity-: {intensity}");
                 break;
         }
@@ -249,8 +273,8 @@ public class AttributeManager : MonoBehaviour
 
         float affectedGlycemia = ration * 34;
         Debug.Log($"FOOD BUTTON -Affected glycemia-: {affectedGlycemia}");
-        ModifyGlycemia((int)affectedGlycemia);
-        ModifyHunger(-100);
+        ModifyGlycemia((int)affectedGlycemia, DateTime.Now);
+        ModifyHunger(-100, DateTime.Now);
 
         StartCoroutine(ResetFoodButton(timeButtonsCD));
         StartCoroutine(ActivateFoodEffect(timeEffectButtons));

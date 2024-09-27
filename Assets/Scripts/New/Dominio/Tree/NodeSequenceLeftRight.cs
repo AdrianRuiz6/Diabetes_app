@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,9 +18,9 @@ namespace BehaviorTree
                 _index = -1;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(DateTime currentTime)
         {
-            switch (children[_index].Evaluate())
+            switch (children[_index].Evaluate(currentTime))
                 {
                     case NodeState.FAILURE:
                         state = NodeState.FAILURE;

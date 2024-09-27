@@ -1,4 +1,5 @@
 using Master.Domain.Events;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class UI_ActivityBar : MonoBehaviour
         GameEventsPetCare.OnModifyActivity -= UpdateVisualBar;
     }
 
-    private void UpdateVisualBar(int newActivityValue)
+    private void UpdateVisualBar(int newActivityValue, DateTime? currentDateTime)
     {
         _currentActivityValue = Mathf.Clamp(_currentActivityValue + newActivityValue, 0, 100);
         float amount = _currentActivityValue / _maxActivity;

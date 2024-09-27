@@ -22,9 +22,6 @@ public class Button_Food : MonoBehaviour
     private string _resultBot;
     private float _ration;
 
-    private float _maxTimer;
-    private float _timer;
-
     void Start()
     {
         _openButton.onClick.AddListener(OpenSubMenu);
@@ -33,8 +30,6 @@ public class Button_Food : MonoBehaviour
         _searchButton.onClick.AddListener(SearchInformation);
 
         _foodBot = new FoodBot();
-
-        _maxTimer = 3;
     }
 
     private void ActivateSendButton()

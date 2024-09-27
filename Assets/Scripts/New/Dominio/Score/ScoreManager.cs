@@ -9,7 +9,7 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager Instance;
 
     [SerializeField] private int _currentScore;
-    [SerializeField] private int _higherScore;
+    [SerializeField] private int _highestScore;
     private DateTime _lastTimeDisconnection;
 
     void Awake()
@@ -28,15 +28,15 @@ public class ScoreManager : MonoBehaviour
     private void OnDestroy()
     {
         DataStorage.SaveCurrentScore(_currentScore);
-        DataStorage.SaveHigherScore(_higherScore);
+        DataStorage.SaveHighestScore(_highestScore);
     }
 
     private void Start()
     {
         _currentScore = DataStorage.LoadCurrentScore();
-        GameEventsScore.OnModifyCurrentScore(_currentScore);
-        _higherScore = DataStorage.LoadHigherScore();
-        GameEventsScore.OnModifyHigherScore(_higherScore);
+        GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
+        _highestScore = DataStorage.LoadHighestScore();
+        GameEventsScore.OnModifyHighestScore?.Invoke(_highestScore);
         _lastTimeDisconnection = DataStorage.LoadDisconnectionDate();
 
         CheckPastMidnights();
@@ -44,16 +44,16 @@ public class ScoreManager : MonoBehaviour
         StartCoroutine(CheckScoreAtMidnight());
     }
 
-    private void CheckHigherScore()
+    private void CheckHighestScore()
     {
-        if(_currentScore > _higherScore)
+        if(_currentScore > _highestScore)
         {
-            _higherScore = _currentScore;
-            GameEventsScore.OnModifyHigherScore(_higherScore);
+            _highestScore = _currentScore;
+            GameEventsScore.OnModifyHighestScore?.Invoke(_highestScore);
         }
 
         _currentScore = 0;
-        GameEventsScore.OnModifyCurrentScore(_currentScore);
+        GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
     }
 
     private void CheckPastMidnights()
@@ -63,7 +63,7 @@ public class ScoreManager : MonoBehaviour
 
         if(Mathf.Abs(timeDifference.Days) >= 1)
         {
-            CheckHigherScore();
+            CheckHighestScore();
         }
     }
 
@@ -76,14 +76,14 @@ public class ScoreManager : MonoBehaviour
 
             yield return new WaitForSeconds((float)(nextMidnight - now).TotalSeconds);
 
-            CheckHigherScore();
+            CheckHighestScore();
         }
     }
 
     public void AddScore(int score)
     {
         _currentScore += score;
-        GameEventsScore.OnModifyCurrentScore(_currentScore);
+        GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
     }
 
     public void SubstractScore(int score)
@@ -91,12 +91,12 @@ public class ScoreManager : MonoBehaviour
         if(_currentScore - score < 0)
         {
             _currentScore = 0;
-            GameEventsScore.OnModifyCurrentScore(0);
+            GameEventsScore.OnModifyCurrentScore?.Invoke(0);
         }
         else
         {
             _currentScore -= score;
-            GameEventsScore.OnModifyCurrentScore(_currentScore);
+            GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
         }
     }
 }

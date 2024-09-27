@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2939794669868973676}
   - component: {fileID: 211180855071301780}
   - component: {fileID: 6658401846174871694}
+  - component: {fileID: 4948329354730889259}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timerPanel: {fileID: 0}
-  _secondsUntilQuestions: 5
+  _secondsUntilQuestions: 30
   _timerFillBar: {fileID: 0}
   _timerColorGradient:
     serializedVersion: 2
@@ -104,3 +105,19 @@ MonoBehaviour:
   _closeAdvice_Btn: {fileID: 0}
   _advice_TMP: {fileID: 0}
   _nextQuestion_Btn: {fileID: 0}
+  _winPointsPrefab: {fileID: 5794816516804160654, guid: c431406a54c0eae48b05d29f3950cac0, type: 3}
+  _loosePointsPrefab: {fileID: 5711499129701505220, guid: 6f06889dad53d994ba019b10714fcf68, type: 3}
+  _winCoinsPrefab: {fileID: 2436229704765043735, guid: e43e4f800a0229c40a658a93dc263048, type: 3}
+  _parentAnimations: {fileID: 0}
+--- !u!114 &4948329354730889259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3356269911105652162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf185675ecfae354ab33cb35a60cd98b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

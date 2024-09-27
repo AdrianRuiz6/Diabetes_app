@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 using Master.Domain.Events;
+using System;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
@@ -10,11 +11,11 @@ namespace Master.Domain.BehaviorTree.Glycemia
     {
         public NodeGlycemia_DefaultGlycemia() { }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(DateTime currentTime)
         {
             Debug.LogWarning("ATRIBUTE: DEFAULT_Glycemia");  // TODO: BORRAR
             int randomGlycemia = 0;
-            int randomValue = Random.Range(1, 3);
+            int randomValue = UnityEngine.Random.Range(1, 3);
             if(randomValue == 1)
             {
                 randomGlycemia = -5;
@@ -23,7 +24,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
             {
                 randomGlycemia = 5;
             }
-            GameEventsPetCare.OnModifyGlycemia?.Invoke(randomGlycemia);
+            GameEventsPetCare.OnModifyGlycemia?.Invoke(randomGlycemia, currentTime);
             return NodeState.SUCCESS;
         }
     }

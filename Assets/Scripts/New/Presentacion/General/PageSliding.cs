@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PageSwiper : MonoBehaviour, IDragHandler, IEndDragHandler
+public class PageSliding : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     private Vector3 panelLocation;
     [SerializeField] private float percentThreshold = 0.2f;
     [SerializeField] private float easing = 0.5f;
-    [SerializeField] private int totalPages = 1;
-    [SerializeField] private int initialPage = 1;
+    [SerializeField] private int totalPages = 4;
+    [SerializeField] private int initialPage = 3;
     private int currentPage = 1;
 
     void Start()
@@ -57,5 +57,18 @@ public class PageSwiper : MonoBehaviour, IDragHandler, IEndDragHandler
             transform.position = Vector3.Lerp(startpos, endpos, Mathf.SmoothStep(0f, 1f, t));
             yield return null;
         }
+    }
+
+    public void MoveToInitialPage()
+    {
+        int pageDifference = initialPage - currentPage;
+
+        Vector3 newLocation = panelLocation;
+        currentPage = initialPage;
+        newLocation += new Vector3(-Screen.width * pageDifference, 0, 0);
+
+        StartCoroutine(SmoothMove(transform.position, newLocation, easing));
+
+        panelLocation = newLocation;
     }
 }
