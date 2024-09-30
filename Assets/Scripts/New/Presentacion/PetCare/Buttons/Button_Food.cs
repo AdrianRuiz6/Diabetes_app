@@ -89,7 +89,7 @@ public class Button_Food : MonoBehaviour
         Debug.Log($"FOOD BUTTON -Rations parsed-: {_ration}");
 
         // Se envía la información a AttributeManager.
-        AttributeManager.Instance.ActivateFoodButton(_ration);
+        AttributeManager.Instance.ActivateFoodButton(_ration, _inputTMP.text);
 
         // Se desactiva el panel.
         _submenuPanel.SetActive(false);

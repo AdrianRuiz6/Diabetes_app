@@ -178,6 +178,11 @@ public class AttributeManager : MonoBehaviour
         try
         {
             glycemiaValue = Mathf.Clamp(glycemiaValue + value, 20, 350);
+            if (currentDateTime != null)
+            {
+                DataStorage.SaveGlycemiaGraph(currentDateTime, glycemiaValue);
+                GameEventsGraph.OnUpdatedGlycemiaGraph?.Invoke();
+            }    
         }
         finally
         {
@@ -192,6 +197,11 @@ public class AttributeManager : MonoBehaviour
         try
         {
             activityValue = Mathf.Clamp(activityValue + value, 0, 100);
+            if(currentDateTime != null)
+            {
+                DataStorage.SaveActivityGraph(currentDateTime, activityValue);
+                GameEventsGraph.OnUpdatedActivityGraph?.Invoke();
+            }
         }
         finally
         {
@@ -205,6 +215,11 @@ public class AttributeManager : MonoBehaviour
         try
         {
             hungerValue = Mathf.Clamp(hungerValue + value, 0, 100);
+            if (currentDateTime != null)
+            {
+                DataStorage.SaveHungerGraph(currentDateTime, hungerValue);
+                GameEventsGraph.OnUpdatedHungerGraph?.Invoke();
+            }
         }
         finally
         {
@@ -220,6 +235,20 @@ public class AttributeManager : MonoBehaviour
         int affectedGlycemia = value * -85;
         Debug.Log($"INSULIN BUTTON -Affected glycemia-: {affectedGlycemia}");
         ModifyGlycemia(affectedGlycemia, DateTime.Now);
+
+        // Se guarda la información para la gráfica.
+        string informationGraph = $"";
+        if (affectedGlycemia == 1)
+        {
+            informationGraph = $"{value} unidadad.";
+        }
+        else
+        {
+            informationGraph = $"{value} unidades.";
+        }
+
+        DataStorage.SaveInsulinGraph(DateTime.Now, informationGraph);
+        GameEventsGraph.OnUpdatedInsulinGraph?.Invoke();
 
         StartCoroutine(ResetInsulinButton(timeButtonsCD));
         StartCoroutine(ActivateInsulinEffect(timeEffectButtons));
@@ -257,6 +286,11 @@ public class AttributeManager : MonoBehaviour
                 break;
         }
 
+        // Se guarda la información para la gráfica.
+        string informationGraph = $"{intensity}.";
+        DataStorage.SaveExerciseGraph(DateTime.Now, informationGraph);
+        GameEventsGraph.OnUpdatedExerciseGraph?.Invoke();
+
         StartCoroutine(ResetExerciseButton(timeButtonsCD));
         StartCoroutine(ActivateExerciseEffect(timeEffectButtons));
     }
@@ -266,7 +300,7 @@ public class AttributeManager : MonoBehaviour
         isExerciseButtonInCD = false;
     }
 
-    public void ActivateFoodButton(float ration)
+    public void ActivateFoodButton(float ration, string food)
     {
         isFoodButtonInCD = true;
         lastTimeFoodUsed = DateTime.Now;
@@ -275,6 +309,11 @@ public class AttributeManager : MonoBehaviour
         Debug.Log($"FOOD BUTTON -Affected glycemia-: {affectedGlycemia}");
         ModifyGlycemia((int)affectedGlycemia, DateTime.Now);
         ModifyHunger(-100, DateTime.Now);
+
+        // Se guarda la información para la gráfica.
+        string informationGraph = $"{ration} raciones de {food}.";
+        DataStorage.SaveFoodGraph(DateTime.Now, informationGraph);
+        GameEventsGraph.OnUpdatedFoodGraph?.Invoke();
 
         StartCoroutine(ResetFoodButton(timeButtonsCD));
         StartCoroutine(ActivateFoodEffect(timeEffectButtons));

@@ -41,48 +41,45 @@ public static class DataStorage
     #endregion
 
     #region ButtonGraph
-    public static void SaveInsulinGraph(DateTime dateTime, string information)
+    public static void SaveInsulinGraph(DateTime? dateTime, string information)
     {
         string path = $"{Application.persistentDataPath}/InsulinGraphData.txt";
         SaveButtonGraph(dateTime, information, path);
     }
 
-    public static List<ButtonData> LoadInsulinGraph()
+    public static Dictionary<DateTime, string> LoadInsulinGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/InsulinGraphData.txt";
-        return LoadButtonGraph(path);
+        return LoadButtonGraph(path, requestedDate);
     }
-    public static void SaveFoodGraph(DateTime dateTime, string information)
+    public static void SaveFoodGraph(DateTime? dateTime, string information)
     {
         string path = $"{Application.persistentDataPath}/FoodGraphData.txt";
         SaveButtonGraph(dateTime, information, path);
     }
 
-    public static List<ButtonData> LoadFoodGraph()
+    public static Dictionary<DateTime, string> LoadFoodGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/FoodGraphData.txt";
-        return LoadButtonGraph(path);
+        return LoadButtonGraph(path, requestedDate);
     }
 
-    public static void SaveExerciseGraph(DateTime dateTime, string information)
+    public static void SaveExerciseGraph(DateTime? dateTime, string information)
     {
         string path = $"{Application.persistentDataPath}/ExerciseGraphData.txt";
         SaveButtonGraph(dateTime, information, path);
     }
 
-    public static List<ButtonData> LoadExerciseGraph()
+    public static Dictionary<DateTime, string> LoadExerciseGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/ExerciseGraphData.txt";
-        return LoadButtonGraph(path);
+        return LoadButtonGraph(path, requestedDate);
     }
 
-    private static void SaveButtonGraph(DateTime dateTime, string information, string path)
+    private static void SaveButtonGraph(DateTime? dateTime, string information, string path)
     {
-        int thresholdDays = 10;
         ButtonDataList originalButtonList = new ButtonDataList();
         ButtonDataList newbuttonList = new ButtonDataList();
-        DateTime currentTime = DateTime.Now;
-        DateTime thresholdDate = currentTime.AddDays(-thresholdDays);
 
         if (File.Exists(path))
         {
@@ -93,17 +90,11 @@ public static class DataStorage
         foreach (ButtonData buttonData in originalButtonList.buttonList)
         {
             DateTime currentDateAndTime = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            if (currentDateAndTime < thresholdDate)
-            {
-                continue;
-            }
-            else
-            {
-                newbuttonList.buttonList.Add(buttonData);
-            }
+            newbuttonList.buttonList.Add(buttonData);
         }
 
-        ButtonData newButtonData = new ButtonData(dateTime, information);
+        DateTime? dateTimeModified = new DateTime(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day, dateTime.Value.Hour, dateTime.Value.Minute, 0);
+        ButtonData newButtonData = new ButtonData(dateTimeModified, information);
         newbuttonList.buttonList.Add(newButtonData);
 
         string json = JsonUtility.ToJson(newbuttonList, true);
@@ -113,11 +104,11 @@ public static class DataStorage
         }
     }
 
-    private static List<ButtonData> LoadButtonGraph(string path)
+    private static Dictionary<DateTime, string> LoadButtonGraph(string path, DateTime? requestedDate)
     {
         if (!File.Exists(path))
         {
-            return new List<ButtonData>();
+            return new Dictionary<DateTime, string>();
         }
 
         string existingJson = null;
@@ -126,55 +117,60 @@ public static class DataStorage
             existingJson = streamReader.ReadToEnd();
         }
 
-        ButtonDataList buttonList = JsonUtility.FromJson<ButtonDataList>(existingJson);
+        ButtonDataList buttonDataList = JsonUtility.FromJson<ButtonDataList>(existingJson);
 
-        return buttonList.buttonList;
+        Dictionary<DateTime, string> askedDateButtonDictionary = new Dictionary<DateTime, string>();
+        foreach (ButtonData buttonData in buttonDataList.buttonList)
+        {
+            DateTime currentDate = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            if (requestedDate.Value.Date == currentDate.Date)
+            {
+                askedDateButtonDictionary.Add(currentDate, buttonData.Information);
+            }
+        }
+
+        return askedDateButtonDictionary;
     }
     #endregion
 
     #region AttributeGraph
-    public static void SaveGlycemiaGraph(DateTime dateTime, int number)
+    public static void SaveGlycemiaGraph(DateTime? dateTime, int number)
     {
         string path = $"{Application.persistentDataPath}/GlycemiaGraphData.txt";
         SaveAttributeGraph(dateTime, number, path);
     }
-    
-    public static List<AttributeData> LoadGlycemiaGraph()
+    public static Dictionary<DateTime, int> LoadGlycemiaGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/GlycemiaGraphData.txt";
-        return LoadAttributeGraph(path);
+        return LoadAttributeGraph(path, requestedDate);
     }
-    public static void SaveHungerGraph(DateTime dateTime, int number)
+
+    public static void SaveHungerGraph(DateTime? dateTime, int number)
     {
         string path = $"{Application.persistentDataPath}/HungerGraphData.txt";
         SaveAttributeGraph(dateTime, number, path);
     }
-    
-    public static List<AttributeData> LoadHungerGraph()
+    public static Dictionary<DateTime, int> LoadHungerGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/HungerGraphData.txt";
-        return LoadAttributeGraph(path);
+        return LoadAttributeGraph(path, requestedDate);
     }
 
-    public static void SaveActivityGraph(DateTime dateTime, int number)
+    public static void SaveActivityGraph(DateTime? dateTime, int number)
     {
         string path = $"{Application.persistentDataPath}/ActivityGraphData.txt";
         SaveAttributeGraph(dateTime, number, path);
     }
-    
-    public static List<AttributeData> LoadActivityGraph()
+    public static Dictionary<DateTime, int> LoadActivityGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/ActivityGraphData.txt";
-        return LoadAttributeGraph(path);
+        return LoadAttributeGraph(path, requestedDate);
     }
 
-    private static void SaveAttributeGraph(DateTime dateTime, int number, string path)
+    private static void SaveAttributeGraph(DateTime? dateTime, int number, string path)
     {
-        int thresholdDays = 10;
         AttributeDataList originalAttributeList = new AttributeDataList();
         AttributeDataList newAttributeList = new AttributeDataList();
-        DateTime currentTime = DateTime.Now;
-        DateTime thresholdDate = currentTime.AddDays(-thresholdDays);
 
         if (File.Exists(path))
         {
@@ -185,17 +181,11 @@ public static class DataStorage
         foreach (AttributeData attributeData in originalAttributeList.attributeList)
         {
             DateTime currentDateAndTime = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            if (currentDateAndTime < thresholdDate)
-            {
-                continue;
-            }
-            else
-            {
-                newAttributeList.attributeList.Add(attributeData);
-            }
+            newAttributeList.attributeList.Add(attributeData);
         }
 
-        AttributeData newAttributeData = new AttributeData(dateTime, number);
+        DateTime? dateTimeModified = new DateTime(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day, dateTime.Value.Hour, dateTime.Value.Minute, 0);
+        AttributeData newAttributeData = new AttributeData(dateTimeModified, number);
         newAttributeList.attributeList.Add(newAttributeData);
 
         string json = JsonUtility.ToJson(newAttributeList, true);
@@ -204,12 +194,11 @@ public static class DataStorage
             streamWriter.Write(json);
         }
     }
-
-    private static List<AttributeData> LoadAttributeGraph(string path)
+    private static Dictionary<DateTime, int> LoadAttributeGraph(string path, DateTime? requestedDate)
     {
         if (!File.Exists(path))
         {
-            return new List<AttributeData>();
+            return new Dictionary<DateTime, int>();
         }
 
         string existingJson = null;
@@ -218,9 +207,19 @@ public static class DataStorage
             existingJson = streamReader.ReadToEnd();
         }
 
-        AttributeDataList attributeList = JsonUtility.FromJson<AttributeDataList>(existingJson);
+        AttributeDataList attributeDataList = JsonUtility.FromJson<AttributeDataList>(existingJson);
 
-        return attributeList.attributeList;
+        Dictionary<DateTime, int> askedDateAttributeDictionary = new Dictionary<DateTime, int>();
+        foreach (AttributeData attributeData in attributeDataList.attributeList)
+        {
+            DateTime currentDate = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            if (requestedDate.Value.Date == currentDate.Date)
+            {
+                askedDateAttributeDictionary.Add(currentDate, attributeData.Value);
+            }
+        }
+
+        return askedDateAttributeDictionary;
     }
     #endregion
     #endregion

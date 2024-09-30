@@ -7,9 +7,9 @@ using UnityEngine;
 public class AttributeData
 {
     public string DateAndTime;
-    public float Value;
+    public int Value;
 
-    public AttributeData(DateTime dateTime, float value)
+    public AttributeData(DateTime? dateTime, int value)
     {
         this.DateAndTime = dateTime.ToString();
         this.Value = value;
