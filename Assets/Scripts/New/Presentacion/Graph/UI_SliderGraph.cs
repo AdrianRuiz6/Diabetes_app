@@ -68,10 +68,8 @@ public class UI_SliderGraph : MonoBehaviour
         _currentDate = newCurrentDate;
         LoadData();
 
-        _insulinInfo_TMP.text = "---";
-        _exerciseInfo_TMP.text = "---";
-        _foodInfo_TMP.text = "---";
-        ChangeValue(0);
+        _slider.SetValueWithoutNotify(0);
+        UpdateAdditionalInfo(0);
     }
 
     // Se coloca en el valor disponible más cercano, escribe la fecha en el TMP correspondiente
@@ -92,7 +90,7 @@ public class UI_SliderGraph : MonoBehaviour
     {
         if(_availableTimes.Count <= 0)
         {
-            return value;
+            return 0;
         }
 
         int closeValue = GetSliderValueAccordingTime(_availableTimes[0]);
@@ -113,11 +111,54 @@ public class UI_SliderGraph : MonoBehaviour
         return closeValue;
     }
 
-    // TODO: Escribe la fecha en el TMP correspondiente y actualiza los datos de la información de los botones.
+    // Escribe la fecha en el TMP correspondiente y actualiza los datos de la información de los botones.
     private void UpdateAdditionalInfo(int value)
     {
         DateTime currentTime = GetTimeAccordingSliderValue(value);
-        _time_TMP.text = $"{currentTime}";
+        _time_TMP.text = $"{currentTime.TimeOfDay}";
+
+        bool isInsulinInfoFound = false;
+        bool isExerciseInfoFound = false;
+        bool isFoodInfoFound = false;
+
+        foreach(KeyValuePair<DateTime, String> kvp in _insulinInfo)
+        {
+            if(currentTime.TimeOfDay == kvp.Key.TimeOfDay)
+            {
+                _insulinInfo_TMP.text = kvp.Value.ToString();
+                isInsulinInfoFound = true;
+            }
+        }
+        if(isInsulinInfoFound == false)
+        {
+            _insulinInfo_TMP.text = "---";
+        }
+
+        foreach (KeyValuePair<DateTime, String> kvp in _exerciseInfo)
+        {
+            if (currentTime.TimeOfDay == kvp.Key.TimeOfDay)
+            {
+                _exerciseInfo_TMP.text = kvp.Value.ToString();
+                isExerciseInfoFound = true;
+            }
+        }
+        if (isExerciseInfoFound == false)
+        {
+            _exerciseInfo_TMP.text = "---";
+        }
+
+        foreach (KeyValuePair<DateTime, String> kvp in _foodInfo)
+        {
+            if (currentTime.TimeOfDay == kvp.Key.TimeOfDay)
+            {
+                _foodInfo_TMP.text = kvp.Value.ToString();
+                isFoodInfoFound = true;
+            }
+        }
+        if (isFoodInfoFound == false)
+        {
+            _foodInfo_TMP.text = "---";
+        }
     }
 
     private void ModifyInitialHour(int hour)
@@ -142,7 +183,7 @@ public class UI_SliderGraph : MonoBehaviour
     {
         DateTime additionalTime = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, sliderValue / 60, sliderValue % 60, 0);
         DateTime minimumTime = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, _minHour, 0, 0);
-        DateTime time = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, minimumTime.Hour + additionalTime.Hour, additionalTime.Minute, 0); ;
+        DateTime time = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, minimumTime.Hour + additionalTime.Hour, additionalTime.Minute, 0);
         return time;
     }
 

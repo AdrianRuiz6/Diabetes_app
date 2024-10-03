@@ -79,7 +79,7 @@ public static class DataStorage
     private static void SaveButtonGraph(DateTime? dateTime, string information, string path)
     {
         ButtonDataList originalButtonList = new ButtonDataList();
-        ButtonDataList newbuttonList = new ButtonDataList();
+        ButtonDataList newButtonList = new ButtonDataList();
 
         if (File.Exists(path))
         {
@@ -89,15 +89,14 @@ public static class DataStorage
 
         foreach (ButtonData buttonData in originalButtonList.buttonList)
         {
-            DateTime currentDateAndTime = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            newbuttonList.buttonList.Add(buttonData);
+            // DateTime currentDateAndTime = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            newButtonList.buttonList.Add(buttonData);
         }
 
-        DateTime? dateTimeModified = new DateTime(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day, dateTime.Value.Hour, dateTime.Value.Minute, 0);
-        ButtonData newButtonData = new ButtonData(dateTimeModified, information);
-        newbuttonList.buttonList.Add(newButtonData);
+        ButtonData newButtonData = new ButtonData(dateTime, information);
+        newButtonList.buttonList.Add(newButtonData);
 
-        string json = JsonUtility.ToJson(newbuttonList, true);
+        string json = JsonUtility.ToJson(newButtonList, true);
         using (StreamWriter streamWriter = new StreamWriter(path))
         {
             streamWriter.Write(json);
@@ -125,7 +124,8 @@ public static class DataStorage
             DateTime currentDate = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
             if (requestedDate.Value.Date == currentDate.Date)
             {
-                askedDateButtonDictionary.Add(currentDate, buttonData.Information);
+                DateTime dateTimeModified = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, currentDate.Minute, 0);
+                askedDateButtonDictionary.Add(dateTimeModified, buttonData.Information);
             }
         }
 
@@ -180,12 +180,11 @@ public static class DataStorage
 
         foreach (AttributeData attributeData in originalAttributeList.attributeList)
         {
-            DateTime currentDateAndTime = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            // DateTime currentDateAndTime = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
             newAttributeList.attributeList.Add(attributeData);
         }
 
-        DateTime? dateTimeModified = new DateTime(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day, dateTime.Value.Hour, dateTime.Value.Minute, 0);
-        AttributeData newAttributeData = new AttributeData(dateTimeModified, number);
+        AttributeData newAttributeData = new AttributeData(dateTime, number);
         newAttributeList.attributeList.Add(newAttributeData);
 
         string json = JsonUtility.ToJson(newAttributeList, true);
@@ -215,7 +214,8 @@ public static class DataStorage
             DateTime currentDate = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
             if (requestedDate.Value.Date == currentDate.Date)
             {
-                askedDateAttributeDictionary.Add(currentDate, attributeData.Value);
+                DateTime dateTimeModified = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, currentDate.Minute, 0);
+                askedDateAttributeDictionary.Add(dateTimeModified, attributeData.Value);
             }
         }
 

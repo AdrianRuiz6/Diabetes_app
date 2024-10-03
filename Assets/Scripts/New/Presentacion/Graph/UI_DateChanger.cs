@@ -12,7 +12,7 @@ public class UI_DateChanger : MonoBehaviour
     [SerializeField] private Button _previousDate;
     [SerializeField] private Button _nextDate;
 
-    private DateTime _currentDate = DateTime.Now;
+    private DateTime _currentDate = DateTime.Now.Date;
 
     void Start()
     {
@@ -36,7 +36,7 @@ public class UI_DateChanger : MonoBehaviour
 
     private void NextDate()
     {
-        if(_currentDate.AddDays(1) <= DateTime.Now.Date)
+        if (_currentDate.AddDays(1) <= DateTime.Now.Date)
         {
             _currentDate = _currentDate.AddDays(1);
             UpdateDate();
