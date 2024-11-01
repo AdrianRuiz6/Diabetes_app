@@ -89,6 +89,7 @@ namespace BehaviorTree
                 {
                     Debug.Log($"FRANJA - Se acaba de SALIR de la franja horaria.");
                     DateTime finishTime = currentDateTime.Date.AddHours(LimitHours.Instance.finishTime.Hours);
+                    finishTime = currentDateTime.Date.AddMinutes(LimitHours.Instance.finishTime.Minutes);
                     AddToEvalueateQueue(finishTime);
                 }
 

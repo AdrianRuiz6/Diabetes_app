@@ -58,6 +58,7 @@ public class UI_SliderGraph : MonoBehaviour
         ModifyInitialHour(LimitHours.Instance.initialTime.Hours);
         ModifyFinishHour(LimitHours.Instance.finishTime.Hours);
 
+        // Iniciar datos fecha actual.
         UpdateDate(DateTime.Now);
 
         _slider.onValueChanged.AddListener(ChangeValue);
