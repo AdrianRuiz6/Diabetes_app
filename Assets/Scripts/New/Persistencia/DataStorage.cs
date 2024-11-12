@@ -23,20 +23,20 @@ public static class DataStorage
 
     public static TimeSpan LoadInitialTime()
     {
-        int hour = PlayerPrefs.GetInt("InitialTime", 9);
+        int hour = PlayerPrefs.GetInt("InitialTime", 16);
         return new TimeSpan(hour, 0, 0);
     }
 
     public static void SaveFinishTime(TimeSpan finishTime)
     {
-        int hour = finishTime.Hours;
+        int hour = finishTime.Hours + 1;
         PlayerPrefs.SetInt("FinishTime", hour);
     }
 
     public static TimeSpan LoadFinishTime()
     {
         int hour = PlayerPrefs.GetInt("FinishTime", 23);
-        return new TimeSpan(hour, 0, 0);
+        return new TimeSpan(hour - 1, 59, 0);
     }
     #endregion
 

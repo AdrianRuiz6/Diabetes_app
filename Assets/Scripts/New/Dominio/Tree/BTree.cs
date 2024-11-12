@@ -59,7 +59,10 @@ namespace BehaviorTree
 
             Debug.Log($"FRANJA - Nueva ejecución -----------");
             // Si está en la franja horaria en los que se mueven los atributos.
-            if (currentDateTime.TimeOfDay >= LimitHours.Instance.initialTime && currentDateTime.TimeOfDay <= LimitHours.Instance.finishTime)
+            if ((LimitHours.Instance.initialTime < LimitHours.Instance.finishTime && 
+    currentDateTime.TimeOfDay >= LimitHours.Instance.initialTime && currentDateTime.TimeOfDay <= LimitHours.Instance.finishTime) ||
+    (LimitHours.Instance.initialTime > LimitHours.Instance.finishTime && 
+    (currentDateTime.TimeOfDay >= LimitHours.Instance.initialTime || currentDateTime.TimeOfDay <= LimitHours.Instance.finishTime)))
             {
                 Debug.Log($"FRANJA - Está DENTRO de la franja horaria");
                 // Si acaba de entrar en la franja horaria calcular el initialTime también.
@@ -84,7 +87,7 @@ namespace BehaviorTree
             }
             else // Si acaba de salir de la franja horaria se calcula el finishTime.
             {
-                Debug.Log($"FRANJA - Está FUERA en la franja horaria");
+                Debug.Log($"FRANJA - Está FUERA en la franja horaria - Start: {LimitHours.Instance.initialTime}; Finish: {LimitHours.Instance.finishTime}");
                 if (previousIsInTime == true)
                 {
                     Debug.Log($"FRANJA - Se acaba de SALIR de la franja horaria.");

@@ -181,7 +181,7 @@ public class AttributeManager : MonoBehaviour
             if (currentDateTime != null)
             {
                 DataStorage.SaveGlycemiaGraph(currentDateTime, glycemiaValue);
-                GameEventsGraph.OnUpdatedGlycemiaGraph?.Invoke();
+                GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
             }    
         }
         finally
@@ -200,7 +200,7 @@ public class AttributeManager : MonoBehaviour
             if(currentDateTime != null)
             {
                 DataStorage.SaveActivityGraph(currentDateTime, activityValue);
-                GameEventsGraph.OnUpdatedActivityGraph?.Invoke();
+                GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Activity);
             }
         }
         finally
@@ -218,7 +218,7 @@ public class AttributeManager : MonoBehaviour
             if (currentDateTime != null)
             {
                 DataStorage.SaveHungerGraph(currentDateTime, hungerValue);
-                GameEventsGraph.OnUpdatedHungerGraph?.Invoke();
+                GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Hunger);
             }
         }
         finally
@@ -248,7 +248,7 @@ public class AttributeManager : MonoBehaviour
         }
 
         DataStorage.SaveInsulinGraph(DateTime.Now, informationGraph);
-        GameEventsGraph.OnUpdatedInsulinGraph?.Invoke();
+        GameEventsGraph.OnUpdatedSolutionGraph?.Invoke();
 
         StartCoroutine(ResetInsulinButton(timeButtonsCD));
         StartCoroutine(ActivateInsulinEffect(timeEffectButtons));
@@ -289,7 +289,7 @@ public class AttributeManager : MonoBehaviour
         // Se guarda la información para la gráfica.
         string informationGraph = $"{intensity}.";
         DataStorage.SaveExerciseGraph(DateTime.Now, informationGraph);
-        GameEventsGraph.OnUpdatedExerciseGraph?.Invoke();
+        GameEventsGraph.OnUpdatedSolutionGraph?.Invoke();
 
         StartCoroutine(ResetExerciseButton(timeButtonsCD));
         StartCoroutine(ActivateExerciseEffect(timeEffectButtons));
@@ -313,7 +313,7 @@ public class AttributeManager : MonoBehaviour
         // Se guarda la información para la gráfica.
         string informationGraph = $"{ration} raciones de {food}.";
         DataStorage.SaveFoodGraph(DateTime.Now, informationGraph);
-        GameEventsGraph.OnUpdatedFoodGraph?.Invoke();
+        GameEventsGraph.OnUpdatedSolutionGraph?.Invoke();
 
         StartCoroutine(ResetFoodButton(timeButtonsCD));
         StartCoroutine(ActivateFoodEffect(timeEffectButtons));

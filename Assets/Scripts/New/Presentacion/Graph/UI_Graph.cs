@@ -8,6 +8,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Experimental.GlobalIllumination;
+
+public enum GraphFilter
+{
+    Glycemia,
+    Activity,
+    Hunger
+}
 
 public class UI_Graph : MonoBehaviour
 {
@@ -16,10 +24,12 @@ public class UI_Graph : MonoBehaviour
 
     private int _minHour = 0;
     private int _maxHour = 0;
-    private Dictionary<DateTime, int> _insulinInfo = new Dictionary<DateTime, int>();
-    private Dictionary<DateTime, int> _exerciseInfo = new Dictionary<DateTime, int>();
-    private Dictionary<DateTime, int> _foodInfo = new Dictionary<DateTime, int>();
+    private Dictionary<DateTime, int> _currentInfo = new Dictionary<DateTime, int>();
     private DateTime _currentDate = DateTime.Now;
+
+    private GraphFilter _currentFilter;
+    private GameObject _graphElements;
+    private Color _lineColor;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _labelPrefab;
@@ -31,9 +41,7 @@ public class UI_Graph : MonoBehaviour
         GameEventsGraph.OnInitialTimeModified += ModifyInitialHour;
         GameEventsGraph.OnFinishTimeModified += ModifyFinishHour;
 
-        //GameEventsGraph.OnUpdatedGlycemiaGraph += LoadData;
-        //GameEventsGraph.OnUpdatedActivityGraph += LoadData;
-        //GameEventsGraph.OnUpdatedHungerGraph += LoadData;
+        GameEventsGraph.OnUpdatedAttributeGraph += SetFilter;
 
         GameEventsGraph.OnUpdatedDateGraph += UpdateDate;
     }
@@ -43,9 +51,7 @@ public class UI_Graph : MonoBehaviour
         GameEventsGraph.OnInitialTimeModified -= ModifyInitialHour;
         GameEventsGraph.OnFinishTimeModified -= ModifyFinishHour;
 
-        //GameEventsGraph.OnUpdatedGlycemiaGraph -= LoadData;
-        //GameEventsGraph.OnUpdatedActivityGraph -= LoadData;
-        //GameEventsGraph.OnUpdatedHungerGraph -= LoadData;
+        GameEventsGraph.OnUpdatedAttributeGraph -= SetFilter;
 
         GameEventsGraph.OnUpdatedDateGraph -= UpdateDate;
     }
@@ -55,63 +61,75 @@ public class UI_Graph : MonoBehaviour
         // Se establece el minimo y máximo de la franja horaria.
         ModifyInitialHour(LimitHours.Instance.initialTime.Hours);
         ModifyFinishHour(LimitHours.Instance.finishTime.Hours);
-        
+
         // Iniciar datos fecha actual.
         UpdateDate(DateTime.Now);
 
-        // TODO: quitar esto
-        List<int> valueList = new List<int>() {250, 250, 56, 45, 30, 0, 0, 15, 13, 17, 25, 37, 40, 36, 33};
-        ShowGraph(valueList);
+        // Creación del gameObject que contenga todos los elementos de la gráfica.
+        _graphElements = new GameObject("Elements");
+        _graphElements.transform.SetParent(_graphContainer, false);
+
+        // Otras inicializaciones.
+        SetFilter(GraphFilter.Glycemia);
     }
 
     private void UpdateDate(DateTime newCurrentDate)
     {
         _currentDate = newCurrentDate;
-        //LoadData();
-
-        // TODO: Limpiar y ponerle los nuevos labels.
-        // TODO: Limpiar y poner los datos de los atributos de la nueva fecha.
+        LoadData();
     }
 
-    // TODO: Carga los datos de los atributos.
-    //private void LoadData()
-    //{
-    //    _insulinInfo.Clear();
-    //    _exerciseInfo.Clear();
-    //    _foodInfo.Clear();
-    //    _availableTimes.Clear(); // TODO: quiza podriamos hacer una lista con las horas puntas
+    private void SetFilter(GraphFilter filter)
+    {
+        _currentFilter = filter;
+        if (_graphElements.transform.childCount > 0)
+        {
+            foreach (Transform child in _graphElements.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+            
+        LoadData();
+        ShowGraph();
+    }
 
-    //    _insulinInfo = DataStorage.LoadInsulinGraph(_currentDate);
-    //    foreach (DateTime newDate in _insulinInfo.Keys)
-    //    {
-    //        if (!_availableTimes.Contains(newDate))
-    //        {
-    //            _availableTimes.Add(newDate);
-    //        }
-    //    }
-    //    _exerciseInfo = DataStorage.LoadExerciseGraph(_currentDate);
-    //    foreach (DateTime newDate in _exerciseInfo.Keys)
-    //    {
-    //        if (!_availableTimes.Contains(newDate))
-    //        {
-    //            _availableTimes.Add(newDate);
-    //        }
-    //    }
-    //    _foodInfo = DataStorage.LoadFoodGraph(_currentDate);
-    //    foreach (DateTime newDate in _foodInfo.Keys)
-    //    {
-    //        if (!_availableTimes.Contains(newDate))
-    //        {
-    //            _availableTimes.Add(newDate);
-    //        }
-    //    }
-    //}
+    private void LoadData()
+    {
+        _currentInfo.Clear();
 
-    private GameObject CreateCircle(Vector2 anchoredPosition) 
+        switch (_currentFilter)
+        {
+            case GraphFilter.Glycemia:
+                _currentInfo = DataStorage.LoadGlycemiaGraph(_currentDate);
+                break;
+            case GraphFilter.Activity:
+                _currentInfo = DataStorage.LoadActivityGraph(_currentDate);
+                break;
+            case GraphFilter.Hunger:
+                _currentInfo = DataStorage.LoadHungerGraph(_currentDate);
+                break;
+        }
+
+        switch (_currentFilter)
+        {
+            case GraphFilter.Glycemia:
+                _lineColor = Color.red;
+                break;
+            case GraphFilter.Activity:
+                _lineColor = Color.yellow;
+                break;
+            case GraphFilter.Hunger:
+                _lineColor = Color.green;
+                break;
+        }
+    }
+
+    private GameObject CreateCircle(Vector2 anchoredPosition)
     {
         GameObject gameObjectCircle = new GameObject("circle", typeof(Image));
         // Asigna el padre del sprite.
-        gameObjectCircle.transform.SetParent(_graphContainer, false);
+        gameObjectCircle.transform.SetParent(_graphElements.transform, false);
         // Le asigna la imágen del círculo al sprite.
         gameObjectCircle.GetComponent<Image>().sprite = _circleSprite;
         // Configura el rectTransform del sprite.
@@ -123,18 +141,36 @@ public class UI_Graph : MonoBehaviour
         return gameObjectCircle;
     }
 
-    private void ShowGraph(List<int> valueList)
+
+
+    private void ShowGraph()
     {
+        int maxHourAux = 0;
+        if (_maxHour < _minHour)
+        {
+            maxHourAux = _maxHour + 24;
+        }
+        else
+        {
+            maxHourAux = _maxHour;
+        }
+        int numSeparations = maxHourAux + 1 - _minHour + 1;
+
         float graphHeight = _graphContainer.sizeDelta.y; // Tamaño máximo de altura.
-        float graphWidth = _graphContainer.sizeDelta.x;// Tamaño máximo de altura.
-        float yMaximum = 250f; // Valor máximo en el eje vertical.
-        float xSize = graphWidth / (valueList.Count - 1); // Distancia horizontal entre punto y punto en el eje horizontal.
+        float graphWidth = _graphContainer.sizeDelta.x;// Tamaño máximo de ancho.
+        float yMaximum = 100f; // Valor máximo en el eje vertical.
+        if (_currentFilter == GraphFilter.Glycemia)
+        {
+            yMaximum = 250f;
+        }
+        float xSize = graphWidth / (numSeparations - 1); // Distancia horizontal entre punto y punto en el eje horizontal.
 
         GameObject lastGameObjectCircle = null;
-        for(int i = 0; i < valueList.Count; i++)
+
+        for (int i = 0; i < numSeparations; i++)
         {
             float xPosition = i * xSize;
-            float yPosition = (valueList[i] / yMaximum) * graphHeight;
+            float yPosition = (_currentInfo.Values.Count / yMaximum) * graphHeight; // TODO: _currentInfo.Values.Count
             GameObject currentGameObjectCircle = CreateCircle(new Vector2(xPosition, yPosition)); // Creación de un punto en la posición actual del gráfico.
             // Unión de un punto con el anterior.
             if (lastGameObjectCircle != null)
@@ -145,16 +181,39 @@ public class UI_Graph : MonoBehaviour
 
             // Colocación de la etiqueta de valor del eje horizontal.
             RectTransform label_X = Instantiate(_labelPrefab).GetComponent<RectTransform>();
-            label_X.SetParent(_graphContainer, false);
+            label_X.SetParent(_graphElements.transform, false);
             label_X.gameObject.SetActive(true);
             label_X.anchorMin = Vector2.zero;
             label_X.anchorMax = Vector2.zero;
             label_X.anchoredPosition = new Vector2(xPosition, -2.5f);
-            label_X.GetComponent<TextMeshProUGUI>().text = "8:00";
+            if (i == numSeparations - 1)
+            {
+                int currentHour = (i + _minHour - 1) % 24;
+                if (currentHour < 10)
+                {
+                    label_X.GetComponent<TextMeshProUGUI>().text = $"0{currentHour}:59";
+                }
+                else
+                {
+                    label_X.GetComponent<TextMeshProUGUI>().text = $"{currentHour}:59";
+                }
+            }
+            else
+            {
+                int currentHour = (i + _minHour) % 24;
+                if (currentHour < 10)
+                {
+                    label_X.GetComponent<TextMeshProUGUI>().text = $"0{currentHour}:00";
+                }
+                else
+                {
+                    label_X.GetComponent<TextMeshProUGUI>().text = $"{currentHour}:00";
+                }
+            }
 
             // Colocación de la linea intermitente de valor del eje horizontal.
             RectTransform flashingLine_X = Instantiate(_flashingLineXPrefab).GetComponent<RectTransform>();
-            flashingLine_X.SetParent(_graphContainer, false);
+            flashingLine_X.SetParent(_graphElements.transform, false);
             flashingLine_X.SetSiblingIndex(1);
             flashingLine_X.gameObject.SetActive(true);
             flashingLine_X.anchorMin = Vector2.zero;
@@ -167,7 +226,7 @@ public class UI_Graph : MonoBehaviour
         {
             // Colocación de la etiqueta de valor del eje vertical.
             RectTransform label_Y = Instantiate(_labelPrefab).GetComponent<RectTransform>();
-            label_Y.SetParent(_graphContainer, false);
+            label_Y.SetParent(_graphElements.transform, false);
             label_Y.gameObject.SetActive(true);
             label_Y.anchorMin = Vector2.zero;
             label_Y.anchorMax = Vector2.zero;
@@ -176,7 +235,7 @@ public class UI_Graph : MonoBehaviour
             label_Y.GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(normalizedValue * yMaximum).ToString();
 
             RectTransform flashingLine_Y = Instantiate(_flashingLineYPrefab).GetComponent<RectTransform>();
-            flashingLine_Y.SetParent(_graphContainer, false);
+            flashingLine_Y.SetParent(_graphElements.transform, false);
             flashingLine_Y.SetSiblingIndex(1);
             flashingLine_Y.gameObject.SetActive(true);
             flashingLine_Y.anchorMin = Vector2.zero;
@@ -189,9 +248,11 @@ public class UI_Graph : MonoBehaviour
     {
         GameObject gameObjectConnection = new GameObject("dotConnection", typeof(Image));
         // Asigna el padre del objeto.
-        gameObjectConnection.transform.SetParent(_graphContainer, false);
+        gameObjectConnection.transform.SetParent(_graphElements.transform, false);
         // Cambiar el color de la línea.
-        gameObjectConnection.GetComponent<Image>().color = new Color(1,1,1, 1f);
+        Color lineColor = Color.white;
+
+        gameObjectConnection.GetComponent<Image>().color = _lineColor;
 
         // Se configura el RectTransform de la línea y se dirige hacia el punto anterior con la longitud y ángulo adecuados.
         RectTransform rectTransformConnection = gameObjectConnection.GetComponent<RectTransform>();
@@ -244,73 +305,20 @@ public class UI_Graph : MonoBehaviour
 
 
 
-    //private void LoQueAntesEstabaEnElStart()
-    //{
-    //    DataStorage.SaveGlycemiaGraph(DateTime.Now, 150);
-    //    DataStorage.SaveGlycemiaGraph(DateTime.Now, 160);
+//private void LoQueAntesEstabaEnElStart()
+//{
+//    DataStorage.SaveGlycemiaGraph(DateTime.Now, 150);
+//    DataStorage.SaveGlycemiaGraph(DateTime.Now, 160);
 
-    //    List<AttributeData> attributeDataList = DataStorage.LoadGlycemiaGraph();
-    //    foreach (AttributeData glycemiaData in attributeDataList)
-    //    {
-    //        DateTime dateAndTime = DateTime.Parse(glycemiaData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-    //        float glycemiaValue = glycemiaData.Value;
+//    List<AttributeData> attributeDataList = DataStorage.LoadGlycemiaGraph();
+//    foreach (AttributeData glycemiaData in attributeDataList)
+//    {
+//        DateTime dateAndTime = DateTime.Parse(glycemiaData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+//        float glycemiaValue = glycemiaData.Value;
 
-    //        Debug.Log($"Date and time: {dateAndTime}. Glycemia value: {glycemiaValue}.");
-    //    }
-    //}
-
-
-
-
-
-
-
-
-    //// TODO: Borrar, es para saberlo para luego.
-    //private void SepararYcompararFechaYHora()
-    //{
-    //    List<AttributeData> attributeDataList = DataStorage.LoadGlycemiaGraph();
-
-    //    foreach (AttributeData glycemiaData in attributeDataList)
-    //    {
-    //        // Parseamos el DateTime desde el string almacenado en glycemiaData
-    //        DateTime dateAndTime = DateTime.Parse(glycemiaData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-
-    //        // Separar la fecha y la hora
-    //        DateTime onlyDate = dateAndTime.Date; // Solo la fecha (hora 00:00:00)
-    //        TimeSpan onlyTime = dateAndTime.TimeOfDay; // Solo la hora del día
-    //        int hour = dateAndTime.Hour; // Solo la hora
-    //        int minute = dateAndTime.Minute; // Solo el minuto
-
-    //        // Imprimir ambos valores
-    //        Debug.Log($"Fecha: {onlyDate.ToShortDateString()}. Hora: {onlyTime}.");
-
-    //        // Ejemplo de comparación con otra fecha y hora
-    //        DateTime compareDate = new DateTime(2024, 9, 22);
-    //        TimeSpan compareTime = new TimeSpan(14, 30, 0); // 14:30:00
-
-    //        // Comparación de fechas
-    //        if (onlyDate == compareDate)
-    //        {
-    //            Debug.Log("Las fechas coinciden.");
-    //        }
-
-    //        // Comparación de horas
-    //        if (onlyTime < compareTime)
-    //        {
-    //            Debug.Log("La hora es anterior a las 14:30.");
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("La hora es posterior a las 14:30.");
-    //        }
-
-    //        // Obtener el valor de glucemia
-    //        float glycemiaValue = glycemiaData.Value;
-    //        Debug.Log($"Valor de glucemia: {glycemiaValue}.");
-    //    }
-
-    //}
+//        Debug.Log($"Date and time: {dateAndTime}. Glycemia value: {glycemiaValue}.");
+//    }
+//}
 
 
 
@@ -319,37 +327,90 @@ public class UI_Graph : MonoBehaviour
 
 
 
+//// TODO: Borrar, es para saberlo para luego.
+//private void SepararYcompararFechaYHora()
+//{
+//    List<AttributeData> attributeDataList = DataStorage.LoadGlycemiaGraph();
+
+//    foreach (AttributeData glycemiaData in attributeDataList)
+//    {
+//        // Parseamos el DateTime desde el string almacenado en glycemiaData
+//        DateTime dateAndTime = DateTime.Parse(glycemiaData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+//        // Separar la fecha y la hora
+//        DateTime onlyDate = dateAndTime.Date; // Solo la fecha (hora 00:00:00)
+//        TimeSpan onlyTime = dateAndTime.TimeOfDay; // Solo la hora del día
+//        int hour = dateAndTime.Hour; // Solo la hora
+//        int minute = dateAndTime.Minute; // Solo el minuto
+
+//        // Imprimir ambos valores
+//        Debug.Log($"Fecha: {onlyDate.ToShortDateString()}. Hora: {onlyTime}.");
+
+//        // Ejemplo de comparación con otra fecha y hora
+//        DateTime compareDate = new DateTime(2024, 9, 22);
+//        TimeSpan compareTime = new TimeSpan(14, 30, 0); // 14:30:00
+
+//        // Comparación de fechas
+//        if (onlyDate == compareDate)
+//        {
+//            Debug.Log("Las fechas coinciden.");
+//        }
+
+//        // Comparación de horas
+//        if (onlyTime < compareTime)
+//        {
+//            Debug.Log("La hora es anterior a las 14:30.");
+//        }
+//        else
+//        {
+//            Debug.Log("La hora es posterior a las 14:30.");
+//        }
+
+//        // Obtener el valor de glucemia
+//        float glycemiaValue = glycemiaData.Value;
+//        Debug.Log($"Valor de glucemia: {glycemiaValue}.");
+//    }
+
+//}
 
 
-    //// TODO: Borrar, es para saberlo para luego.
-    //private void VerSiUnaFechaTieneMasDeNoSeCuantosDias()
-    //{
-    //    List<AttributeData> attributeDataList = DataStorage.LoadGlycemiaGraph();
 
-    //    // Obtener la fecha actual
-    //    DateTime currentDate = DateTime.Now;
 
-    //    // Restar 10 días de la fecha actual
-    //    DateTime thresholdDate = currentDate.AddDays(-10);
 
-    //    foreach (AttributeData glycemiaData in attributeDataList)
-    //    {
-    //        // Parseamos la fecha guardada
-    //        DateTime dateAndTime = DateTime.Parse(glycemiaData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
 
-    //        // Comparar si la fecha almacenada es anterior a hace 10 días
-    //        if (dateAndTime < thresholdDate)
-    //        {
-    //            Debug.Log($"La fecha {dateAndTime.ToShortDateString()} es de hace más de 10 días.");
-    //        }
-    //        else
-    //        {
-    //            Debug.Log($"La fecha {dateAndTime.ToShortDateString()} es más reciente o igual a hace 10 días.");
-    //        }
 
-    //        // Obtener el valor de glucemia
-    //        float glycemiaValue = glycemiaData.Value;
-    //        Debug.Log($"Valor de glucemia: {glycemiaValue}.");
-    //    }
-    //}
+
+
+
+//// TODO: Borrar, es para saberlo para luego.
+//private void VerSiUnaFechaTieneMasDeNoSeCuantosDias()
+//{
+//    List<AttributeData> attributeDataList = DataStorage.LoadGlycemiaGraph();
+
+//    // Obtener la fecha actual
+//    DateTime currentDate = DateTime.Now;
+
+//    // Restar 10 días de la fecha actual
+//    DateTime thresholdDate = currentDate.AddDays(-10);
+
+//    foreach (AttributeData glycemiaData in attributeDataList)
+//    {
+//        // Parseamos la fecha guardada
+//        DateTime dateAndTime = DateTime.Parse(glycemiaData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+//        // Comparar si la fecha almacenada es anterior a hace 10 días
+//        if (dateAndTime < thresholdDate)
+//        {
+//            Debug.Log($"La fecha {dateAndTime.ToShortDateString()} es de hace más de 10 días.");
+//        }
+//        else
+//        {
+//            Debug.Log($"La fecha {dateAndTime.ToShortDateString()} es más reciente o igual a hace 10 días.");
+//        }
+
+//        // Obtener el valor de glucemia
+//        float glycemiaValue = glycemiaData.Value;
+//        Debug.Log($"Valor de glucemia: {glycemiaValue}.");
+//    }
+//}
 

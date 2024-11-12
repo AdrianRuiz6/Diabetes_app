@@ -30,9 +30,7 @@ public class UI_SliderGraph : MonoBehaviour
         GameEventsGraph.OnInitialTimeModified += ModifyInitialHour;
         GameEventsGraph.OnFinishTimeModified += ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedFoodGraph += LoadData;
-        GameEventsGraph.OnUpdatedInsulinGraph += LoadData;
-        GameEventsGraph.OnUpdatedExerciseGraph += LoadData;
+        GameEventsGraph.OnUpdatedSolutionGraph += LoadData;
 
         GameEventsGraph.OnUpdatedDateGraph += UpdateDate;
     }
@@ -42,9 +40,7 @@ public class UI_SliderGraph : MonoBehaviour
         GameEventsGraph.OnInitialTimeModified -= ModifyInitialHour;
         GameEventsGraph.OnFinishTimeModified -= ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedFoodGraph -= LoadData;
-        GameEventsGraph.OnUpdatedInsulinGraph -= LoadData;
-        GameEventsGraph.OnUpdatedExerciseGraph -= LoadData;
+        GameEventsGraph.OnUpdatedSolutionGraph -= LoadData;
 
         GameEventsGraph.OnUpdatedDateGraph -= UpdateDate;
     }
@@ -171,12 +167,30 @@ public class UI_SliderGraph : MonoBehaviour
     private void ModifyFinishHour(int hour)
     {
         _maxHour = hour;
-        _slider.maxValue = (_maxHour - _minHour) * 60;
+        int maxHourAux = 0;
+        if(_maxHour < _minHour)
+        {
+            maxHourAux = _maxHour + 24;
+        }
+        else
+        {
+            maxHourAux = _maxHour;
+        }
+        _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
     }
 
     private int GetSliderValueAccordingTime(DateTime dateTime)
     {
-        int sliderValue = (dateTime.Hour - _minHour) * 60 + dateTime.Minute;
+        int dateTimeAux = 0;
+        if (dateTime.Hour < _minHour)
+        {
+            dateTimeAux = dateTime.Hour + 24;
+        }
+        else
+        {
+            dateTimeAux = dateTime.Hour;
+        }
+        int sliderValue = (dateTimeAux - _minHour) * 60 + dateTime.Minute;
         return sliderValue;
     }
 
