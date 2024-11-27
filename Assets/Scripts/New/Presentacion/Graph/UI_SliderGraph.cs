@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class UI_SliderGraph : MonoBehaviour
 {
@@ -30,7 +27,7 @@ public class UI_SliderGraph : MonoBehaviour
         GameEventsGraph.OnInitialTimeModified += ModifyInitialHour;
         GameEventsGraph.OnFinishTimeModified += ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedSolutionGraph += LoadData;
+        GameEventsGraph.OnUpdatedActionsGraph += LoadData;
 
         GameEventsGraph.OnUpdatedDateGraph += UpdateDate;
     }
@@ -40,7 +37,7 @@ public class UI_SliderGraph : MonoBehaviour
         GameEventsGraph.OnInitialTimeModified -= ModifyInitialHour;
         GameEventsGraph.OnFinishTimeModified -= ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedSolutionGraph -= LoadData;
+        GameEventsGraph.OnUpdatedActionsGraph -= LoadData;
 
         GameEventsGraph.OnUpdatedDateGraph -= UpdateDate;
     }

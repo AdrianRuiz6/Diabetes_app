@@ -248,7 +248,7 @@ public class AttributeManager : MonoBehaviour
         }
 
         DataStorage.SaveInsulinGraph(DateTime.Now, informationGraph);
-        GameEventsGraph.OnUpdatedSolutionGraph?.Invoke();
+        GameEventsGraph.OnUpdatedActionsGraph?.Invoke();
 
         StartCoroutine(ResetInsulinButton(timeButtonsCD));
         StartCoroutine(ActivateInsulinEffect(timeEffectButtons));
@@ -289,7 +289,7 @@ public class AttributeManager : MonoBehaviour
         // Se guarda la información para la gráfica.
         string informationGraph = $"{intensity}.";
         DataStorage.SaveExerciseGraph(DateTime.Now, informationGraph);
-        GameEventsGraph.OnUpdatedSolutionGraph?.Invoke();
+        GameEventsGraph.OnUpdatedActionsGraph?.Invoke();
 
         StartCoroutine(ResetExerciseButton(timeButtonsCD));
         StartCoroutine(ActivateExerciseEffect(timeEffectButtons));
@@ -313,7 +313,7 @@ public class AttributeManager : MonoBehaviour
         // Se guarda la información para la gráfica.
         string informationGraph = $"{ration} raciones de {food}.";
         DataStorage.SaveFoodGraph(DateTime.Now, informationGraph);
-        GameEventsGraph.OnUpdatedSolutionGraph?.Invoke();
+        GameEventsGraph.OnUpdatedActionsGraph?.Invoke();
 
         StartCoroutine(ResetFoodButton(timeButtonsCD));
         StartCoroutine(ActivateFoodEffect(timeEffectButtons));

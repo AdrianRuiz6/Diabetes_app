@@ -9,7 +9,7 @@ public class GameEventsGraph
     public static Action<int> OnFinishTimeModified;
 
     public static Action<GraphFilter> OnUpdatedAttributeGraph;
-    public static Action OnUpdatedSolutionGraph;
+    public static Action OnUpdatedActionsGraph;
 
     public static Action<DateTime> OnUpdatedDateGraph;
 }

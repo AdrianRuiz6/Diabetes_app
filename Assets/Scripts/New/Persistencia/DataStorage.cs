@@ -124,8 +124,7 @@ public static class DataStorage
             DateTime currentDate = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
             if (requestedDate.Value.Date == currentDate.Date)
             {
-                DateTime dateTimeModified = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, currentDate.Minute, 0);
-                askedDateButtonDictionary.Add(dateTimeModified, buttonData.Information);
+                askedDateButtonDictionary.Add(currentDate, buttonData.Information);
             }
         }
 
@@ -214,8 +213,7 @@ public static class DataStorage
             DateTime currentDate = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
             if (requestedDate.Value.Date == currentDate.Date)
             {
-                DateTime dateTimeModified = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, currentDate.Minute, 0);
-                askedDateAttributeDictionary.Add(dateTimeModified, attributeData.Value);
+                askedDateAttributeDictionary.Add(currentDate, attributeData.Value);
             }
         }
 

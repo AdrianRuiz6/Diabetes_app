@@ -16,7 +16,7 @@ public class UI_DateChanger : MonoBehaviour
 
     void Start()
     {
-        UpdateDate();
+        _date_TMP.text = $"{_currentDate.ToString("dd")} / {_currentDate.ToString("MM")} / {_currentDate.Year - 2000}";
 
         _previousDate.onClick.AddListener(PreviousDate);
         _nextDate.onClick.AddListener(NextDate);
