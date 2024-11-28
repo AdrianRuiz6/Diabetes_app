@@ -13,6 +13,7 @@ namespace BehaviorTree
         private int _counterEvaluates = 0;
 
         private bool previousIsInTime = true;
+        private bool firstIteration = true;
 
         private Queue<DateTime> _dateTimesQueue = new Queue<DateTime>();
 
@@ -37,6 +38,7 @@ namespace BehaviorTree
             {
                 if(_dateTimesQueue.Peek().TimeOfDay == LimitHours.Instance.initialTime)
                 {
+                    Debug.Log($"-test- restart atributes");
                     AttributeManager.Instance.RestartAttributes(_dateTimesQueue.Peek());
                 }
                 else
@@ -54,36 +56,32 @@ namespace BehaviorTree
 
         private void ExecutingAttribute(DateTime currentDateTime) // TODO: modificar Debugs.
         {
-            DateTime previousDateTime = currentDateTime.AddSeconds(-AttributeSchedule.Instance.UpdateInterval);
-            previousIsInTime = previousDateTime.TimeOfDay >= LimitHours.Instance.initialTime && previousDateTime.TimeOfDay <= LimitHours.Instance.finishTime;
-
             Debug.Log($"FRANJA - Nueva ejecución -----------");
+            if (firstIteration)
+            {
+                TimeSpan previousTime = currentDateTime.AddSeconds(-AttributeSchedule.Instance.UpdateInterval).TimeOfDay;
+                previousIsInTime = LimitHours.Instance.IsInRange(previousTime);
+
+                firstIteration = false;
+                Debug.Log($"FRANJA - Primer inicio previousIsInTime = {previousIsInTime}");
+            }
+            bool currentIsInTime = LimitHours.Instance.IsInRange(currentDateTime.TimeOfDay); ;
+
+            
+            Debug.Log($"FRANJA - Cualquier inicio previousIsInTime = {previousIsInTime}");
             // Si está en la franja horaria en los que se mueven los atributos.
-            if ((LimitHours.Instance.initialTime < LimitHours.Instance.finishTime && 
-    currentDateTime.TimeOfDay >= LimitHours.Instance.initialTime && currentDateTime.TimeOfDay <= LimitHours.Instance.finishTime) ||
-    (LimitHours.Instance.initialTime > LimitHours.Instance.finishTime && 
-    (currentDateTime.TimeOfDay >= LimitHours.Instance.initialTime || currentDateTime.TimeOfDay <= LimitHours.Instance.finishTime)))
+            if (currentIsInTime)
             {
                 Debug.Log($"FRANJA - Está DENTRO de la franja horaria");
                 // Si acaba de entrar en la franja horaria calcular el initialTime también.
                 if(previousIsInTime == false && currentDateTime.TimeOfDay != LimitHours.Instance.initialTime)
                 {
                     Debug.Log($"FRANJA - Se acaba de ENTRAR en la franja horaria.");
-                    DateTime initialTime = currentDateTime.Date.AddHours(LimitHours.Instance.initialTime.Hours);
+                    DateTime initialTime = currentDateTime.Date.AddHours(LimitHours.Instance.initialTime.Hours).AddMinutes(56);
                     AddToEvalueateQueue(initialTime);
                 }
                 Debug.Log($"FRANJA - Hora: {currentDateTime}");
                 AddToEvalueateQueue(currentDateTime);
-
-                
-                if (currentDateTime.TimeOfDay == LimitHours.Instance.finishTime)
-                {
-                    previousIsInTime = false;
-                }
-                else
-                {
-                    previousIsInTime = true;
-                }
             }
             else // Si acaba de salir de la franja horaria se calcula el finishTime.
             {
@@ -91,14 +89,13 @@ namespace BehaviorTree
                 if (previousIsInTime == true)
                 {
                     Debug.Log($"FRANJA - Se acaba de SALIR de la franja horaria.");
-                    DateTime finishTime = currentDateTime.Date.AddHours(LimitHours.Instance.finishTime.Hours);
-                    finishTime = currentDateTime.Date.AddMinutes(LimitHours.Instance.finishTime.Minutes);
+                    DateTime finishTime = currentDateTime.Date.AddHours(LimitHours.Instance.finishTime.Hours)
+                        .AddMinutes(LimitHours.Instance.finishTime.Minutes);
                     AddToEvalueateQueue(finishTime);
                 }
-
-                previousIsInTime = false;
             }
-            
+            previousIsInTime = currentIsInTime;
+            Debug.Log($"FRANJA - final previousIsInTime = {previousIsInTime}");
         }
 
         private void AddToEvalueateQueue(DateTime newDateTime)

@@ -51,4 +51,16 @@ public class LimitHours : MonoBehaviour
     {
         finishTime = new TimeSpan(newHour - 1, 59, 0);
     }
+
+    public bool IsInRange(TimeSpan currentTime)
+    {
+        if (finishTime >= initialTime)
+        {
+            return currentTime >= initialTime && currentTime <= finishTime;
+        }
+        else
+        {
+            return currentTime >= initialTime || currentTime <= finishTime;
+        }
+    }
 }
