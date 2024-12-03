@@ -8,6 +8,12 @@ namespace Master.Domain.BehaviorTree.Activity
 {
     public class BT_Activity : BTree
     {
+        private void Start()
+        {
+            SetState(TreeType.Activity);
+            base.Start();
+        }
+
         protected override Node SetUpTree()
         {
             #region LongTermButtons

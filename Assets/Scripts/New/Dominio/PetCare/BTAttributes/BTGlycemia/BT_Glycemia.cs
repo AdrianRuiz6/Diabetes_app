@@ -7,6 +7,12 @@ namespace Master.Domain.BehaviorTree.Glycemia
 {
     public class BT_Glycemia : BTree
     {
+        private void Start()
+        {
+            SetState(TreeType.Glycemia);
+            base.Start();
+        }
+
         protected override Node SetUpTree()
         {
             #region CryticalGlucemia

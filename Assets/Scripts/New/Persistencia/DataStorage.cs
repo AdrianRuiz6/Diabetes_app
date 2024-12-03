@@ -23,8 +23,8 @@ public static class DataStorage
 
     public static TimeSpan LoadInitialTime()
     {
-        int hour = PlayerPrefs.GetInt("InitialTime", 20);
-        return new TimeSpan(hour, 56, 0);
+        int hour = PlayerPrefs.GetInt("InitialTime", 18);
+        return new TimeSpan(hour, 0, 0);
     }
 
     public static void SaveFinishTime(TimeSpan finishTime)
@@ -35,7 +35,7 @@ public static class DataStorage
 
     public static TimeSpan LoadFinishTime()
     {
-        int hour = PlayerPrefs.GetInt("FinishTime", 21);
+        int hour = PlayerPrefs.GetInt("FinishTime", 22);
         return new TimeSpan(hour - 1, 59, 0);
     }
     #endregion
@@ -122,7 +122,7 @@ public static class DataStorage
         foreach (ButtonData buttonData in buttonDataList.buttonList)
         {
             DateTime currentDate = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            if (requestedDate.Value.Date == currentDate.Date)
+            if (requestedDate.Value.Date == currentDate.Date && LimitHours.Instance.IsInRange(currentDate.TimeOfDay))
             {
                 askedDateButtonDictionary.Add(currentDate, buttonData.Information);
             }
@@ -192,6 +192,7 @@ public static class DataStorage
             streamWriter.Write(json);
         }
     }
+
     private static Dictionary<DateTime, int> LoadAttributeGraph(string path, DateTime? requestedDate)
     {
         if (!File.Exists(path))
@@ -211,7 +212,7 @@ public static class DataStorage
         foreach (AttributeData attributeData in attributeDataList.attributeList)
         {
             DateTime currentDate = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            if (requestedDate.Value.Date == currentDate.Date)
+            if (requestedDate.Value.Date == currentDate.Date && LimitHours.Instance.IsInRange(currentDate.TimeOfDay))
             {
                 askedDateAttributeDictionary.Add(currentDate, attributeData.Value);
             }
@@ -326,8 +327,8 @@ public static class DataStorage
 
     public static int LoadGlycemia()
     {
-        //return PlayerPrefs.GetInt("Glycemia", AttributeManager.Instance.initialGlycemiaValue);
-        return 120;
+        return PlayerPrefs.GetInt("Glycemia", AttributeManager.Instance.initialGlycemiaValue);
+        //return 120;
     }
 
     public static void SaveActivity(float activityValue)
@@ -337,8 +338,8 @@ public static class DataStorage
 
     public static int LoadActivity()
     {
-        //return PlayerPrefs.GetInt("Activity", AttributeManager.Instance.initialActivityValue);
-        return 50;
+        return PlayerPrefs.GetInt("Activity", AttributeManager.Instance.initialActivityValue);
+        //return 50;
     }
 
     public static void SaveHunger(float hungerValue)
@@ -348,8 +349,8 @@ public static class DataStorage
 
     public static int LoadHunger()
     {
-        //return PlayerPrefs.GetInt("Hunger", AttributeManager.Instance.initialHungerValue);
-        return 50;
+        return PlayerPrefs.GetInt("Hunger", AttributeManager.Instance.initialHungerValue);
+        //return 50;
     }
 
     public static void SaveCurrentScore(int currentScore)

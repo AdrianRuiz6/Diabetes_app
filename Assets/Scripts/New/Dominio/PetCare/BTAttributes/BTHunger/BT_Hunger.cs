@@ -8,6 +8,12 @@ namespace Master.Domain.BehaviorTree.Hunger
 {
     public class BT_Hunger : BTree
     {
+        private void Start()
+        {
+            SetState(TreeType.Hunger);
+            base.Start();
+        }
+
         protected override Node SetUpTree()
         {
             #region LongTermButtons

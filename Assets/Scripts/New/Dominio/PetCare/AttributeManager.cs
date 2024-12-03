@@ -161,14 +161,23 @@ public class AttributeManager : MonoBehaviour
 
         if(currentTime == LimitHours.Instance.initialTime)
         {
-            RestartAttributes(DateTime.Now.AddHours(LimitHours.Instance.initialTime.Hours));
+            RestartGlycemia(DateTime.Now.AddHours(LimitHours.Instance.initialTime.Hours));
+            RestartActivity(DateTime.Now.AddHours(LimitHours.Instance.initialTime.Hours));
+            RestartHunger(DateTime.Now.AddHours(LimitHours.Instance.initialTime.Hours));
         }
     }
 
-    public void RestartAttributes(DateTime currentTime)
+    public void RestartGlycemia(DateTime currentTime)
     {
         ModifyGlycemia(initialGlycemiaValue - glycemiaValue, currentTime);
+    }
+
+    public void RestartActivity(DateTime currentTime)
+    {
         ModifyActivity(initialActivityValue - activityValue, currentTime);
+    }
+    public void RestartHunger(DateTime currentTime)
+    {
         ModifyHunger(initialHungerValue - hungerValue, currentTime);
     }
 
@@ -177,7 +186,7 @@ public class AttributeManager : MonoBehaviour
         mutex.WaitOne();
         try
         {
-            glycemiaValue = Mathf.Clamp(glycemiaValue + value, 20, 350);
+            glycemiaValue = Mathf.Clamp(glycemiaValue + value, 20, 250);
             if (currentDateTime != null)
             {
                 DataStorage.SaveGlycemiaGraph(currentDateTime, glycemiaValue);
