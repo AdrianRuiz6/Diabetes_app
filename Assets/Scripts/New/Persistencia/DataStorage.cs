@@ -23,7 +23,7 @@ public static class DataStorage
 
     public static TimeSpan LoadInitialTime()
     {
-        int hour = PlayerPrefs.GetInt("InitialTime", 18);
+        int hour = PlayerPrefs.GetInt("InitialTime", 14);
         return new TimeSpan(hour, 0, 0);
     }
 
@@ -35,7 +35,7 @@ public static class DataStorage
 
     public static TimeSpan LoadFinishTime()
     {
-        int hour = PlayerPrefs.GetInt("FinishTime", 22);
+        int hour = PlayerPrefs.GetInt("FinishTime", 23);
         return new TimeSpan(hour - 1, 59, 0);
     }
     #endregion

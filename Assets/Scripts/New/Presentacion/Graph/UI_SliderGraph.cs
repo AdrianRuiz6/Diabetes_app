@@ -117,7 +117,7 @@ public class UI_SliderGraph : MonoBehaviour
 
         foreach(KeyValuePair<DateTime, String> kvp in _insulinInfo)
         {
-            if(currentTime.TimeOfDay == kvp.Key.TimeOfDay)
+            if(currentTime.Hour == kvp.Key.Hour && currentTime.Minute == kvp.Key.Minute)
             {
                 _insulinInfo_TMP.text = kvp.Value.ToString();
                 isInsulinInfoFound = true;
@@ -130,7 +130,7 @@ public class UI_SliderGraph : MonoBehaviour
 
         foreach (KeyValuePair<DateTime, String> kvp in _exerciseInfo)
         {
-            if (currentTime.TimeOfDay == kvp.Key.TimeOfDay)
+            if (currentTime.Hour == kvp.Key.Hour && currentTime.Minute == kvp.Key.Minute)
             {
                 _exerciseInfo_TMP.text = kvp.Value.ToString();
                 isExerciseInfoFound = true;
@@ -143,7 +143,7 @@ public class UI_SliderGraph : MonoBehaviour
 
         foreach (KeyValuePair<DateTime, String> kvp in _foodInfo)
         {
-            if (currentTime.TimeOfDay == kvp.Key.TimeOfDay)
+            if (currentTime.Hour == kvp.Key.Hour && currentTime.Minute == kvp.Key.Minute)
             {
                 _foodInfo_TMP.text = kvp.Value.ToString();
                 isFoodInfoFound = true;

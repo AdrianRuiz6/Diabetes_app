@@ -26,6 +26,10 @@ public class UI_Attribute : MonoBehaviour
     [SerializeField] private int _minValue;
     [SerializeField] private int _maxValue;
 
+    [SerializeField] private Color goodColor = Color.green;
+    [SerializeField] private Color intermediateColor = Color.yellow;
+    [SerializeField] private Color badColor = Color.red;
+
     private Slider _slider;
     private Image _sliderBackground;
     private TextMeshProUGUI _value_TXT;
@@ -37,15 +41,17 @@ public class UI_Attribute : MonoBehaviour
         {
             case AttributeType.Glycemia:
                 GameEventsPetCare.OnModifyGlycemia += UpdateVisualBar;
+                _currentValue = DataStorage.LoadGlycemia();
                 break;
             case AttributeType.Activity:
                 GameEventsPetCare.OnModifyActivity += UpdateVisualBar;
+                _currentValue = DataStorage.LoadActivity();
                 break;
             case AttributeType.Hunger:
                 GameEventsPetCare.OnModifyHunger += UpdateVisualBar;
+                _currentValue = DataStorage.LoadHunger();
                 break;
         }
-        
     }
 
     void OnDestroy()
@@ -69,6 +75,7 @@ public class UI_Attribute : MonoBehaviour
         _slider = GetComponentInChildren<Slider>();
         _value_TXT = GetComponentInChildren<TextMeshProUGUI>();
         _slider.wholeNumbers = true;
+
         Transform background = transform.Find("Bar/Background");
         _sliderBackground = background.GetComponent<Image>();
         _slider.minValue = _minValue;
@@ -79,9 +86,23 @@ public class UI_Attribute : MonoBehaviour
         _positiveGoodValue = midrange + _goodValueAmount;
         _negativeGoodValue = midrange - _goodValueAmount;
         _positiveIntermediateValue = _positiveGoodValue + _intermediateValueAmount;
-        _negativeIntermediateValue = _negativeIntermediateValue - _intermediateValueAmount;
+        _negativeIntermediateValue = midrange - (_goodValueAmount + _intermediateValueAmount);
 
-        _currentValue = _slider.value;
+        switch (_attributeType)
+        {
+            case AttributeType.Glycemia:
+                _currentValue = DataStorage.LoadGlycemia();
+                break;
+            case AttributeType.Activity:
+                _currentValue = DataStorage.LoadActivity();
+                break;
+            case AttributeType.Hunger:
+                _currentValue = DataStorage.LoadHunger();
+                break;
+        }
+
+        _slider.value = _currentValue;
+        UpdateVisualBar(0, null);
         _slider.onValueChanged.AddListener(ChangeValue);
     }
 
@@ -92,24 +113,24 @@ public class UI_Attribute : MonoBehaviour
 
     private void UpdateVisualBar(int additionalValue, DateTime? currentDataTime)
     {
-        _currentValue = _slider.value + additionalValue;
+        _currentValue = Mathf.Clamp(_slider.value + additionalValue, _minValue, _maxValue);
         _slider.SetValueWithoutNotify(_currentValue);
 
         _value_TXT.text = _slider.value.ToString();
 
-        
-        if(_slider.value >= _negativeGoodValue && _slider.value <= _positiveGoodValue)
+        if (_slider.value >= _negativeGoodValue && _slider.value <= _positiveGoodValue)
         {
-            _sliderBackground.color = Color.green;
+            _sliderBackground.color = goodColor;
         }
-        else if (_slider.value >= _negativeIntermediateValue && _slider.value < _negativeGoodValue ||
-            _slider.value > _positiveGoodValue && _slider.value <= _positiveIntermediateValue)
+        else if ((_slider.value >= _negativeIntermediateValue && _slider.value < _negativeGoodValue) ||
+                 (_slider.value > _positiveGoodValue && _slider.value <= _positiveIntermediateValue))
         {
-            _sliderBackground.color = Color.yellow;
+            _sliderBackground.color = intermediateColor;
         }
         else
         {
-            _sliderBackground.color = Color.red;
+            
+            _sliderBackground.color = badColor;
         }
     }
 }

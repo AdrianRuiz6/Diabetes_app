@@ -13,6 +13,7 @@ public class Cooldown : MonoBehaviour
 
     private Button _button;
     private bool _isInCD;
+    private bool _isInRange;
 
     private float _time;
     private float _maxTime;
@@ -22,10 +23,11 @@ public class Cooldown : MonoBehaviour
     {
         _button = GetComponent<Button>();
 
-        _maxTime = AttributeManager.Instance.timeButtonsCD;
         _isInCD = false;
         _backgroundImageCD.enabled = false;
         _iconImageCD.enabled = false;
+
+        _isInRange = true;
     }
 
     private void Awake()
@@ -40,32 +42,43 @@ public class Cooldown : MonoBehaviour
 
     void Update()
     {
-        if (_time > 0)
+        if (_isInRange == false && LimitHours.Instance.IsInRange(DateTime.Now.TimeOfDay))
         {
-            _time -= Time.deltaTime;
-
-            // Visualilzación radial del CoolDown.
-            _fillAmount = _time / _maxTime;
-            _fillAmount = Mathf.Clamp01(_fillAmount);
-
-            _backgroundImageCD.fillAmount = _fillAmount;
-            _iconImageCD.fillAmount = _fillAmount;
+            ResetButton();
+        }else if (_isInRange == true && LimitHours.Instance.IsInRange(DateTime.Now.TimeOfDay) == false)
+        {
+            DisableButton();
         }
 
-        if (_time <= 0)
+        if (_isInRange)
         {
-            _isInCD = false;
-            _backgroundImageCD.enabled = false;
-            _iconImageCD.enabled = false;
-        }
+            if (_time > 0)
+            {
+                _time -= Time.deltaTime;
 
-        if (_isInCD)
-        {
-            _button.interactable = false;
-        }
-        else
-        {
-            _button.interactable = true;
+                // Visualilzación radial del CoolDown.
+                _fillAmount = _time / _maxTime;
+                _fillAmount = Mathf.Clamp01(_fillAmount);
+
+                _backgroundImageCD.fillAmount = _fillAmount;
+                _iconImageCD.fillAmount = _fillAmount;
+            }
+
+            if (_time <= 0)
+            {
+                _isInCD = false;
+                _backgroundImageCD.enabled = false;
+                _iconImageCD.enabled = false;
+            }
+
+            if (_isInCD)
+            {
+                _button.interactable = false;
+            }
+            else
+            {
+                _button.interactable = true;
+            }
         }
     }
 
@@ -73,11 +86,34 @@ public class Cooldown : MonoBehaviour
     {
         if (externalID == _myID)
         {
+            Debug.Log($"-test- timeCD = {timeCD}; externalID = {externalID}; gameObject = {gameObject.name}; Hora = {DateTime.Now.TimeOfDay}");
             _isInCD = true;
             _time = timeCD;
+            _maxTime = AttributeManager.Instance.timeButtonsCD;
 
             _backgroundImageCD.enabled = true;
             _iconImageCD.enabled = true;
         }
+    }
+
+    public void DisableButton()
+    {
+        _isInRange = false;
+        _button.interactable = false;
+
+        _backgroundImageCD.enabled = true;
+        _backgroundImageCD.fillAmount = 1;
+        _iconImageCD.enabled = true;
+        _iconImageCD.fillAmount = 1;
+    }
+
+    public void ResetButton()
+    {
+        _isInRange = true;
+        _button.interactable = true;
+        _time = 0;
+
+        _backgroundImageCD.enabled = false; 
+        _iconImageCD.enabled = false;
     }
 }
