@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public enum GraphFilter
 {
@@ -29,6 +30,8 @@ public class UI_Graph : MonoBehaviour
     private GraphFilter _currentFilter;
     private GameObject _graphElements;
     private Color _lineColor;
+
+    private GameObject[] _x_labels;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _labelPrefab;
@@ -152,7 +155,8 @@ public class UI_Graph : MonoBehaviour
             float xPosition = i * xSize;
 
             // Colocación de la etiqueta de valor del eje horizontal.
-            RectTransform label_X = Instantiate(_labelPrefab).GetComponent<RectTransform>();
+            GameObject label_X_Object = Instantiate(_labelPrefab);
+            RectTransform label_X = label_X_Object.GetComponent<RectTransform>();
             label_X.SetParent(_graphElements.transform, false);
             label_X.gameObject.SetActive(true);
             label_X.anchorMin = Vector2.zero;
@@ -182,6 +186,7 @@ public class UI_Graph : MonoBehaviour
                     label_X.GetComponent<TextMeshProUGUI>().text = $"{currentHour}:00";
                 }
             }
+            _x_labels.AddRange(label_X);
 
             // Colocación de líneas intermitentes del eje horizontal.
             RectTransform flashingLine_X = Instantiate(_flashingLineXPrefab).GetComponent<RectTransform>();
@@ -217,6 +222,8 @@ public class UI_Graph : MonoBehaviour
             flashingLine_Y.anchorMax = Vector2.zero;
             flashingLine_Y.anchoredPosition = new Vector2(-2.1f, normalizedValue * graphHeight);
         }
+
+        //SetFontSize(); TODO
     }
 
     private void PlotDataPoints()
@@ -301,5 +308,17 @@ public class UI_Graph : MonoBehaviour
     {
         _maxHour = hour;
         UpdateDate(DateTime.Now);
+    }
+
+    private void SetFontSize()
+    {
+        float hourDifference = _maxHour - _minHour;
+        if(hourDifference > 15)
+        {
+            foreach (GameObject label in _x_labels)
+            {
+                label.GetComponent<TMP_Text>().fontSize = 1.5f - hourDifference * 0.05f;
+            }
+        }
     }
 }

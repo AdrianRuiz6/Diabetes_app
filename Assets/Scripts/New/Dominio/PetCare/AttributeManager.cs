@@ -71,7 +71,7 @@ public class AttributeManager : MonoBehaviour
         timeButtonsCD = 3; // TODO: 60 minutos 3600
         timeEffectButtons = 3; // TODO: 30 minutos 1800
 
-        initialGlycemiaValue = 120;
+        initialGlycemiaValue = 135;
         initialActivityValue = 75;
         initialHungerValue = 25;
 
@@ -187,7 +187,7 @@ public class AttributeManager : MonoBehaviour
             {
                 DataStorage.SaveGlycemiaGraph(currentDateTime, glycemiaValue);
                 GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
-            }    
+            }
         }
         finally
         {

@@ -12,7 +12,7 @@ namespace Master.Domain.Economy
         private ProductState _productState;
         private Color _sellingColor;
 
-        private Button _myButton;
+        private Button _productButton;
 
         private void Awake()
         {
@@ -30,12 +30,12 @@ namespace Master.Domain.Economy
         void Start()
         {
             // Inicializa el botón con el color que vende.
-            _myButton = GetComponent<Button>();
-            _sellingColor = _myButton.colors.normalColor;
+            _productButton = GetComponent<Button>();
+            _sellingColor = _productButton.colors.normalColor;
             _sellingColor.a = 1f;
 
             // Añadida función cuando se pulsa el botón.
-            _myButton.onClick.AddListener(onButtonClick);
+            _productButton.onClick.AddListener(onButtonClick);
 
             // Cargar datos producto.
             _productState = DataStorage.LoadProduct(_productName);
@@ -64,7 +64,7 @@ namespace Master.Domain.Economy
             else if(_productState == ProductState.Purchased)
             {
                 EquipProduct();
-            }else if(_productState==ProductState.Equipped)
+            }else if(_productState == ProductState.Equipped)
             {
                 _productState = ProductState.Purchased;
                 GameEventsEconomy.OnProductBought?.Invoke(_productName);

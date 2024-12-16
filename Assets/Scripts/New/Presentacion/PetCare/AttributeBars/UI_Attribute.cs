@@ -86,7 +86,7 @@ public class UI_Attribute : MonoBehaviour
         _positiveGoodValue = midrange + _goodValueAmount;
         _negativeGoodValue = midrange - _goodValueAmount;
         _positiveIntermediateValue = _positiveGoodValue + _intermediateValueAmount;
-        _negativeIntermediateValue = midrange - (_goodValueAmount + _intermediateValueAmount);
+        _negativeIntermediateValue = _negativeGoodValue - _intermediateValueAmount;
 
         switch (_attributeType)
         {

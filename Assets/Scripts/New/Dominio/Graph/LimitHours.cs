@@ -49,7 +49,7 @@ public class LimitHours : MonoBehaviour
 
     private void ModifyFinishHour(int newHour)
     {
-        finishTime = new TimeSpan(newHour - 1, 59, 0);
+        finishTime = new TimeSpan(newHour, 59, 0);
     }
 
     public bool IsInRange(TimeSpan currentTime)

@@ -1,19 +1,38 @@
-using DG.Tweening.Plugins.Core.PathCore;
 using Master.Domain.Economy;
 using Master.Domain.States;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 public static class DataStorage
 {
+    #region Volume
+    public static void SaveMusicVolume(float volume)
+    {
+        PlayerPrefs.SetFloat("MusicVolume", volume);
+    }
+
+    public static float LoadMusicVolume()
+    {
+        return PlayerPrefs.GetFloat("MusicVolume", 1f);
+    }
+
+    public static void SaveSoundEffectsVolume(float volume)
+    {
+        PlayerPrefs.SetFloat("SoundEffectsVolume", volume);
+    }
+
+    public static float LoadSoundEffectsVolume()
+    {
+        return PlayerPrefs.GetFloat("SoundEffectsVolume", 1f);
+    }
+    #endregion
+
     #region Graph
+
     #region Initial and Finish time
     public static void SaveInitialTime(TimeSpan initialTime)
     {

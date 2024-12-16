@@ -25,6 +25,18 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void OnDestroy()
+    {
+        DataStorage.SaveMusicVolume(_musicAudioSource.volume);
+        DataStorage.SaveSoundEffectsVolume(_soundEffectsAudioSource.volume);
+    }
+
+    private void Start()
+    {
+        SetMusicVolume(DataStorage.LoadMusicVolume());
+        SetSoundEffectsVolume(DataStorage.LoadSoundEffectsVolume());
 
         // Inicialización del diccionario de efectos.
         _soundEffectsDictionary = new Dictionary<string, AudioClip>();

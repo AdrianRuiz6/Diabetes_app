@@ -108,8 +108,8 @@ public class UI_SliderGraph : MonoBehaviour
     // Escribe la fecha en el TMP correspondiente y actualiza los datos de la información de los botones.
     private void UpdateAdditionalInfo(int value)
     {
-        DateTime currentTime = GetTimeAccordingSliderValue(value);
-        _time_TMP.text = $"{currentTime.TimeOfDay}";
+        DateTime currentTimeSlider = GetTimeAccordingSliderValue(value);
+        _time_TMP.text = $"{currentTimeSlider.TimeOfDay}";
 
         bool isInsulinInfoFound = false;
         bool isExerciseInfoFound = false;
@@ -117,7 +117,7 @@ public class UI_SliderGraph : MonoBehaviour
 
         foreach(KeyValuePair<DateTime, String> kvp in _insulinInfo)
         {
-            if(currentTime.Hour == kvp.Key.Hour && currentTime.Minute == kvp.Key.Minute)
+            if(currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
             {
                 _insulinInfo_TMP.text = kvp.Value.ToString();
                 isInsulinInfoFound = true;
@@ -130,7 +130,7 @@ public class UI_SliderGraph : MonoBehaviour
 
         foreach (KeyValuePair<DateTime, String> kvp in _exerciseInfo)
         {
-            if (currentTime.Hour == kvp.Key.Hour && currentTime.Minute == kvp.Key.Minute)
+            if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
             {
                 _exerciseInfo_TMP.text = kvp.Value.ToString();
                 isExerciseInfoFound = true;
@@ -143,7 +143,7 @@ public class UI_SliderGraph : MonoBehaviour
 
         foreach (KeyValuePair<DateTime, String> kvp in _foodInfo)
         {
-            if (currentTime.Hour == kvp.Key.Hour && currentTime.Minute == kvp.Key.Minute)
+            if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
             {
                 _foodInfo_TMP.text = kvp.Value.ToString();
                 isFoodInfoFound = true;
@@ -159,6 +159,9 @@ public class UI_SliderGraph : MonoBehaviour
     {
         _minHour = hour;
         _slider.minValue = 0;
+
+        // TODO
+        
     }
 
     private void ModifyFinishHour(int hour)
@@ -174,6 +177,9 @@ public class UI_SliderGraph : MonoBehaviour
             maxHourAux = _maxHour;
         }
         _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
+
+        // TODO
+
     }
 
     private int GetSliderValueAccordingTime(DateTime dateTime)
