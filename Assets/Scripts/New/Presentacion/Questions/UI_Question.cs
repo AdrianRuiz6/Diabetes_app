@@ -109,10 +109,12 @@ public class UI_Question : MonoBehaviour
     {
         if (_advicePanel.activeSelf == true)
         {
+            PageSliding.Instance.ActivatePageSliding();
             _advicePanel.SetActive(false);
         }
         else
         {
+            PageSliding.Instance.DeactivatePageSliding();
             _advicePanel.SetActive(true);
         }
     }

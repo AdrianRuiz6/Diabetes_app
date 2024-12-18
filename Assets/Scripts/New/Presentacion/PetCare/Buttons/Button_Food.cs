@@ -45,6 +45,7 @@ public class Button_Food : MonoBehaviour
 
     private void OpenSubMenu()
     {
+        PageSliding.Instance.DeactivatePageSliding();
         DeactivateSendButton();
         _resultBot = "";
         _inputTMP.text = "";
@@ -56,6 +57,7 @@ public class Button_Food : MonoBehaviour
 
     private void CloseSubMenu()
     {
+        PageSliding.Instance.ActivatePageSliding();
         _submenuPanel.SetActive(false);
     }
 

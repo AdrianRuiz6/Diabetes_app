@@ -1,56 +1,56 @@
 using Master.Domain.Events;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
+using TMPro;
 
 public class UI_product : MonoBehaviour
 {
     [SerializeField] private string _productName;
-    [SerializeField] private GameObject _BoughtIcon;
-    [SerializeField] private GameObject _EquippedIcon;
-
-    private string _boughtName;
-    private string _equippedName;
+    [SerializeField] private GameObject _equippedIcon;
+    [SerializeField] private GameObject _boughtIcon;
+    [SerializeField] private Color _textColorNotEnoughMoney;
+    [SerializeField] private GameObject _priceUI;
+    [SerializeField] private TextMeshProUGUI _price_text;
 
     private bool _isBought;
-
-    private Vector3 _buttonsPosition;
 
     private void Awake()
     {
         GameEventsEconomy.OnProductEquipped += OnProductEquipped;
         GameEventsEconomy.OnProductBought += OnProductBought;
-
-        _boughtName = "Bought_icon_" + _productName;
-        _equippedName = "Equipped_icon_" + _productName;
-
-        _buttonsPosition = new Vector3(-3.4000001f, -41.2999992f, 0.998049974f);
-
-        _isBought = false;
+        GameEventsEconomy.OnNotEnoughMoney += OnNotEnoughMoney;
+        GameEventsEconomy.OnEnoughMoney += OnEnoughMoney;
     }
 
     void OnDestroy()
     {
         GameEventsEconomy.OnProductEquipped -= OnProductEquipped;
         GameEventsEconomy.OnProductBought -= OnProductBought;
+        GameEventsEconomy.OnNotEnoughMoney -= OnNotEnoughMoney;
+        GameEventsEconomy.OnEnoughMoney -= OnEnoughMoney;
+    }
+
+    void Start()
+    {
+        _priceUI.SetActive(true);
+        _equippedIcon.SetActive(false);
+        _boughtIcon.SetActive(false);
+
+        _isBought = false;
     }
 
     private void OnProductEquipped(string productName)
     {
         if (productName == _productName)
         {
-            DeleteBoughtIcon();
+            _priceUI.SetActive(false);
+            _boughtIcon.SetActive(false);
             _isBought = true;
 
-            GameObject equippedIconInstance = Instantiate(_EquippedIcon, _buttonsPosition, transform.rotation);
-            equippedIconInstance.name = _equippedName;
-            equippedIconInstance.transform.SetParent(transform, false);
+            _equippedIcon.SetActive(true);
         }
         else
         {
-            DeleteEquippedIcon();
+            _equippedIcon.SetActive(false);
             if (_isBought == true)
             {
                 OnProductBought(_productName);
@@ -62,28 +62,27 @@ public class UI_product : MonoBehaviour
     {
         if (productName == _productName)
         {
-            DeleteEquippedIcon();
+            _priceUI.SetActive(false);
+            _equippedIcon.SetActive(false);
             _isBought = true;
 
-            GameObject boughtIconInstance = Instantiate(_BoughtIcon, _buttonsPosition, transform.rotation);
-            boughtIconInstance.name = _boughtName;
-            boughtIconInstance.transform.SetParent(transform, false);
+            _boughtIcon.SetActive(true);
         }
     }
 
-    private void DeleteBoughtIcon()
+    private void OnNotEnoughMoney(string productName)
     {
-        GameObject boughtIconToDestroy = GameObject.Find(_boughtName);
-
-        if (boughtIconToDestroy != null)
-            Destroy(boughtIconToDestroy);
+        if (productName == _productName)
+        {
+            _price_text.color = _textColorNotEnoughMoney;
+        }
     }
 
-    private void DeleteEquippedIcon()
+    private void OnEnoughMoney(string productName)
     {
-        GameObject EquipedIconToDestroy = GameObject.Find(_equippedName);
-
-        if (EquipedIconToDestroy != null)
-            Destroy(EquipedIconToDestroy);
+        if (productName == _productName)
+        {
+            _price_text.color = Color.white;
+        }
     }
 }

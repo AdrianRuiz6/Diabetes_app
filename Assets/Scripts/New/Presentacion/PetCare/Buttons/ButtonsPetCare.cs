@@ -31,6 +31,7 @@ public abstract class ButtonsPetCare : MonoBehaviour
 
     private void OpenSubMenu()
     {
+        PageSliding.Instance.DeactivatePageSliding();
         _submenuPanel.SetActive(true);
 
         _slider.value = 1;
@@ -39,6 +40,7 @@ public abstract class ButtonsPetCare : MonoBehaviour
 
     private void CloseSubMenu()
     {
+        PageSliding.Instance.ActivatePageSliding();
         _submenuPanel.SetActive(false);
     }
 

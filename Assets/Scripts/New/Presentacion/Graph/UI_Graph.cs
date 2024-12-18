@@ -30,8 +30,7 @@ public class UI_Graph : MonoBehaviour
     private GraphFilter _currentFilter;
     private GameObject _graphElements;
     private Color _lineColor;
-
-    private GameObject[] _x_labels;
+    private List<GameObject> _x_labels;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _labelPrefab;
@@ -60,6 +59,8 @@ public class UI_Graph : MonoBehaviour
 
     private void Start()
     {
+        _x_labels = new List<GameObject>();
+
         // Creación del gameObject que contenga todos los elementos de la gráfica.
         _graphElements = new GameObject("Elements");
         _graphElements.transform.SetParent(_graphContainer, false);
@@ -186,7 +187,7 @@ public class UI_Graph : MonoBehaviour
                     label_X.GetComponent<TextMeshProUGUI>().text = $"{currentHour}:00";
                 }
             }
-            _x_labels.AddRange(label_X);
+            _x_labels.Add(label_X_Object);
 
             // Colocación de líneas intermitentes del eje horizontal.
             RectTransform flashingLine_X = Instantiate(_flashingLineXPrefab).GetComponent<RectTransform>();
@@ -223,7 +224,7 @@ public class UI_Graph : MonoBehaviour
             flashingLine_Y.anchoredPosition = new Vector2(-2.1f, normalizedValue * graphHeight);
         }
 
-        //SetFontSize(); TODO
+        SetFontSize();
     }
 
     private void PlotDataPoints()
@@ -312,13 +313,26 @@ public class UI_Graph : MonoBehaviour
 
     private void SetFontSize()
     {
-        float hourDifference = _maxHour - _minHour;
-        if(hourDifference > 15)
+        float baseFontSize = 1.5f;
+        float fontSizeAdjustment = 0.1f;
+        float minFontSize = 0.95f;
+        float maxFontSize = 1.5f;
+        float maxHourDifference = 14;
+
+        float maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
+        float hourDifference = maxHourAux - _minHour;
+
+        if (hourDifference > maxHourDifference)
         {
             foreach (GameObject label in _x_labels)
             {
-                label.GetComponent<TMP_Text>().fontSize = 1.5f - hourDifference * 0.05f;
+                float newFontSize = baseFontSize - (hourDifference - maxHourDifference) * fontSizeAdjustment;
+                newFontSize = Mathf.Clamp(newFontSize, minFontSize, maxFontSize);
+
+                label.GetComponent<TMP_Text>().fontSize = newFontSize;
             }
         }
+
+        _x_labels.Clear();
     }
 }

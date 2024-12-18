@@ -48,17 +48,28 @@ namespace Master.Domain.Economy
             }
         }
 
+        private void Update()
+        {
+            if(_productState == ProductState.NotPurchased)
+            {
+                if (EconomyManager.Instance.GetCoins() < _sellingPrice)
+                {
+                    GameEventsEconomy.OnNotEnoughMoney(_productName);
+                }
+                else
+                {
+                    GameEventsEconomy.OnEnoughMoney(_productName);
+                }
+            }
+        }
+
         void onButtonClick()
         {
             if (_productState == ProductState.NotPurchased)
             {
                 if(EconomyManager.Instance.GetCoins() >= _sellingPrice)
                 {
-                    BuyProduct();
-                }
-                else
-                {
-                    Debug.Log("No tienes suficientes monedas.");
+                    UI_confirmationWindowShop.Instance.ShowConfirmationWindow(transform.Find("Product/Dog").gameObject, _sellingPrice.ToString(), BuyProduct);
                 }
             }
             else if(_productState == ProductState.Purchased)

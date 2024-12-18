@@ -159,40 +159,30 @@ public class UI_SliderGraph : MonoBehaviour
     {
         _minHour = hour;
         _slider.minValue = 0;
+        int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
+        _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
 
         // TODO
-        
+        _slider.SetValueWithoutNotify(0);
+        UpdateAdditionalInfo(0);
+
     }
 
     private void ModifyFinishHour(int hour)
     {
         _maxHour = hour;
-        int maxHourAux = 0;
-        if(_maxHour < _minHour)
-        {
-            maxHourAux = _maxHour + 24;
-        }
-        else
-        {
-            maxHourAux = _maxHour;
-        }
+        int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
         _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
 
         // TODO
+        _slider.SetValueWithoutNotify(0);
+        UpdateAdditionalInfo(0);
 
     }
 
     private int GetSliderValueAccordingTime(DateTime dateTime)
     {
-        int dateTimeAux = 0;
-        if (dateTime.Hour < _minHour)
-        {
-            dateTimeAux = dateTime.Hour + 24;
-        }
-        else
-        {
-            dateTimeAux = dateTime.Hour;
-        }
+        int dateTimeAux = (dateTime.Hour < _minHour) ? dateTime.Hour + 24 : dateTime.Hour;
         int sliderValue = (dateTimeAux - _minHour) * 60 + dateTime.Minute;
         return sliderValue;
     }

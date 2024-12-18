@@ -57,11 +57,13 @@ public class SettingsButton : MonoBehaviour
     private void OpenSetting()
     {
         _settingsPanel.SetActive(true);
+        PageSliding.Instance.DeactivatePageSliding();
     }
 
     private void CloseSetting()
     {
         _settingsPanel?.SetActive(false);
+        PageSliding.Instance.ActivatePageSliding();
     }
 
     private void ChangeMusicVolume(float value)

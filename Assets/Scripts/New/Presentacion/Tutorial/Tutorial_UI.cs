@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Tutorial_UI : MonoBehaviour
 {
-    private PageSliding _pageSliding;
-
     [SerializeField] private GameObject _Tutorial_Section;
     private List<GameObject> _pagesList;
 
@@ -19,7 +17,6 @@ public class Tutorial_UI : MonoBehaviour
     void Start()
     {
         _pagesList = new List<GameObject>();
-        _pageSliding = GetComponent<PageSliding>();
 
         GetAllPages();
 
@@ -54,8 +51,7 @@ public class Tutorial_UI : MonoBehaviour
 
     private void OpenTutorial()
     {
-        _pageSliding.MoveToInitialPage();
-        _pageSliding.enabled = false;
+        PageSliding.Instance.MoveToInitialPage();
         _Tutorial_Section.SetActive(true);
 
         foreach (GameObject page in _pagesList)
@@ -67,7 +63,6 @@ public class Tutorial_UI : MonoBehaviour
 
     private void CloseTutorial()
     {
-        _pageSliding.enabled = true;
         _Tutorial_Section.SetActive(false);
 
         foreach (GameObject page in _pagesList)
