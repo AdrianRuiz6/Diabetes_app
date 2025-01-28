@@ -31,6 +31,64 @@ public static class DataStorage
     }
     #endregion
 
+    #region Score
+    public static void SaveCurrentScore(int currentScore)
+    {
+        PlayerPrefs.SetInt("CurrentScore", currentScore);
+    }
+
+    public static int LoadCurrentScore()
+    {
+        return PlayerPrefs.GetInt("CurrentScore", 0);
+    }
+
+    public static void SaveHighestScore(int currentScore)
+    {
+        PlayerPrefs.SetInt("HigherScore", currentScore);
+    }
+
+    public static int LoadHighestScore()
+    {
+        return PlayerPrefs.GetInt("HigherScore", 0);
+    }
+
+    public static void SaveScoreInfo(List<ScoreRecordData> infoList)
+    {
+        string path = $"{Application.persistentDataPath}/ScoreRecordData.txt";
+
+        ScoreRecordDataList allScoreElements = new ScoreRecordDataList();
+        foreach(ScoreRecordData scoreData in infoList)
+        {
+            allScoreElements.score.Add(scoreData);
+        }
+
+        string json = JsonUtility.ToJson(allScoreElements, true);
+
+        using (StreamWriter streamWriter = new StreamWriter(path, false))
+        {
+            streamWriter.Write(json);
+        }
+    }
+
+    public static List<ScoreRecordData> LoadScoreInfo()
+    {
+        string path = $"{Application.persistentDataPath}/ScoreRecordData.txt";
+        if (!File.Exists(path))
+            return new List<ScoreRecordData>();
+
+        string existingJson = null;
+
+        using (StreamReader streamReader = new StreamReader(path))
+        {
+            existingJson = streamReader.ReadToEnd();
+        }
+
+        ScoreRecordDataList allScoreElements = JsonUtility.FromJson<ScoreRecordDataList>(existingJson);
+
+        return allScoreElements.score;
+    }
+    #endregion
+
     #region Graph
 
     #region Initial and Finish time
@@ -241,6 +299,85 @@ public static class DataStorage
     }
     #endregion
     #endregion
+
+    #region Economy
+    public static void SaveStashedCoins(int coins)
+    {
+        PlayerPrefs.SetInt("StashedCoins", coins);
+    }
+
+    public static int LoadStashedCoins()
+    {
+        return PlayerPrefs.GetInt("StashedCoins", 0);
+    }
+
+    public static void SaveTotalCoins(int coins)
+    {
+        PlayerPrefs.SetInt("Coins", coins);
+    }
+
+    public static int LoadTotalCoins()
+    {
+        return PlayerPrefs.GetInt("Coins", 0);
+    }
+
+    public static void SaveProduct(string nameProduct, ProductState productState)
+    {
+        string path = $"{Application.persistentDataPath}/ProductData.txt";
+
+        ProductDataList allProducts = new ProductDataList();
+
+        if (File.Exists(path))
+        {
+            string existingJson = File.ReadAllText(path);
+            allProducts = JsonUtility.FromJson<ProductDataList>(existingJson) ?? new ProductDataList();
+        }
+
+        ProductData existingProduct = allProducts.products.FirstOrDefault(p => p.ProductName == nameProduct);
+        if (existingProduct != null)
+        {
+            existingProduct.ProductState = productState;
+        }
+        else
+        {
+            ProductData productData = new ProductData(nameProduct, productState);
+            allProducts.products.Add(productData);
+        }
+
+        string json = JsonUtility.ToJson(allProducts, true);
+
+        using (StreamWriter streamWriter = new StreamWriter(path))
+        {
+            streamWriter.Write(json);
+        }
+    }
+
+    public static ProductState LoadProduct(string name)
+    {
+        string path = $"{Application.persistentDataPath}/ProductData.txt";
+        if (!File.Exists(path))
+            return ProductState.NotPurchased;
+
+        string existingJson = null;
+
+        using (StreamReader streamReader = new StreamReader(path))
+        {
+            existingJson = streamReader.ReadToEnd();
+        }
+
+        ProductDataList allProducts = JsonUtility.FromJson<ProductDataList>(existingJson);
+
+        ProductData result = allProducts.products.FirstOrDefault(product => product.ProductName == name);
+        if (result == null)
+        {
+            return ProductState.NotPurchased;
+        }
+
+        return result.ProductState;
+    }
+    #endregion
+
+    #region Conection
     public static void SaveIsFirstUsage()
     {
         PlayerPrefs.SetInt("IsFirstUsage", 1);
@@ -271,26 +408,18 @@ public static class DataStorage
         return DateTime.Parse(PlayerPrefs.GetString("DisconnectionDate", DateTime.Now.ToString()));
     }
 
-    public static void SaveTimeLeftQuestionTimer(float timeLeft)
+    public static void SaveLastIterationStartTime(DateTime startTimeInterval)
     {
-        PlayerPrefs.SetFloat("LeftTimeQuestionTimer", timeLeft);
+        PlayerPrefs.SetString("LastIntervalStartTime", startTimeInterval.ToString());
     }
 
-    public static float LoadTimeLeftQuestionTimer()
+    public static DateTime LoadLastIterationStartTime()
     {
-        return PlayerPrefs.GetFloat("LeftTimeQuestionTimer", 0);
+        return DateTime.Parse(PlayerPrefs.GetString("LastIntervalStartTime", DateTime.Now.ToString()));
     }
+    #endregion
 
-    public static void SaveRestTimeIntervalSimulator(float timePassed)
-    {
-        PlayerPrefs.SetFloat("TimeLeft", timePassed);
-    }
-
-    public static float LoadRestTimeIntervalSimulator()
-    {
-        return PlayerPrefs.GetFloat("TimeLeft", 0);
-    }
-
+    #region Attributes
     public static void SaveLastTimeInsulinUsed(DateTime? lastTimeInsulinUsed)
     {
         PlayerPrefs.SetString("LastTimeInsulinUsed", lastTimeInsulinUsed.ToString());
@@ -347,7 +476,6 @@ public static class DataStorage
     public static int LoadGlycemia()
     {
         return PlayerPrefs.GetInt("Glycemia", AttributeManager.Instance.initialGlycemiaValue);
-        //return 120;
     }
 
     public static void SaveActivity(float activityValue)
@@ -358,7 +486,6 @@ public static class DataStorage
     public static int LoadActivity()
     {
         return PlayerPrefs.GetInt("Activity", AttributeManager.Instance.initialActivityValue);
-        //return 50;
     }
 
     public static void SaveHunger(float hungerValue)
@@ -369,92 +496,28 @@ public static class DataStorage
     public static int LoadHunger()
     {
         return PlayerPrefs.GetInt("Hunger", AttributeManager.Instance.initialHungerValue);
-        //return 50;
+    }
+    #endregion
+
+    #region Questions
+    public static void SaveCurrentQuestionIndex(int currentQuestionIndex)
+    {
+        PlayerPrefs.SetInt("CurrentQuestionIndex", currentQuestionIndex);
     }
 
-    public static void SaveCurrentScore(int currentScore)
+    public static int LoadCurrentQuestionIndex()
     {
-        PlayerPrefs.SetInt("CurrentScore", currentScore);
+        return PlayerPrefs.GetInt("CurrentQuestionIndex", 0);
     }
 
-    public static int LoadCurrentScore()
+    public static void SaveTimeLeftQuestionTimer(float timeLeft)
     {
-        return PlayerPrefs.GetInt("CurrentScore", 0);
+        PlayerPrefs.SetFloat("LeftTimeQuestionTimer", timeLeft);
     }
 
-    public static void SaveHighestScore(int currentScore)
+    public static float LoadTimeLeftQuestionTimer()
     {
-        PlayerPrefs.SetInt("HigherScore", currentScore);
-    }
-
-    public static int LoadHighestScore()
-    {
-        return PlayerPrefs.GetInt("HigherScore", 0);
-    }
-
-    public static void SaveCoins(int coins)
-    {
-        PlayerPrefs.SetInt("Coins", coins);
-    }
-
-    public static int LoadCoins()
-    {
-        return PlayerPrefs.GetInt("Coins", 0);
-    }
-
-    public static void SaveProduct(string nameProduct, ProductState productState)
-    {
-        string path = $"{Application.persistentDataPath}/ProductData.txt";
-
-        ProductDataList allProducts = new ProductDataList();
-
-        if (File.Exists(path))
-        {
-            string existingJson = File.ReadAllText(path);
-            allProducts = JsonUtility.FromJson<ProductDataList>(existingJson) ?? new ProductDataList();
-        }
-
-        ProductData existingProduct = allProducts.products.FirstOrDefault(p => p.ProductName == nameProduct);
-        if (existingProduct != null)
-        {
-            existingProduct.ProductState = productState;
-        }
-        else
-        {
-            ProductData productData = new ProductData(nameProduct, productState);
-            allProducts.products.Add(productData);
-        }
-
-        string json = JsonUtility.ToJson(allProducts);
-
-        using (StreamWriter streamWriter = new StreamWriter(path))
-        {
-            streamWriter.Write(json);
-        }
-    }
-
-    public static ProductState LoadProduct(string name)
-    {
-        string path = $"{Application.persistentDataPath}/ProductData.txt";
-        if (!File.Exists(path))
-            return ProductState.NotPurchased;
-
-        string existingJson = null;
-
-        using (StreamReader streamReader = new StreamReader(path))
-        {
-            existingJson = streamReader.ReadToEnd();
-        }
-
-        ProductDataList allProducts = JsonUtility.FromJson<ProductDataList>(existingJson);
-
-        ProductData result = allProducts.products.FirstOrDefault(product => product.ProductName == name);
-        if (result == null)
-        {
-            return ProductState.NotPurchased;
-        }
-
-        return result.ProductState;
+        return PlayerPrefs.GetFloat("LeftTimeQuestionTimer", 0);
     }
 
     public static void SaveUserPerformance(Dictionary<string, FixedSizeQueue<char>> userPerformance)
@@ -518,6 +581,42 @@ public static class DataStorage
         return userPerformance;
     }
 
+    public static void SaveIterationQuestions(List<Question> iterationQuestions)
+    {
+        string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
+
+        IterationQuestionsDataList newIterationQuestions = new IterationQuestionsDataList();
+        foreach (Question question in iterationQuestions)
+        {
+            newIterationQuestions.questions.Add(question);
+        }
+
+        string json = JsonUtility.ToJson(newIterationQuestions, true);
+
+        using (StreamWriter streamWriter = new StreamWriter(path, false))
+        {
+            streamWriter.Write(json);
+        }
+    }
+
+    public static List<Question> LoadIterationQuestions()
+    {
+        string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
+        if (!File.Exists(path))
+            return new List<Question>();
+
+        string existingJson = null;
+
+        using (StreamReader streamReader = new StreamReader(path))
+        {
+            existingJson = streamReader.ReadToEnd();
+        }
+
+        IterationQuestionsDataList currentIterationQuestions = JsonUtility.FromJson<IterationQuestionsDataList>(existingJson);
+
+        return currentIterationQuestions.questions;
+    }
+
     public static List<Question> LoadQuestions()
     {
         string url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmL6z_aRoGzC_IM7f85ga5WoVNv99d4oUYIsjTrLzUgKLUuzc4xXIY8n_TakI-OQ/pub?gid=180804845&single=true&output=csv";
@@ -575,4 +674,5 @@ public static class DataStorage
             }
         }
     }
+    #endregion
 }

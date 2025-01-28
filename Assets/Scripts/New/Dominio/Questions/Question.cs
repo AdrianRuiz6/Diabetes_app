@@ -1,20 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Xml.XPath;
 using UnityEngine;
 
+[System.Serializable]
 public class Question
 {
-    public string topic { get; private set; }
-    public string question { get; private set; }
-    public string answer1 { get; private set; }
-    public string answer2 { get; private set; }
-    public string answer3 { get; private set; }
-    public string correctAnswer { get; private set; }
-    public string advice { get; private set; }
+    public string topic;
+    public string question;
+    public string answer1;
+    public string answer2;
+    public string answer3;
+    public string correctAnswer;
+    public string advice;
 
-    public char resultAnswer { get; private set; }
+    public char resultAnswer;
 
     public Question(string topic, string question, string answer1, string answer2, string answer3, string correctAnswer, string advice)
     {

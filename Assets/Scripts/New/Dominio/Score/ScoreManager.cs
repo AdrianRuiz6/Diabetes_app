@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.AdaptivePerformance.Provider.AdaptivePerformanceSubsystemDescriptor;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -10,7 +12,6 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] private int _currentScore;
     [SerializeField] private int _highestScore;
-    private DateTime _lastTimeDisconnection;
 
     void Awake()
     {
@@ -33,13 +34,14 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        _currentScore = DataStorage.LoadCurrentScore();
-        GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
         _highestScore = DataStorage.LoadHighestScore();
-        GameEventsScore.OnModifyHighestScore?.Invoke(_highestScore);
-        _lastTimeDisconnection = DataStorage.LoadDisconnectionDate();
+        _currentScore = DataStorage.LoadCurrentScore();
 
-        CheckPastMidnights();
+        if (DataStorage.LoadDisconnectionDate().Date < DateTime.Now.Date)
+        {
+            CheckHighestScore();
+            _currentScore = 0;
+        }
 
         StartCoroutine(CheckScoreAtMidnight());
     }
@@ -51,20 +53,6 @@ public class ScoreManager : MonoBehaviour
             _highestScore = _currentScore;
             GameEventsScore.OnModifyHighestScore?.Invoke(_highestScore);
         }
-
-        _currentScore = 0;
-        GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
-    }
-
-    private void CheckPastMidnights()
-    {
-        DateTime currentTime = DateTime.Now;
-        TimeSpan timeDifference = currentTime.Date - _lastTimeDisconnection.Date;
-
-        if(Mathf.Abs(timeDifference.Days) >= 1)
-        {
-            CheckHighestScore();
-        }
     }
 
     private IEnumerator CheckScoreAtMidnight()
@@ -74,29 +62,35 @@ public class ScoreManager : MonoBehaviour
             DateTime now = DateTime.Now;
             DateTime nextMidnight = now.AddDays(1).Date;
 
-            yield return new WaitForSeconds((float)(nextMidnight - now).TotalSeconds);
+            while (DateTime.Now < nextMidnight)
+            {
+                yield return new WaitForSeconds(1);
+            }
 
             CheckHighestScore();
+            _currentScore = 0;
+            GameEventsScore.OnMidnight?.Invoke();
+            break;
         }
     }
 
-    public void AddScore(int score)
+    public void AddScore(int score, DateTime? time, string activity)
     {
         _currentScore += score;
-        GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
+        GameEventsScore.OnModifyCurrentScore?.Invoke(score, time, activity);
     }
 
-    public void SubstractScore(int score)
+    public void SubstractScore(int score, DateTime? time, string activity)
     {
         if(_currentScore - score < 0)
         {
             _currentScore = 0;
-            GameEventsScore.OnModifyCurrentScore?.Invoke(0);
+            GameEventsScore.OnModifyCurrentScore?.Invoke(-score, time, activity);
         }
         else
         {
             _currentScore -= score;
-            GameEventsScore.OnModifyCurrentScore?.Invoke(_currentScore);
+            GameEventsScore.OnModifyCurrentScore?.Invoke(-score, time, activity);
         }
     }
 }

@@ -20,10 +20,11 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    public void PlayAnimation(GameObject prefab, Vector3 position, GameObject parent)
+    public void PlayAnimation(GameObject prefab, Vector3 position, Vector3 scale, GameObject parent)
     {
         GameObject animatedObject = Instantiate(prefab, position, Quaternion.identity);
         animatedObject.transform.SetParent(parent.transform, false);
+        animatedObject.transform.localScale = scale;
         StartCoroutine(DestroyAnimatedObject(animatedObject));
     }
 

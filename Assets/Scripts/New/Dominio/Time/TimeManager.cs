@@ -1,7 +1,4 @@
-using Master.Domain.Economy;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
+using System;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour

@@ -2,6 +2,7 @@ using Master.Domain.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AISimulator : MonoBehaviour
@@ -9,6 +10,8 @@ public class AISimulator : MonoBehaviour
     public static AISimulator Instance;
 
     private int _iterationsTotal;
+    private float _initialTimerSeconds;
+    private DateTime _currentIterationStartTime;
 
     private int _iterationsEffectsInsulin;
     private bool _isInsulinActivated;
@@ -17,8 +20,7 @@ public class AISimulator : MonoBehaviour
     private int _iterationsEffectsFood;
     private bool _isFoodActivated;
 
-    private float _timeIntervalAI;
-    private float _initialTimerSeconds;
+    private float _timeIterationAI;
 
     private Queue<DateTime> _dateTimesQueue = new Queue<DateTime>();
 
@@ -37,24 +39,23 @@ public class AISimulator : MonoBehaviour
 
     public void Simulate()
     {
-        _timeIntervalAI = AttributeSchedule.Instance.UpdateInterval;
-        Debug.Log($"SIMULATION: Start Simulation - Time Interval: {_timeIntervalAI} seconds");
+        _timeIterationAI = AttributeSchedule.Instance.UpdateInterval;
+        Debug.Log($"SIMULATION: Start Simulation - Time Interval: {_timeIterationAI} seconds");
 
         CalculateIterationsButtons();
         SimulateIntervals();
-        AttributeSchedule.Instance.UpdateTimer(_initialTimerSeconds);
+        AttributeSchedule.Instance.UpdateTimer(_initialTimerSeconds, _currentIterationStartTime);
     }
 
     private void CalculateIterationsButtons()
     {
+        DateTime lastIterationStartTime = DataStorage.LoadLastIterationStartTime();
         DateTime? currentTime = DateTime.Now;
         TimeSpan? timePassed;
         float secondsPassed;
         float restTimeEffects;
         float timeDisconnected;
         DateTime? lastTimeDisconnected = DataStorage.LoadDisconnectionDate();
-        DateTime? newLastTimeDisconnected = null;
-        float restTimePreviousInterval = DataStorage.LoadRestTimeIntervalSimulator();
 
         _isInsulinActivated = AttributeManager.Instance.isInsulinEffectActive;
         _isExerciseActivated = AttributeManager.Instance.isExerciseEffectActive;
@@ -62,84 +63,76 @@ public class AISimulator : MonoBehaviour
 
         // Cálculo de las iteraciones e inicio del tiemer de la IA de los atributos.
         Debug.Log($"SIMULATION: Current Time: {currentTime}");
-        Debug.Log($"SIMULATION: Last Disconnected Time: {lastTimeDisconnected}, Time Left from Previous Interval: {restTimePreviousInterval}");
 
         if (DataStorage.LoadIsFirstUsage())
         {
             _iterationsTotal = 0;
-            _initialTimerSeconds = _timeIntervalAI;
+            _initialTimerSeconds = _timeIterationAI;
         }
         else
         {
-            // Verifica si lastTimeDisconnected es null
-            if (lastTimeDisconnected.HasValue)
-            {
-                if (lastTimeDisconnected.Value.AddSeconds(restTimePreviousInterval) <= currentTime)
-                {
-                    DateTime dateTimeToIntroduce = DateTime.Now;
+            // Se calculan los intervalos sucedidos mientras la aplicación estaba desconectada y reinicio del timer de la simulación.
 
-                    _iterationsTotal = 1;
-                    newLastTimeDisconnected = lastTimeDisconnected.Value.AddSeconds(restTimePreviousInterval);
-                    // Se guarda la fecha en la lista de fechas.
-                    dateTimeToIntroduce = lastTimeDisconnected.Value.AddSeconds(restTimePreviousInterval);
-                    _dateTimesQueue.Enqueue(dateTimeToIntroduce);
+            // Se calcula el tiempo transcurrido desde la última vez que se inició un intervalo hasta ahora.
+            TimeSpan timePassedSinceLastIteration = DateTime.Now - lastIterationStartTime;
+            secondsPassed = (float)timePassedSinceLastIteration.TotalSeconds;
 
-                    timePassed = currentTime - newLastTimeDisconnected;
-                    secondsPassed = (float)timePassed?.TotalSeconds;
-                    _iterationsTotal = _iterationsTotal + (int)secondsPassed / (int)_timeIntervalAI;
-                    // Se guardan las fechas en la lista de fechas.
-                    for (int iterations = 0; iterations < _iterationsTotal; iterations++)
-                    {
-                        dateTimeToIntroduce = dateTimeToIntroduce.AddSeconds(_timeIntervalAI);
-                        _dateTimesQueue.Enqueue(dateTimeToIntroduce);
-                    }
-                    _initialTimerSeconds = secondsPassed % _timeIntervalAI;
-                }
-                else
-                {
-                    timePassed = currentTime - lastTimeDisconnected;
-                    secondsPassed = restTimePreviousInterval - (float)timePassed?.TotalSeconds;
-                    _iterationsTotal = 0;
-                    _initialTimerSeconds = secondsPassed % _timeIntervalAI;
-                }
-            }
-            else
+            // Si no ha pasado suficiente tiempo para completar un intervalo.
+            if (secondsPassed < _timeIterationAI)
             {
                 _iterationsTotal = 0;
-                _initialTimerSeconds = _timeIntervalAI;
+                _initialTimerSeconds = _timeIterationAI - secondsPassed;
+                _currentIterationStartTime = lastIterationStartTime;
             }
+            // Si ha ha pasado suficiente tiempo para completar un intervalo.
+            else
+            {
+                _iterationsTotal = (int)(secondsPassed / _timeIterationAI);
+                _initialTimerSeconds = _timeIterationAI - (secondsPassed % _timeIterationAI);
+                _currentIterationStartTime = lastIterationStartTime.AddSeconds(_iterationsTotal * _timeIterationAI);
 
-            Debug.Log($"SIMULATION: Total iterations: {_iterationsTotal}, Initial Timer Seconds: {_initialTimerSeconds}");
+                Debug.Log($"SIMULATION: Iteraciones totales pasadas desde el último intervalo: {_iterationsTotal}");
+                Debug.Log($"SIMULATION: Segundos restantes para el próximo intervalo: {_initialTimerSeconds}");
+                Debug.Log($"SIMULATION: Tiempo de inicio de la iteracion actual: {_currentIterationStartTime}");
+
+                // Se guardan las fechas en la lista de fechas.
+                DateTime dateTimeToIntroduce = lastIterationStartTime;
+                for (int iterations = 0; iterations < _iterationsTotal; iterations++)
+                {
+                    dateTimeToIntroduce = dateTimeToIntroduce.AddSeconds(_timeIterationAI);
+                    _dateTimesQueue.Enqueue(dateTimeToIntroduce);
+                }
+            }
         }
 
-        // Verificación para lastTimeInsulinUsed
+        // Cálculo de la duración en intervalos del efecto de la insulina.
         if (AttributeManager.Instance.lastTimeInsulinUsed.HasValue)
         {
             timePassed = lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime) - AttributeManager.Instance.lastTimeInsulinUsed.Value;
             secondsPassed = (float)timePassed?.TotalSeconds;
             restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
-            
+
             Debug.Log($"SIMULATION: Insulin - Time Passed (lastTimeUsed -> DisconectionTIme): {secondsPassed}, Rest of the time: {restTimeEffects}");
 
             if (secondsPassed < AttributeManager.Instance.timeEffectButtons)
             {
                 timeDisconnected = (float)(currentTime - lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime))?.TotalSeconds;
                 AttributeManager.Instance.isInsulinEffectActive = true;
-                if(restTimeEffects < timeDisconnected)
+                if (restTimeEffects < timeDisconnected)
                 {
-                    _iterationsEffectsInsulin = (int)restTimeEffects / (int)_timeIntervalAI;
+                    _iterationsEffectsInsulin = (int)restTimeEffects / (int)_timeIterationAI;
                     Debug.Log($"SIMULATION: Insulin Effect Active - Iterations Left: {_iterationsEffectsInsulin}");
                 }
                 else
                 {
-                    _iterationsEffectsInsulin = (int)timeDisconnected / (int)_timeIntervalAI;
+                    _iterationsEffectsInsulin = (int)timeDisconnected / (int)_timeIterationAI;
                     Debug.Log($"SIMULATION: Insulin Effect Active - Iterations Left: {_iterationsEffectsInsulin}");
                 }
-                
+
             }
         }
 
-        // Verificación para lastTimeExerciseUsed
+        // Cálculo de la duración en intervalos del efecto del ejercicio.
         if (AttributeManager.Instance.lastTimeExerciseUsed.HasValue)
         {
             timePassed = lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime) - AttributeManager.Instance.lastTimeExerciseUsed.Value;
@@ -154,23 +147,23 @@ public class AISimulator : MonoBehaviour
                 AttributeManager.Instance.isExerciseEffectActive = true;
                 if (restTimeEffects < timeDisconnected)
                 {
-                    _iterationsEffectsExercise = (int)restTimeEffects / (int)_timeIntervalAI;
+                    _iterationsEffectsExercise = (int)restTimeEffects / (int)_timeIterationAI;
                     Debug.Log($"SIMULATION: Exercise Effect Active - Iterations Left: {_iterationsEffectsExercise}");
                 }
                 else
                 {
-                    _iterationsEffectsExercise = (int)timeDisconnected / (int)_timeIntervalAI;
+                    _iterationsEffectsExercise = (int)timeDisconnected / (int)_timeIterationAI;
                     Debug.Log($"SIMULATION: Exercise Effect Active - Iterations Left: {_iterationsEffectsExercise}");
                 }
             }
         }
 
-        // Verificación para lastTimeFoodUsed
+        // Cálculo de la duración en intervalos del efecto de la comida.
         if (AttributeManager.Instance.lastTimeFoodUsed.HasValue)
         {
             timePassed = lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime) - AttributeManager.Instance.lastTimeFoodUsed.Value;
             secondsPassed = (float)timePassed?.TotalSeconds;
-            restTimeEffects =  AttributeManager.Instance.timeEffectButtons - secondsPassed;
+            restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
 
             Debug.Log($"SIMULATION: Food - Time Passed (lastTimeUsed -> DisconectionTIme): {secondsPassed}, Rest of the time: {restTimeEffects}");
 
@@ -180,12 +173,12 @@ public class AISimulator : MonoBehaviour
                 AttributeManager.Instance.isFoodEffectActive = true;
                 if (restTimeEffects < timeDisconnected)
                 {
-                    _iterationsEffectsFood = (int)restTimeEffects / (int)_timeIntervalAI;
+                    _iterationsEffectsFood = (int)restTimeEffects / (int)_timeIterationAI;
                     Debug.Log($"SIMULATION: Food Effect Active - Iterations Left: {_iterationsEffectsFood}");
                 }
                 else
                 {
-                    _iterationsEffectsFood = (int)timeDisconnected / (int)_timeIntervalAI;
+                    _iterationsEffectsFood = (int)timeDisconnected / (int)_timeIterationAI;
                     Debug.Log($"SIMULATION: Food Effect Active - Iterations Left: {_iterationsEffectsFood}");
                 }
             }

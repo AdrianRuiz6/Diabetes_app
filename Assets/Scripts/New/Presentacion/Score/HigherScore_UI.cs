@@ -20,6 +20,7 @@ public class HigherScore_UI : MonoBehaviour
     void Start()
     {
         _higherScore_TMP = GetComponent<TMP_Text>();
+        _higherScore_TMP.text = DataStorage.LoadHighestScore().ToString();
     }
 
     private void ModifyHigherScoreTMP(int higherScore)

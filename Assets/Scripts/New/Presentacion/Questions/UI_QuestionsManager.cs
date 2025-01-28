@@ -36,11 +36,12 @@ public class UI_QuestionsManager : MonoBehaviour
 
         float previousTimeLeft = DataStorage.LoadTimeLeftQuestionTimer();
         DateTime lastTimeDisconnected = DataStorage.LoadDisconnectionDate();
+
         TimeSpan timeDisconnected = DateTime.Now - lastTimeDisconnected;
         float currentTimeLeft = previousTimeLeft - (float)timeDisconnected.TotalSeconds;
-
         GameEventsQuestions.OnModifyTimer?.Invoke(currentTimeLeft);
     }
+
 
     private void TurnFalseProblemsLoading()
     {

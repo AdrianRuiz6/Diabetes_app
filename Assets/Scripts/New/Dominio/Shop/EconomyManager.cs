@@ -7,7 +7,8 @@ namespace Master.Domain.Economy
 {
     public class EconomyManager : MonoBehaviour
     {
-        [SerializeField] private int _coins;
+        [SerializeField] private int _totalCoins;
+        [SerializeField] private int _stashedCoins;
 
         public static EconomyManager Instance;
 
@@ -24,32 +25,47 @@ namespace Master.Domain.Economy
             }
         }
 
+        private void OnDestroy()
+        {
+            DataStorage.SaveTotalCoins(_totalCoins);
+            DataStorage.SaveStashedCoins(_stashedCoins);
+        }
+
         void Start()
         {
-            _coins = DataStorage.LoadCoins();
-            GameEventsEconomy.OnCoinsUpdated?.Invoke(_coins);
+            _stashedCoins = DataStorage.LoadStashedCoins();
+            _totalCoins = DataStorage.LoadTotalCoins();
+            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
         }
 
-        public void AddCoins(int coins)
+        public void AddStashedCoins(int coins)
         {
-            _coins += coins;
-            GameEventsEconomy.OnCoinsUpdated?.Invoke(_coins);
+            _stashedCoins += coins;
+            GameEventsEconomy.OnStashedCoinsUpdated?.Invoke(_stashedCoins);
         }
 
-        public void SubstractCoins(int coins)
+        public void StashedCoinsToTotalCoins()
         {
-            _coins -= coins;
-            GameEventsEconomy.OnCoinsUpdated?.Invoke(_coins);
+            _totalCoins += _stashedCoins;
+            _stashedCoins = 0;
+            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+        }
+
+        public void AddTotalCoins(int coins)
+        {
+            _totalCoins += coins;
+            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+        }
+
+        public void SubstractTotalCoins(int coins)
+        {
+            _totalCoins -= coins;
+            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
         }
 
         public int GetCoins()
         {
-            return _coins;
-        }
-
-        private void OnDestroy()
-        {
-            DataStorage.SaveCoins(_coins);
+            return _totalCoins;
         }
     }
 }

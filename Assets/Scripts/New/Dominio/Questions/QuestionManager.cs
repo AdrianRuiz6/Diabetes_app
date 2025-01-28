@@ -29,12 +29,15 @@ public class QuestionManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        DataStorage.SaveCurrentQuestionIndex(currentQuestionIndex);
+        DataStorage.SaveIterationQuestions(_iterationQuestions);
+    }
+
     void Start()
     {
         _allQuestions = new Dictionary<string, List<Question>>();
-        _iterationQuestions = new List<Question>();
-        currentQuestionIndex = 0;
-
         InitializeQuestions();
     }
 
@@ -70,7 +73,24 @@ public class QuestionManager : MonoBehaviour
 
         UserPerformanceManager.Instance.InitializePerformance(allTopics);
 
-        GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
+        _iterationQuestions = DataStorage.LoadIterationQuestions();
+        if(DataStorage.LoadCurrentQuestionIndex() - 1 < 0)
+        {
+            currentQuestionIndex = 0;
+        }
+        else
+        {
+            currentQuestionIndex = DataStorage.LoadCurrentQuestionIndex() - 1;
+        }
+        
+        if(_iterationQuestions.Count == 0)
+        {
+            GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
+        }
+        else
+        {
+            GameEventsQuestions.OnFinalizedCreationQuestions?.Invoke();
+        }
     }
 
     IEnumerator TimerRetry()

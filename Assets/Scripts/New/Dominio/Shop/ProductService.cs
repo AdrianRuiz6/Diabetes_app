@@ -35,7 +35,7 @@ namespace Master.Domain.Economy
             _sellingColor.a = 1f;
 
             // Añadida función cuando se pulsa el botón.
-            _productButton.onClick.AddListener(onButtonClick);
+            _productButton.onClick.AddListener(OnButtonClick);
 
             // Cargar datos producto.
             _productState = DataStorage.LoadProduct(_productName);
@@ -63,7 +63,7 @@ namespace Master.Domain.Economy
             }
         }
 
-        void onButtonClick()
+        void OnButtonClick()
         {
             if (_productState == ProductState.NotPurchased)
             {
@@ -86,7 +86,7 @@ namespace Master.Domain.Economy
         private void BuyProduct()
         {
             _productState = ProductState.Purchased;
-            EconomyManager.Instance.SubstractCoins(_sellingPrice);
+            EconomyManager.Instance.SubstractTotalCoins(_sellingPrice);
             GameEventsEconomy.OnProductBought?.Invoke(_productName);
         }
 

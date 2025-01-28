@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
+using UnityEngine.UIElements;
+using Master.Domain.Economy;
 
 public class AttributeManager : MonoBehaviour
 {
@@ -12,6 +14,16 @@ public class AttributeManager : MonoBehaviour
 
     private Mutex mutex = new Mutex();
 
+    public List<AttributeState> GlycemiaRangeStates;
+    public List<AttributeState> ActivityRangeStates;
+    public List<AttributeState> HungerRangeStates;
+
+    public int minGlycemiaValue { get; private set; }
+    public int minActivityValue { get; private set; }
+    public int minHungerValue { get; private set; }
+    public int maxGlycemiaValue { get; private set; }
+    public int maxActivityValue { get; private set; }
+    public int maxHungerValue { get; private set; }
     public int initialGlycemiaValue { get; private set; }
     public int initialActivityValue { get; private set; }
     public int initialHungerValue { get; private set; }
@@ -49,6 +61,16 @@ public class AttributeManager : MonoBehaviour
         GameEventsPetCare.OnModifyGlycemia += ModifyGlycemia;
         GameEventsPetCare.OnModifyActivity += ModifyActivity;
         GameEventsPetCare.OnModifyHunger += ModifyHunger;
+
+        minGlycemiaValue = 20;
+        minActivityValue = 0;
+        minHungerValue = 0;
+        maxGlycemiaValue = 250;
+        maxActivityValue = 100;
+        maxHungerValue = 100;
+        initialGlycemiaValue = 115;
+        initialActivityValue = 75;
+        initialHungerValue = 25;
     }
 
     void OnDestroy()
@@ -68,12 +90,8 @@ public class AttributeManager : MonoBehaviour
 
     void Start()
     {
-        timeButtonsCD = 3; // TODO: 60 minutos 3600
+        timeButtonsCD = 15; // TODO: 60 minutos 3600
         timeEffectButtons = 3; // TODO: 30 minutos 1800
-
-        initialGlycemiaValue = 135;
-        initialActivityValue = 75;
-        initialHungerValue = 25;
 
         glycemiaValue = DataStorage.LoadGlycemia();
         activityValue = DataStorage.LoadActivity();
@@ -86,10 +104,8 @@ public class AttributeManager : MonoBehaviour
         DateTime? currentTime = DateTime.Now;
         TimeSpan? timePassed = null;
 
-        Debug.Log($"-test- lastTimeInsulinUsed -> {lastTimeInsulinUsed}");
-        if(lastTimeInsulinUsed != null)
+        if (lastTimeInsulinUsed != null)
         {
-            Debug.Log($"-test- lastTimeInsulinUsed -> entró");
             timePassed = currentTime - lastTimeInsulinUsed;
             if ((float)timePassed.Value.TotalSeconds < timeButtonsCD)
             {
@@ -127,7 +143,7 @@ public class AttributeManager : MonoBehaviour
                 StartCoroutine(ActivateExerciseEffect(timeEffectButtons - (float)timePassed.Value.Seconds));
             }
         }
-        
+
         if (lastTimeFoodUsed != null)
         {
             timePassed = currentTime - lastTimeFoodUsed;
@@ -155,7 +171,7 @@ public class AttributeManager : MonoBehaviour
     {
         TimeSpan currentTime = DateTime.Now.TimeOfDay;
 
-        if(currentTime == LimitHours.Instance.initialTime)
+        if (currentTime == LimitHours.Instance.initialTime)
         {
             RestartGlycemia(DateTime.Now.AddHours(LimitHours.Instance.initialTime.Hours));
             RestartActivity(DateTime.Now.AddHours(LimitHours.Instance.initialTime.Hours));
@@ -182,18 +198,41 @@ public class AttributeManager : MonoBehaviour
         mutex.WaitOne();
         try
         {
-            glycemiaValue = Mathf.Clamp(glycemiaValue + value, 20, 250);
+            glycemiaValue = Mathf.Clamp(glycemiaValue + value, minGlycemiaValue, maxGlycemiaValue);
             if (currentDateTime != null)
             {
                 DataStorage.SaveGlycemiaGraph(currentDateTime, glycemiaValue);
                 GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
+
+                // Distribución de las recompensas
+                foreach (AttributeState state in GlycemiaRangeStates)
+                {
+                    if (glycemiaValue >= state.MinValue && glycemiaValue <= state.MaxValue)
+                    {
+                        switch (state.RangeValue)
+                        {
+                            case AttributeRangeValue.Good:
+                                ScoreManager.Instance.AddScore(20, currentDateTime, "control bueno de la glucemia");
+                                EconomyManager.Instance.AddStashedCoins(10);
+                                break;
+                            case AttributeRangeValue.Intermediate:
+                                ScoreManager.Instance.AddScore(10, currentDateTime, "control regular de la glucemia");
+                                EconomyManager.Instance.AddStashedCoins(5);
+                                break;
+                            case AttributeRangeValue.Bad:
+                                ScoreManager.Instance.SubstractScore(10, currentDateTime, "control malo de la glucemia");
+                                break;
+                            default: break;
+                        }
+                    }
+                }
             }
         }
         finally
         {
             mutex.ReleaseMutex();
         }
-        
+
     }
 
     private void ModifyActivity(int value, DateTime? currentDateTime = null)
@@ -201,11 +240,33 @@ public class AttributeManager : MonoBehaviour
         mutex.WaitOne();
         try
         {
-            activityValue = Mathf.Clamp(activityValue + value, 0, 100);
-            if(currentDateTime != null)
+            activityValue = Mathf.Clamp(activityValue + value, minActivityValue, maxActivityValue);
+            if (currentDateTime != null)
             {
                 DataStorage.SaveActivityGraph(currentDateTime, activityValue);
                 GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Activity);
+                // Distribución de las recompensas
+                foreach (AttributeState state in ActivityRangeStates)
+                {
+                    if (activityValue >= state.MinValue && activityValue <= state.MaxValue)
+                    {
+                        switch (state.RangeValue)
+                        {
+                            case AttributeRangeValue.Good:
+                                ScoreManager.Instance.AddScore(20, currentDateTime, "control bueno de la actividad");
+                                EconomyManager.Instance.AddStashedCoins(10);
+                                break;
+                            case AttributeRangeValue.Intermediate:
+                                ScoreManager.Instance.AddScore(10, currentDateTime, "control regular de la actividad");
+                                EconomyManager.Instance.AddStashedCoins(5);
+                                break;
+                            case AttributeRangeValue.Bad:
+                                ScoreManager.Instance.SubstractScore(10, currentDateTime, "control malo de la actividad");
+                                break;
+                            default: break;
+                        }
+                    }
+                }
             }
         }
         finally
@@ -219,11 +280,33 @@ public class AttributeManager : MonoBehaviour
         mutex.WaitOne();
         try
         {
-            hungerValue = Mathf.Clamp(hungerValue + value, 0, 100);
+            hungerValue = Mathf.Clamp(hungerValue + value, minHungerValue, maxHungerValue);
             if (currentDateTime != null)
             {
                 DataStorage.SaveHungerGraph(currentDateTime, hungerValue);
                 GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Hunger);
+                // Distribución de las recompensas
+                foreach (AttributeState state in HungerRangeStates)
+                {
+                    if (hungerValue >= state.MinValue && hungerValue <= state.MaxValue)
+                    {
+                        switch (state.RangeValue)
+                        {
+                            case AttributeRangeValue.Good:
+                                ScoreManager.Instance.AddScore(20, currentDateTime, "control bueno del hambre");
+                                EconomyManager.Instance.AddStashedCoins(10);
+                                break;
+                            case AttributeRangeValue.Intermediate:
+                                ScoreManager.Instance.AddScore(10, currentDateTime, "control regular del hambre");
+                                EconomyManager.Instance.AddStashedCoins(5);
+                                break;
+                            case AttributeRangeValue.Bad:
+                                ScoreManager.Instance.SubstractScore(10, currentDateTime, "control malo del hambre");
+                                break;
+                            default: break;
+                        }
+                    }
+                }
             }
         }
         finally
@@ -331,7 +414,6 @@ public class AttributeManager : MonoBehaviour
 
     private IEnumerator ResetInsulinButton(float time)
     {
-        Debug.Log($"-test- se llama al CD");
         GameEventsPetCare.OnStartTimerCD?.Invoke("Insulin", time);
         yield return new WaitForSeconds(time);
         DeactivateInsulinButton();

@@ -44,7 +44,7 @@ public class Cooldown : MonoBehaviour
     {
         if (_isInRange == false && LimitHours.Instance.IsInRange(DateTime.Now.TimeOfDay))
         {
-            ResetButton();
+            EnableButton();
         }else if (_isInRange == true && LimitHours.Instance.IsInRange(DateTime.Now.TimeOfDay) == false)
         {
             DisableButton();
@@ -107,7 +107,7 @@ public class Cooldown : MonoBehaviour
         _iconImageCD.fillAmount = 1;
     }
 
-    public void ResetButton()
+    public void EnableButton()
     {
         _isInRange = true;
         _button.interactable = true;

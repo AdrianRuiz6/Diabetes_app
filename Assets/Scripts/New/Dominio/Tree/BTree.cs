@@ -92,7 +92,6 @@ namespace BehaviorTree
             {
                 TimeSpan previousTime = currentDateTime.AddSeconds(-AttributeSchedule.Instance.UpdateInterval).TimeOfDay;
                 previousIsInTime = LimitHours.Instance.IsInRange(previousTime);
-                firstIteration = false;
             }
 
             bool currentIsInTime = LimitHours.Instance.IsInRange(currentDateTime.TimeOfDay);
@@ -118,6 +117,7 @@ namespace BehaviorTree
                     AddToEvalueateQueue(finishTime);
                 }
             }
+            firstIteration = false;
         }
 
         private void AddToEvalueateQueue(DateTime newDateTime)

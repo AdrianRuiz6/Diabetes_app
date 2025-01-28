@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,19 +29,6 @@ public class UI_QuestionsTimer : MonoBehaviour
         DataStorage.SaveTimeLeftQuestionTimer(_timer);
     }
 
-    private void OnValidate()
-    {
-        _timer = Mathf.Clamp(_timer, 0, _secondsUntilQuestions);
-    }
-
-    private void Start()
-    {
-        if(_timer == 0)
-        {
-            StartTimer();
-        }
-    }
-
     void Update()
     {
         if (_isTimerActive)
@@ -55,7 +39,7 @@ public class UI_QuestionsTimer : MonoBehaviour
             }
             else
             {
-                _timer -= Time.deltaTime;
+                _timer = Mathf.Clamp(_timer - Time.deltaTime, 0, _secondsUntilQuestions);
                 UpdateTimerBar();
             }
         }
@@ -63,7 +47,7 @@ public class UI_QuestionsTimer : MonoBehaviour
 
     private void StartTimer()
     {
-        _timer = _secondsUntilQuestions;
+        _timer = Mathf.Clamp(_secondsUntilQuestions, 0, _secondsUntilQuestions);
         UpdateTimerBar();
         _isTimerActive = true;
     }
@@ -132,7 +116,6 @@ public class UI_QuestionsTimer : MonoBehaviour
 
     private void UpdateTimerBar()
     {
-        _timer = Mathf.Clamp(_timer, 0, _secondsUntilQuestions);
         _timerFillBar.fillAmount = _timer / _secondsUntilQuestions;
         _timerFillBar.color = _timerColorGradient.Evaluate(_timerFillBar.fillAmount);
 
@@ -148,10 +131,8 @@ public class UI_QuestionsTimer : MonoBehaviour
         }
         else
         {
-            Debug.Log(_timer);
             _isTimerActive = true;
-            _timer = newTimerValue;
-            Debug.Log(_timer);
+            _timer = Mathf.Clamp(newTimerValue, 0, _secondsUntilQuestions);
             UpdateTimerBar();
         }
     }

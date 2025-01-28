@@ -1,6 +1,5 @@
 using Master.Domain.Events;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -16,23 +15,15 @@ public enum AttributeType
 public class UI_Attribute : MonoBehaviour
 {
     [SerializeField] private AttributeType _attributeType;
-    [SerializeField] private int _goodValueAmount;
-    [SerializeField] private int _intermediateValueAmount;
-    private int _positiveGoodValue;
-    private int _negativeGoodValue;
-    private int _positiveIntermediateValue;
-    private int _negativeIntermediateValue;
 
-    [SerializeField] private int _minValue;
-    [SerializeField] private int _maxValue;
+    private float _minValue;
+    private float _maxValue;
 
-    [SerializeField] private Color goodColor = Color.green;
-    [SerializeField] private Color intermediateColor = Color.yellow;
-    [SerializeField] private Color badColor = Color.red;
-
+    private List<AttributeState> _attributeStates;
     private Slider _slider;
     private Image _sliderBackground;
     private TextMeshProUGUI _value_TXT;
+    private string _unit;
     private float _currentValue;
 
     void Awake()
@@ -42,14 +33,26 @@ public class UI_Attribute : MonoBehaviour
             case AttributeType.Glycemia:
                 GameEventsPetCare.OnModifyGlycemia += UpdateVisualBar;
                 _currentValue = DataStorage.LoadGlycemia();
+                _attributeStates = AttributeManager.Instance.GlycemiaRangeStates;
+                _minValue = AttributeManager.Instance.minGlycemiaValue;
+                _maxValue = AttributeManager.Instance.maxGlycemiaValue;
+                _unit = "mg/dL";
                 break;
             case AttributeType.Activity:
                 GameEventsPetCare.OnModifyActivity += UpdateVisualBar;
                 _currentValue = DataStorage.LoadActivity();
+                _attributeStates = AttributeManager.Instance.ActivityRangeStates;
+                _minValue = AttributeManager.Instance.minActivityValue;
+                _maxValue = AttributeManager.Instance.maxActivityValue;
+                _unit = "%";
                 break;
             case AttributeType.Hunger:
                 GameEventsPetCare.OnModifyHunger += UpdateVisualBar;
                 _currentValue = DataStorage.LoadHunger();
+                _attributeStates = AttributeManager.Instance.HungerRangeStates;
+                _minValue = AttributeManager.Instance.minHungerValue;
+                _maxValue = AttributeManager.Instance.maxHungerValue;
+                _unit = "%";
                 break;
         }
     }
@@ -80,26 +83,7 @@ public class UI_Attribute : MonoBehaviour
         _sliderBackground = background.GetComponent<Image>();
         _slider.minValue = _minValue;
         _slider.maxValue = _maxValue;
-        _value_TXT.text = _slider.value.ToString();
-
-        int midrange = (_maxValue - _minValue) / 2;
-        _positiveGoodValue = midrange + _goodValueAmount;
-        _negativeGoodValue = midrange - _goodValueAmount;
-        _positiveIntermediateValue = _positiveGoodValue + _intermediateValueAmount;
-        _negativeIntermediateValue = _negativeGoodValue - _intermediateValueAmount;
-
-        switch (_attributeType)
-        {
-            case AttributeType.Glycemia:
-                _currentValue = DataStorage.LoadGlycemia();
-                break;
-            case AttributeType.Activity:
-                _currentValue = DataStorage.LoadActivity();
-                break;
-            case AttributeType.Hunger:
-                _currentValue = DataStorage.LoadHunger();
-                break;
-        }
+        _value_TXT.text = $"{_slider.value} {_unit}";
 
         _slider.value = _currentValue;
         UpdateVisualBar(0, null);
@@ -115,22 +99,15 @@ public class UI_Attribute : MonoBehaviour
     {
         _currentValue = Mathf.Clamp(_slider.value + additionalValue, _minValue, _maxValue);
         _slider.SetValueWithoutNotify(_currentValue);
+        _value_TXT.text = $"{_slider.value} {_unit}";
 
-        _value_TXT.text = _slider.value.ToString();
-
-        if (_slider.value >= _negativeGoodValue && _slider.value <= _positiveGoodValue)
+        foreach (AttributeState state in _attributeStates)
         {
-            _sliderBackground.color = goodColor;
-        }
-        else if ((_slider.value >= _negativeIntermediateValue && _slider.value < _negativeGoodValue) ||
-                 (_slider.value > _positiveGoodValue && _slider.value <= _positiveIntermediateValue))
-        {
-            _sliderBackground.color = intermediateColor;
-        }
-        else
-        {
-            
-            _sliderBackground.color = badColor;
+            if (_slider.value >= state.MinValue && _slider.value <= state.MaxValue)
+            {
+                _sliderBackground.color = state.StateColor;
+                break;
+            }
         }
     }
 }

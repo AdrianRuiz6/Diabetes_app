@@ -46,6 +46,7 @@ public abstract class ButtonsPetCare : MonoBehaviour
 
     public virtual void SendInformation()
     {
+        PageSliding.Instance.ActivatePageSliding();
         _submenuPanel.SetActive(false);
     }
 }
