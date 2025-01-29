@@ -1,0 +1,104 @@
+{
+    "questions": [
+        {
+            "topic": "Situaciones Extremas",
+            "question": "¿Qué debes hacer si te sientes muy débil y tu nivel de azúcar está muy alto?",
+            "answer1": "Comer dulces",
+            "answer2": "Beber mucha agua y avisar a un adulto",
+            "answer3": "Seguir haciendo lo que estás haciendo",
+            "correctAnswer": "Beber mucha agua y avisar a un adulto",
+            "advice": "El agua puede ayudar a bajar tu nivel de azúcar.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Situaciones Extremas",
+            "question": "¿Qué debes hacer si te sientes muy confundido o tienes visión borrosa?",
+            "answer1": "Pedir ayuda a un adulto de inmediato",
+            "answer2": "Tomar una siesta",
+            "answer3": "Jugar videojuegos",
+            "correctAnswer": "Pedir ayuda a un adulto de inmediato",
+            "advice": "Siempre informa a un adulto cuando te sientas muy mal.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Hipoglucemia e Hiperglucemia",
+            "question": "¿Qué debes hacer si te sientes muy hambriento y mareado?",
+            "answer1": "Tomar una siesta",
+            "answer2": "Esperar a la comida",
+            "answer3": "Comer algo dulce",
+            "correctAnswer": "Comer algo dulce",
+            "advice": "Lleva siempre contigo algo dulce para estos momentos.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Alimentación y Ejercicio",
+            "question": "¿Cómo puede afectar el ejercicio a tus niveles de azúcar en sangre?",
+            "answer1": "Siempre los hace subir",
+            "answer2": "No los afecta",
+            "answer3": "Puede hacer que bajen",
+            "correctAnswer": "Puede hacer que bajen",
+            "advice": "Es importante medir tu azúcar antes y después de hacer ejercicio.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Teoría",
+            "question": "¿Qué es un glucómetro?",
+            "answer1": "Un tipo de comida",
+            "answer2": "Un juego",
+            "answer3": "Un dispositivo que mide tu nivel de azúcar en sangre",
+            "correctAnswer": "Un dispositivo que mide tu nivel de azúcar en sangre",
+            "advice": "Usa el glucómetro para controlar tu diabetes.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Teoría",
+            "question": "¿Qué es la insulina?",
+            "answer1": "Una hormona que ayuda a tu cuerpo a usar el azúcar",
+            "answer2": "Un tipo de comida",
+            "answer3": "Un juguete",
+            "correctAnswer": "Una hormona que ayuda a tu cuerpo a usar el azúcar",
+            "advice": "La insulina es importante para controlar tu nivel de azúcar.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Actividades Extraordinarias",
+            "question": "¿Qué debes hacer si vas a una competencia deportiva?",
+            "answer1": "No llevar comida",
+            "answer2": "No preparar nada",
+            "answer3": "Llevar tus suministros y algo de comida",
+            "correctAnswer": "Llevar tus suministros y algo de comida",
+            "advice": "\"El ejercicio puede afectar tu nivel de azúcar",
+            "resultAnswer": 70
+        },
+        {
+            "topic": "Actividades Extraordinarias",
+            "question": "¿Qué debes hacer si vas a una actividad extraescolar después de la escuela?",
+            "answer1": "No llevar nada",
+            "answer2": "Llevar tus suministros y algo de comida",
+            "answer3": "Ir sin preparar nada",
+            "correctAnswer": "Llevar tus suministros y algo de comida",
+            "advice": "Siempre estar preparado para cualquier actividad.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Hipoglucemia e Hiperglucemia",
+            "question": "¿Qué debes hacer si te despiertas en medio de la noche sintiéndote mal?",
+            "answer1": "Comer algo dulce y avisar a un adulto",
+            "answer2": "Ignorarlo y dormir",
+            "answer3": "Beber agua",
+            "correctAnswer": "Comer algo dulce y avisar a un adulto",
+            "advice": "Siempre informa a un adulto cuando te sientas mal.",
+            "resultAnswer": 32
+        },
+        {
+            "topic": "Alimentación y Ejercicio",
+            "question": "¿Qué debes hacer si quieres comer algo dulce?",
+            "answer1": "No comer nada",
+            "answer2": "Comer todo lo que quieras",
+            "answer3": "Medir tu nivel de azúcar y comer con moderación",
+            "correctAnswer": "Medir tu nivel de azúcar y comer con moderación",
+            "advice": "\"Puedes disfrutar de dulces",
+            "resultAnswer": 32
+        }
+    ]
+}

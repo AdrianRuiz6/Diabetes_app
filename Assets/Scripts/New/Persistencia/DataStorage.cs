@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
+using DG.Tweening.Plugins.Core.PathCore;
 
 public static class DataStorage
 {
@@ -13,6 +15,7 @@ public static class DataStorage
     public static void SaveMusicVolume(float volume)
     {
         PlayerPrefs.SetFloat("MusicVolume", volume);
+        PlayerPrefs.Save();
     }
 
     public static float LoadMusicVolume()
@@ -23,6 +26,7 @@ public static class DataStorage
     public static void SaveSoundEffectsVolume(float volume)
     {
         PlayerPrefs.SetFloat("SoundEffectsVolume", volume);
+        PlayerPrefs.Save();
     }
 
     public static float LoadSoundEffectsVolume()
@@ -35,6 +39,7 @@ public static class DataStorage
     public static void SaveCurrentScore(int currentScore)
     {
         PlayerPrefs.SetInt("CurrentScore", currentScore);
+        PlayerPrefs.Save();
     }
 
     public static int LoadCurrentScore()
@@ -45,6 +50,7 @@ public static class DataStorage
     public static void SaveHighestScore(int currentScore)
     {
         PlayerPrefs.SetInt("HigherScore", currentScore);
+        PlayerPrefs.Save();
     }
 
     public static int LoadHighestScore()
@@ -54,10 +60,10 @@ public static class DataStorage
 
     public static void SaveScoreInfo(List<ScoreRecordData> infoList)
     {
-        string path = $"{Application.persistentDataPath}/ScoreRecordData.txt";
+        string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreRecordData.txt");
 
         ScoreRecordDataList allScoreElements = new ScoreRecordDataList();
-        foreach(ScoreRecordData scoreData in infoList)
+        foreach (ScoreRecordData scoreData in infoList)
         {
             allScoreElements.score.Add(scoreData);
         }
@@ -72,7 +78,7 @@ public static class DataStorage
 
     public static List<ScoreRecordData> LoadScoreInfo()
     {
-        string path = $"{Application.persistentDataPath}/ScoreRecordData.txt";
+        string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreRecordData.txt");
         if (!File.Exists(path))
             return new List<ScoreRecordData>();
 
@@ -96,6 +102,7 @@ public static class DataStorage
     {
         int hour = initialTime.Hours;
         PlayerPrefs.SetInt("InitialTime", hour);
+        PlayerPrefs.Save();
     }
 
     public static TimeSpan LoadInitialTime()
@@ -108,6 +115,7 @@ public static class DataStorage
     {
         int hour = finishTime.Hours + 1;
         PlayerPrefs.SetInt("FinishTime", hour);
+        PlayerPrefs.Save();
     }
 
     public static TimeSpan LoadFinishTime()
@@ -304,6 +312,7 @@ public static class DataStorage
     public static void SaveStashedCoins(int coins)
     {
         PlayerPrefs.SetInt("StashedCoins", coins);
+        PlayerPrefs.Save();
     }
 
     public static int LoadStashedCoins()
@@ -314,6 +323,7 @@ public static class DataStorage
     public static void SaveTotalCoins(int coins)
     {
         PlayerPrefs.SetInt("Coins", coins);
+        PlayerPrefs.Save();
     }
 
     public static int LoadTotalCoins()
@@ -381,6 +391,7 @@ public static class DataStorage
     public static void SaveIsFirstUsage()
     {
         PlayerPrefs.SetInt("IsFirstUsage", 1);
+        PlayerPrefs.Save();
     }
 
     public static bool LoadIsFirstUsage()
@@ -401,6 +412,7 @@ public static class DataStorage
     public static void SaveDisconnectionDate()
     {
         PlayerPrefs.SetString("DisconnectionDate", DateTime.Now.ToString());
+        PlayerPrefs.Save();
     }
 
     public static DateTime LoadDisconnectionDate()
@@ -411,6 +423,7 @@ public static class DataStorage
     public static void SaveLastIterationStartTime(DateTime startTimeInterval)
     {
         PlayerPrefs.SetString("LastIntervalStartTime", startTimeInterval.ToString());
+        PlayerPrefs.Save();
     }
 
     public static DateTime LoadLastIterationStartTime()
@@ -423,6 +436,7 @@ public static class DataStorage
     public static void SaveLastTimeInsulinUsed(DateTime? lastTimeInsulinUsed)
     {
         PlayerPrefs.SetString("LastTimeInsulinUsed", lastTimeInsulinUsed.ToString());
+        PlayerPrefs.Save();
     }
 
     public static DateTime? LoadLastTimeInsulinUsed()
@@ -439,6 +453,7 @@ public static class DataStorage
     public static void SaveLastTimeExerciseUsed(DateTime? lastTimeExerciseUsed)
     {
         PlayerPrefs.SetString("LastTimeExerciseUsed", lastTimeExerciseUsed.ToString());
+        PlayerPrefs.Save();
     }
 
     public static DateTime? LoadLastTimeExerciseUsed()
@@ -455,6 +470,7 @@ public static class DataStorage
     public static void SaveLastTimeFoodUsed(DateTime? lastTimeFoodUsed)
     {
         PlayerPrefs.SetString("LastTimeFoodUsed", lastTimeFoodUsed.ToString());
+        PlayerPrefs.Save();
     }
 
     public static DateTime? LoadLastTimeFoodUsed()
@@ -471,6 +487,7 @@ public static class DataStorage
     public static void SaveGlycemia(float glycemiaValue)
     {
         PlayerPrefs.SetFloat("Glycemia", glycemiaValue);
+        PlayerPrefs.Save();
     }
 
     public static int LoadGlycemia()
@@ -481,6 +498,7 @@ public static class DataStorage
     public static void SaveActivity(float activityValue)
     {
         PlayerPrefs.SetFloat("Activity", activityValue);
+        PlayerPrefs.Save();
     }
 
     public static int LoadActivity()
@@ -491,6 +509,7 @@ public static class DataStorage
     public static void SaveHunger(float hungerValue)
     {
         PlayerPrefs.SetFloat("Hunger", hungerValue);
+        PlayerPrefs.Save();
     }
 
     public static int LoadHunger()
@@ -503,6 +522,7 @@ public static class DataStorage
     public static void SaveCurrentQuestionIndex(int currentQuestionIndex)
     {
         PlayerPrefs.SetInt("CurrentQuestionIndex", currentQuestionIndex);
+        PlayerPrefs.Save();
     }
 
     public static int LoadCurrentQuestionIndex()
@@ -513,6 +533,7 @@ public static class DataStorage
     public static void SaveTimeLeftQuestionTimer(float timeLeft)
     {
         PlayerPrefs.SetFloat("LeftTimeQuestionTimer", timeLeft);
+        PlayerPrefs.Save();
     }
 
     public static float LoadTimeLeftQuestionTimer()

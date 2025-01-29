@@ -1,0 +1,79 @@
+{
+    "userPerformanceList": [
+        {
+            "topic": "Actividades Extraordinarias",
+            "performanceData": [
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80
+            ]
+        },
+        {
+            "topic": "Alimentación y Ejercicio",
+            "performanceData": [
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80
+            ]
+        },
+        {
+            "topic": "Hipoglucemia e Hiperglucemia",
+            "performanceData": [
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80
+            ]
+        },
+        {
+            "topic": "Situaciones Extremas",
+            "performanceData": [
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80
+            ]
+        },
+        {
+            "topic": "Teoría",
+            "performanceData": [
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80,
+                80
+            ]
+        }
+    ]
+}

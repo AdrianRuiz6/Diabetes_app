@@ -1,0 +1,36 @@
+{
+    "products": [
+        {
+            "ProductName": "Yellow",
+            "ProductState": 0
+        },
+        {
+            "ProductName": "Blue",
+            "ProductState": 1
+        },
+        {
+            "ProductName": "Purple",
+            "ProductState": 0
+        },
+        {
+            "ProductName": "Orange",
+            "ProductState": 0
+        },
+        {
+            "ProductName": "Red",
+            "ProductState": 0
+        },
+        {
+            "ProductName": "Pink",
+            "ProductState": 0
+        },
+        {
+            "ProductName": "LightPink",
+            "ProductState": 0
+        },
+        {
+            "ProductName": "Green",
+            "ProductState": 0
+        }
+    ]
+}

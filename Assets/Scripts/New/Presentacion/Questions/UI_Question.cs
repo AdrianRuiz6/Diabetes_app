@@ -130,7 +130,7 @@ public class UI_Question : MonoBehaviour
             // Recompensa.
             Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
             AnimationManager.Instance.PlayAnimation(_winCoinsPrefab, new Vector3(localMousePosition.x - 6, localMousePosition.y, localMousePosition.z), new Vector3(1, 1, 1), _parentAnimations);
-            AnimationManager.Instance.PlayAnimation(_winPointsPrefab, new Vector3(localMousePosition.x + 6, localMousePosition.y, localMousePosition.z), new Vector3(1,1,1), _parentAnimations);
+            AnimationManager.Instance.PlayAnimation(_winPointsPrefab, new Vector3(localMousePosition.x + 6, localMousePosition.y, localMousePosition.z), new Vector3(1, 1, 1), _parentAnimations);
 
             EconomyManager.Instance.AddTotalCoins(50);
             ScoreManager.Instance.AddScore(50, DateTime.Now, "respuesta correcta");
@@ -139,7 +139,7 @@ public class UI_Question : MonoBehaviour
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
         {
             Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
-            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, new Vector3(1, 1, 1), localMousePosition, _parentAnimations);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
             WrongAnswer(_answer1_Image);
@@ -147,7 +147,7 @@ public class UI_Question : MonoBehaviour
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
         {
             Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
-            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, new Vector3(1, 1, 1), localMousePosition, _parentAnimations);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
             WrongAnswer(_answer1_Image);
@@ -166,7 +166,7 @@ public class UI_Question : MonoBehaviour
         if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer1_TMP.text))
         {
             Vector3 localMousePosition = _parentAnimations.transform.InverseTransformPoint(Input.mousePosition);
-            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, new Vector3(1, 1, 1), localMousePosition, _parentAnimations);
+            AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
             WrongAnswer(_answer2_Image);

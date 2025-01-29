@@ -51,9 +51,9 @@ MonoBehaviour:
   _timerFillBar: {fileID: 0}
   _timerColorGradient:
     serializedVersion: 2
-    key0: {r: 0, g: 1, b: 0.0056221485, a: 1}
-    key1: {r: 1, g: 0.56404424, b: 0, a: 1}
-    key2: {r: 1, g: 0, b: 0, a: 0}
+    key0: {r: 0.33333334, g: 1, b: 0.33333334, a: 1}
+    key1: {r: 0.99215686, g: 1, b: 0.33333334, a: 1}
+    key2: {r: 1, g: 0.33333334, b: 0.3764706, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -106,7 +106,7 @@ MonoBehaviour:
   _advice_TMP: {fileID: 0}
   _nextQuestion_Btn: {fileID: 0}
   _winPointsPrefab: {fileID: 5794816516804160654, guid: c431406a54c0eae48b05d29f3950cac0, type: 3}
-  _loosePointsPrefab: {fileID: 5711499129701505220, guid: 6f06889dad53d994ba019b10714fcf68, type: 3}
+  _loosePointsPrefab: {fileID: 5689863822247779696, guid: 8fcdc3281c771fb4a9730a5ae7c5896c, type: 3}
   _winCoinsPrefab: {fileID: 2436229704765043735, guid: e43e4f800a0229c40a658a93dc263048, type: 3}
   _parentAnimations: {fileID: 0}
 --- !u!114 &4948329354730889259
