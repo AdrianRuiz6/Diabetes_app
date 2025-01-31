@@ -10,13 +10,13 @@ public class CurrentScore_UI : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsScore.OnMidnight += ModifyOnMidnight;
+        GameEventsScore.OnResetScore += ModifyOnMidnight;
         GameEventsScore.OnModifyCurrentScore += ModifyCurrentScoreTMP;
     }
 
     private void OnDestroy()
     {
-        GameEventsScore.OnMidnight -= ModifyOnMidnight;
+        GameEventsScore.OnResetScore -= ModifyOnMidnight;
         GameEventsScore.OnModifyCurrentScore -= ModifyCurrentScoreTMP;
     }
 
@@ -37,7 +37,14 @@ public class CurrentScore_UI : MonoBehaviour
 
     private void ModifyCurrentScoreTMP(int addedScore, DateTime? time, string info)
     {
-        _currentScore_TMP.text = (int.Parse(_currentScore_TMP.text) + addedScore).ToString();
+        if(int.Parse(_currentScore_TMP.text) + addedScore < 0)
+        {
+            _currentScore_TMP.text = 0.ToString();
+        }
+        else
+        {
+            _currentScore_TMP.text = (int.Parse(_currentScore_TMP.text) + addedScore).ToString();
+        }
     }
 
     private void ModifyOnMidnight()

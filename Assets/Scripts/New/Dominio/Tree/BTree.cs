@@ -88,41 +88,14 @@ namespace BehaviorTree
 
         private void ExecutingAttribute(DateTime currentDateTime)
         {
-            if (firstIteration)
+            bool IsInTime = LimitHours.Instance.IsInRange(currentDateTime.TimeOfDay);
+            bool IsInCurrentDate = currentDateTime.Date == TimeManager.Instance.currentConnectionDateTime.Date;
+            bool IsInLastSessionDate = currentDateTime.Date == TimeManager.Instance.lastDisconnectionDateTime.Date;
+
+            if (IsInLastSessionDate && IsInTime || IsInCurrentDate && IsInTime)
             {
-                TimeSpan previousTime = currentDateTime.AddSeconds(-AttributeSchedule.Instance.UpdateInterval).TimeOfDay;
-                previousIsInTime = LimitHours.Instance.IsInRange(previousTime);
+                _dateTimesQueue.Enqueue(currentDateTime);
             }
-
-            bool currentIsInTime = LimitHours.Instance.IsInRange(currentDateTime.TimeOfDay);
-
-            if (currentIsInTime)
-            {
-                if (previousIsInTime == false && currentDateTime.TimeOfDay != LimitHours.Instance.initialTime)
-                {
-                    previousIsInTime = currentIsInTime;
-                    DateTime initialTime = currentDateTime.Date.AddHours(LimitHours.Instance.initialTime.Hours);
-                    AddToEvalueateQueue(initialTime);
-                }
-
-                AddToEvalueateQueue(currentDateTime);
-            }
-            else
-            {
-                if (previousIsInTime == true)
-                {
-                    previousIsInTime = currentIsInTime;
-                    DateTime finishTime = currentDateTime.Date.AddHours(LimitHours.Instance.finishTime.Hours)
-                        .AddMinutes(LimitHours.Instance.finishTime.Minutes);
-                    AddToEvalueateQueue(finishTime);
-                }
-            }
-            firstIteration = false;
-        }
-
-        private void AddToEvalueateQueue(DateTime newDateTime)
-        {
-            _dateTimesQueue.Enqueue(newDateTime);
         }
 
         protected abstract Node SetUpTree();

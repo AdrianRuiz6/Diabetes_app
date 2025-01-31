@@ -8,7 +8,7 @@ using UnityEngine;
 public class AttributeSchedule : MonoBehaviour
 {
     public static AttributeSchedule Instance;
-    private DateTime _lastTimeInterval = DateTime.Now;
+    private DateTime _lastIterationTime = DateTime.Now;
 
     public float UpdateInterval = 300; // 5 minutos
 
@@ -24,29 +24,29 @@ public class AttributeSchedule : MonoBehaviour
             Destroy(gameObject);
         }
 
-        _lastTimeInterval.AddSeconds(-UpdateInterval);
+        _lastIterationTime.AddSeconds(-UpdateInterval);
     }
 
     private void OnDestroy()
     {
-         DataStorage.SaveLastIterationStartTime(_lastTimeInterval);
+         DataStorage.SaveLastIterationStartTime(_lastIterationTime);
     }
 
-    public void UpdateTimer(float passedTime, DateTime lastTimeInterval)
+    public void UpdateTimer(float restTimeIteration, DateTime lastTimeInterval)
     {
         StopAllCoroutines();
-        _lastTimeInterval = lastTimeInterval;
-        StartCoroutine(TimerAttributes(passedTime));
+        _lastIterationTime = lastTimeInterval;
+        StartCoroutine(TimerAttributes(restTimeIteration));
     }
 
-    private IEnumerator TimerAttributes(float timeFirstInterval)
+    private IEnumerator TimerAttributes(float timeFirstIteration)
     {
-        yield return new WaitForSeconds(timeFirstInterval);
+        yield return new WaitForSeconds(timeFirstIteration);
         GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
 
         while (true)
         {
-            _lastTimeInterval = DateTime.Now;
+            _lastIterationTime = DateTime.Now;
             yield return new WaitForSeconds(UpdateInterval);
             GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
         }

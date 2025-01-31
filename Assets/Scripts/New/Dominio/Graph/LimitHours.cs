@@ -36,6 +36,18 @@ public class LimitHours : MonoBehaviour
         DataStorage.SaveFinishTime(finishTime);
     }
 
+    //private void OnApplicationPause(bool pauseStatus)
+    //{
+    //    if (pauseStatus)
+    //    {
+    //        GameEventsGraph.OnInitialTimeModified -= ModifyInitialHour;
+    //        GameEventsGraph.OnFinishTimeModified -= ModifyFinishHour;
+
+    //        DataStorage.SaveInitialTime(initialTime);
+    //        DataStorage.SaveFinishTime(finishTime);
+    //    }
+    //}
+
     void Start()
     {
         initialTime = DataStorage.LoadInitialTime();

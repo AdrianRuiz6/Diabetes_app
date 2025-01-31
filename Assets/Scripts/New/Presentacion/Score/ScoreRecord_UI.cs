@@ -24,7 +24,7 @@ public class ScoreRecord_UI : MonoBehaviour
             Destroy(gameObject);
         }
 
-        GameEventsScore.OnMidnight += ClearElements;
+        GameEventsScore.OnResetScore += ClearElements;
         GameEventsScore.OnModifyCurrentScore += AddElement;
     }
 
@@ -32,9 +32,20 @@ public class ScoreRecord_UI : MonoBehaviour
     {
         DataStorage.SaveScoreInfo(_infoList);
 
-        GameEventsScore.OnMidnight -= ClearElements;
+        GameEventsScore.OnResetScore -= ClearElements;
         GameEventsScore.OnModifyCurrentScore -= AddElement;
     }
+
+    //void OnApplicationPause(bool pauseStatus)
+    //{
+    //    if (pauseStatus)
+    //    {
+    //        DataStorage.SaveScoreInfo(_infoList);
+
+    //        GameEventsScore.OnResetScore -= ClearElements;
+    //        GameEventsScore.OnModifyCurrentScore -= AddElement;
+    //    }
+    //}
 
     void Start()
     {

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UIElements;
 using static UnityEngine.AdaptivePerformance.Provider.AdaptivePerformanceSubsystemDescriptor;
 
@@ -69,7 +70,7 @@ public class ScoreManager : MonoBehaviour
 
             CheckHighestScore();
             _currentScore = 0;
-            GameEventsScore.OnMidnight?.Invoke();
+            GameEventsScore.OnResetScore?.Invoke();
             break;
         }
     }
@@ -92,5 +93,11 @@ public class ScoreManager : MonoBehaviour
             _currentScore -= score;
             GameEventsScore.OnModifyCurrentScore?.Invoke(-score, time, activity);
         }
+    }
+
+    public void ResetScore()
+    {
+        GameEventsScore.OnResetScore?.Invoke();
+        _currentScore = 0;
     }
 }

@@ -12,7 +12,7 @@ namespace Master.Domain.BehaviorTree.Hunger
 
         public override NodeState Evaluate(DateTime currentDateTime)
         {
-            if (AttributeManager.Instance.glycemiaValue <= 70)
+            if (AttributeManager.Instance.IsGlycemiaInRange(AttributeManager.Instance.glycemiaValue, "bad1"))
             {
                 return NodeState.SUCCESS;
             }

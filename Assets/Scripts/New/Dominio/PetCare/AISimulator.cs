@@ -42,14 +42,28 @@ public class AISimulator : MonoBehaviour
         _timeIterationAI = AttributeSchedule.Instance.UpdateInterval;
         Debug.Log($"SIMULATION: Start Simulation - Time Interval: {_timeIterationAI} seconds");
 
-        CalculateIterationsButtons();
-        SimulateIntervals();
+        CalculateIterations();
+        SimulateIterations();
         AttributeSchedule.Instance.UpdateTimer(_initialTimerSeconds, _currentIterationStartTime);
     }
 
-    private void CalculateIterationsButtons()
+    private void CalculateIterations()
     {
-        DateTime lastIterationStartTime = DataStorage.LoadLastIterationStartTime();
+        DateTime lastIterationStartTime = DateTime.Now;
+        if (DataStorage.LoadIsFirstUsage())
+        {
+            DateTime currentCheckedTime = DateTime.Now.Date.AddHours(LimitHours.Instance.initialTime.Hours);
+            while (currentCheckedTime <= DateTime.Now)
+            {
+                currentCheckedTime = currentCheckedTime.AddSeconds(AttributeSchedule.Instance.UpdateInterval);
+            }
+
+            lastIterationStartTime = currentCheckedTime.AddSeconds(-AttributeSchedule.Instance.UpdateInterval);
+        }
+        else
+        {
+            lastIterationStartTime = DataStorage.LoadLastIterationStartTime();
+        }
         DateTime? currentTime = DateTime.Now;
         TimeSpan? timePassed;
         float secondsPassed;
@@ -64,46 +78,49 @@ public class AISimulator : MonoBehaviour
         // Cálculo de las iteraciones e inicio del tiemer de la IA de los atributos.
         Debug.Log($"SIMULATION: Current Time: {currentTime}");
 
-        if (DataStorage.LoadIsFirstUsage())
+        // Se calculan los intervalos sucedidos mientras la aplicación estaba desconectada y reinicio del timer de la simulación.
+
+        // Se calcula el tiempo transcurrido desde la última vez que se inició un intervalo hasta ahora.
+        TimeSpan timePassedSinceLastIteration = DateTime.Now - lastIterationStartTime;
+        secondsPassed = (float)timePassedSinceLastIteration.TotalSeconds;
+
+        // Si no ha pasado suficiente tiempo para completar un intervalo.
+        if (secondsPassed < _timeIterationAI)
         {
             _iterationsTotal = 0;
-            _initialTimerSeconds = _timeIterationAI;
+            _initialTimerSeconds = _timeIterationAI - secondsPassed;
+            _currentIterationStartTime = lastIterationStartTime;
         }
+        // Si ha ha pasado suficiente tiempo para completar un intervalo.
         else
         {
-            // Se calculan los intervalos sucedidos mientras la aplicación estaba desconectada y reinicio del timer de la simulación.
+            _iterationsTotal = (int)(secondsPassed / _timeIterationAI);
+            _initialTimerSeconds = _timeIterationAI - (secondsPassed % _timeIterationAI);
+            _currentIterationStartTime = lastIterationStartTime.AddSeconds(_iterationsTotal * _timeIterationAI);
 
-            // Se calcula el tiempo transcurrido desde la última vez que se inició un intervalo hasta ahora.
-            TimeSpan timePassedSinceLastIteration = DateTime.Now - lastIterationStartTime;
-            secondsPassed = (float)timePassedSinceLastIteration.TotalSeconds;
-
-            // Si no ha pasado suficiente tiempo para completar un intervalo.
-            if (secondsPassed < _timeIterationAI)
+            // Se guardan las fechas en la lista de fechas y se ajustan al inicio del rango de tiempo si hace falta.
+            DateTime dateTimeToIntroduce = lastIterationStartTime;
+            bool isPreviousDateTimeToIntroduceInRange = LimitHours.Instance.IsInRange(dateTimeToIntroduce.TimeOfDay);
+            bool isCurrentDateTimeToIntroduceInRange = false;
+            for (int iterations = 0; iterations < _iterationsTotal; iterations++)
             {
-                _iterationsTotal = 0;
-                _initialTimerSeconds = _timeIterationAI - secondsPassed;
-                _currentIterationStartTime = lastIterationStartTime;
-            }
-            // Si ha ha pasado suficiente tiempo para completar un intervalo.
-            else
-            {
-                _iterationsTotal = (int)(secondsPassed / _timeIterationAI);
-                _initialTimerSeconds = _timeIterationAI - (secondsPassed % _timeIterationAI);
-                _currentIterationStartTime = lastIterationStartTime.AddSeconds(_iterationsTotal * _timeIterationAI);
+                dateTimeToIntroduce = dateTimeToIntroduce.AddSeconds(_timeIterationAI);
+                isCurrentDateTimeToIntroduceInRange = LimitHours.Instance.IsInRange(dateTimeToIntroduce.TimeOfDay);
 
-                Debug.Log($"SIMULATION: Iteraciones totales pasadas desde el último intervalo: {_iterationsTotal}");
-                Debug.Log($"SIMULATION: Segundos restantes para el próximo intervalo: {_initialTimerSeconds}");
-                Debug.Log($"SIMULATION: Tiempo de inicio de la iteracion actual: {_currentIterationStartTime}");
-
-                // Se guardan las fechas en la lista de fechas.
-                DateTime dateTimeToIntroduce = lastIterationStartTime;
-                for (int iterations = 0; iterations < _iterationsTotal; iterations++)
+                if (!isPreviousDateTimeToIntroduceInRange && isCurrentDateTimeToIntroduceInRange)
                 {
-                    dateTimeToIntroduce = dateTimeToIntroduce.AddSeconds(_timeIterationAI);
-                    _dateTimesQueue.Enqueue(dateTimeToIntroduce);
+                    dateTimeToIntroduce = dateTimeToIntroduce.Date.AddHours(LimitHours.Instance.initialTime.Hours);
                 }
+                _dateTimesQueue.Enqueue(dateTimeToIntroduce);
+
+                isPreviousDateTimeToIntroduceInRange = isCurrentDateTimeToIntroduceInRange;
             }
+
+            Debug.Log($"SIMULATION: Iteraciones totales pasadas desde el último intervalo: {_iterationsTotal}");
+            Debug.Log($"SIMULATION: Segundos restantes para el próximo intervalo: {_initialTimerSeconds}");
+            Debug.Log($"SIMULATION: Tiempo de inicio de la iteracion actual: {_currentIterationStartTime}");
         }
+
 
         // Cálculo de la duración en intervalos del efecto de la insulina.
         if (AttributeManager.Instance.lastTimeInsulinUsed.HasValue)
@@ -185,7 +202,7 @@ public class AISimulator : MonoBehaviour
         }
     }
 
-    private void SimulateIntervals()
+    private void SimulateIterations()
     {
         Debug.Log($"SIMULATION: SimulateIntervals() - Total Iterations: {_iterationsTotal}");
 

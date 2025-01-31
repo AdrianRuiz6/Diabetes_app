@@ -32,27 +32,12 @@ public class UI_Attribute : MonoBehaviour
         {
             case AttributeType.Glycemia:
                 GameEventsPetCare.OnModifyGlycemia += UpdateVisualBar;
-                _currentValue = DataStorage.LoadGlycemia();
-                _attributeStates = AttributeManager.Instance.GlycemiaRangeStates;
-                _minValue = AttributeManager.Instance.minGlycemiaValue;
-                _maxValue = AttributeManager.Instance.maxGlycemiaValue;
-                _unit = "mg/dL";
                 break;
             case AttributeType.Activity:
                 GameEventsPetCare.OnModifyActivity += UpdateVisualBar;
-                _currentValue = DataStorage.LoadActivity();
-                _attributeStates = AttributeManager.Instance.ActivityRangeStates;
-                _minValue = AttributeManager.Instance.minActivityValue;
-                _maxValue = AttributeManager.Instance.maxActivityValue;
-                _unit = "%";
                 break;
             case AttributeType.Hunger:
                 GameEventsPetCare.OnModifyHunger += UpdateVisualBar;
-                _currentValue = DataStorage.LoadHunger();
-                _attributeStates = AttributeManager.Instance.HungerRangeStates;
-                _minValue = AttributeManager.Instance.minHungerValue;
-                _maxValue = AttributeManager.Instance.maxHungerValue;
-                _unit = "%";
                 break;
         }
     }
@@ -79,6 +64,31 @@ public class UI_Attribute : MonoBehaviour
         _value_TXT = GetComponentInChildren<TextMeshProUGUI>();
         _slider.wholeNumbers = true;
 
+        switch (_attributeType)
+        {
+            case AttributeType.Glycemia:
+                _currentValue = AttributeManager.Instance.glycemiaValue;
+                _attributeStates = AttributeManager.Instance.GlycemiaRangeStates;
+                _minValue = AttributeManager.Instance.minGlycemiaValue;
+                _maxValue = AttributeManager.Instance.maxGlycemiaValue;
+                _unit = "mg/dL";
+                break;
+            case AttributeType.Activity:
+                _currentValue = AttributeManager.Instance.activityValue;
+                _attributeStates = AttributeManager.Instance.ActivityRangeStates;
+                _minValue = AttributeManager.Instance.minActivityValue;
+                _maxValue = AttributeManager.Instance.maxActivityValue;
+                _unit = "%";
+                break;
+            case AttributeType.Hunger:
+                _currentValue = AttributeManager.Instance.hungerValue;
+                _attributeStates = AttributeManager.Instance.HungerRangeStates;
+                _minValue = AttributeManager.Instance.minHungerValue;
+                _maxValue = AttributeManager.Instance.maxHungerValue;
+                _unit = "%";
+                break;
+        }
+
         Transform background = transform.Find("Bar/Background");
         _sliderBackground = background.GetComponent<Image>();
         _slider.minValue = _minValue;
@@ -86,13 +96,29 @@ public class UI_Attribute : MonoBehaviour
         _value_TXT.text = $"{_slider.value} {_unit}";
 
         _slider.value = _currentValue;
-        UpdateVisualBar(0, null);
+        InitializeVisualBar();
         _slider.onValueChanged.AddListener(ChangeValue);
     }
 
     private void ChangeValue(float arg0)
     {
         _slider.SetValueWithoutNotify(_currentValue);
+    }
+
+    private void InitializeVisualBar()
+    {
+        _currentValue = Mathf.Clamp(_slider.value, _minValue, _maxValue);
+        _slider.SetValueWithoutNotify(_currentValue);
+        _value_TXT.text = $"{_slider.value} {_unit}";
+
+        foreach (AttributeState state in _attributeStates)
+        {
+            if (_slider.value >= state.MinValue && _slider.value <= state.MaxValue)
+            {
+                _sliderBackground.color = state.StateColor;
+                break;
+            }
+        }
     }
 
     private void UpdateVisualBar(int additionalValue, DateTime? currentDataTime)

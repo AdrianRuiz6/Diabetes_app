@@ -110,11 +110,13 @@ public class UI_Question : MonoBehaviour
     {
         if (_advicePanel.activeSelf == true)
         {
+            _openAdvice_Btn.gameObject.SetActive(true);
             PageSliding.Instance.ActivatePageSliding();
             _advicePanel.SetActive(false);
         }
         else
         {
+            _openAdvice_Btn.gameObject.SetActive(false);
             PageSliding.Instance.DeactivatePageSliding();
             _advicePanel.SetActive(true);
         }

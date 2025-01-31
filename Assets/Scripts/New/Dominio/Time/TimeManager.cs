@@ -4,6 +4,8 @@ using UnityEngine;
 public class TimeManager : MonoBehaviour
 {
     public static TimeManager Instance;
+    public DateTime lastDisconnectionDateTime;
+    public DateTime currentConnectionDateTime;
 
     void Awake()
     {
@@ -15,6 +17,21 @@ public class TimeManager : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
+        }
+
+        lastDisconnectionDateTime = DataStorage.LoadDisconnectionDate();
+        currentConnectionDateTime = DateTime.Now;
+    }
+
+    public bool IsConnected(DateTime dateTimeToEvaluate)
+    {
+        if(dateTimeToEvaluate > lastDisconnectionDateTime && dateTimeToEvaluate < currentConnectionDateTime)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 

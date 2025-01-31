@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class SettingsButton : MonoBehaviour
 {
@@ -13,14 +14,26 @@ public class SettingsButton : MonoBehaviour
     [SerializeField] private Slider _sliderMusic;
     [SerializeField] private Slider _sliderSoundEffects;
 
-    [Header("Limit hours")] // TODO
+    [Header("Limit hours")]
     [SerializeField] private Slider _sliderInitialHour;
     [SerializeField] private TMP_Text _initialHour_TMP;
     [SerializeField] private Slider _sliderFinishHour;
     [SerializeField] private TMP_Text _finishHour_TMP;
+    [SerializeField] private GameObject _warningWindow_Object;
+    [SerializeField] private Button _applySettingsButton;
+    [SerializeField] private Button _closeWarningButton;
+    [SerializeField] private Button _confirmWarningButton;
+
+    private float _previousInitialHour;
+    private float _currentInitialHour;
+    private float _previousFinishHour;
+    private float _currentFinishHour;
 
     void Start()
     {
+        _warningWindow_Object.SetActive(false);
+        _settingsPanel.SetActive(false);
+
         // Configuración inicial del volumen.
         _sliderMusic.wholeNumbers = false;
         _sliderMusic.minValue = 0;
@@ -49,9 +62,28 @@ public class SettingsButton : MonoBehaviour
         SetFinishHourTMP(DataStorage.LoadFinishTime().Hours);
         _sliderFinishHour.onValueChanged.AddListener(ChangeFinishHour);
 
-        // Configuración de los botones.
+        _previousInitialHour = _sliderInitialHour.value;
+        _currentInitialHour = _sliderInitialHour.value;
+        _previousFinishHour = _sliderFinishHour.value;
+        _currentFinishHour = _sliderFinishHour.value;
+
+    // Configuración de los botones.
         _openSettingsButton.onClick.AddListener(OpenSetting);
         _closeSettingsButton.onClick.AddListener(CloseSetting);
+        _applySettingsButton.onClick.AddListener(ShowWarningChangeRangeTime);
+        _closeWarningButton.onClick.AddListener(CloseWarningChangeRangeTime);
+        _confirmWarningButton.onClick.AddListener(ConfirmChangeRangeTime);
+    }
+
+    void Update()
+    {
+        if(_previousInitialHour != _currentInitialHour || _previousFinishHour != _currentFinishHour){
+            _applySettingsButton.gameObject.SetActive(true);
+        }else
+        {
+            if (_applySettingsButton.gameObject.activeSelf)
+                _applySettingsButton.gameObject.SetActive(false);
+        }
     }
 
     private void OpenSetting()
@@ -63,6 +95,7 @@ public class SettingsButton : MonoBehaviour
     private void CloseSetting()
     {
         _settingsPanel?.SetActive(false);
+        CancelChangeRangeTime();
         PageSliding.Instance.ActivatePageSliding();
     }
 
@@ -78,7 +111,13 @@ public class SettingsButton : MonoBehaviour
 
     private void ChangeInitialHour(float hour)
     {
-        GameEventsGraph.OnInitialTimeModified?.Invoke((int)hour);
+        if(hour > _sliderFinishHour.value)
+        {
+            hour = _sliderFinishHour.value;
+            _sliderInitialHour.SetValueWithoutNotify(hour);
+        }
+
+        _currentInitialHour = _sliderInitialHour.value;
         SetInitialHourTMP(hour);
     }
 
@@ -90,7 +129,13 @@ public class SettingsButton : MonoBehaviour
 
     private void ChangeFinishHour(float hour)
     {
-        GameEventsGraph.OnFinishTimeModified?.Invoke((int)hour);
+        if (hour < _sliderInitialHour.value)
+        {
+            hour = _sliderInitialHour.value;
+            _sliderFinishHour.SetValueWithoutNotify(hour);
+        }
+
+        _currentFinishHour = _sliderFinishHour.value;
         SetFinishHourTMP(hour);
     }
 
@@ -98,5 +143,54 @@ public class SettingsButton : MonoBehaviour
     {
         string hourText = (hour < 10) ? $"0{hour}" : hour.ToString();
         _finishHour_TMP.text = $"{hourText}:59";
+    }
+
+    private void ShowWarningChangeRangeTime()
+    {
+        _warningWindow_Object.SetActive(true);
+    }
+
+    private void CloseWarningChangeRangeTime()
+    {
+        _warningWindow_Object.SetActive(false);
+    }
+
+    private void ConfirmChangeRangeTime()
+    {
+        GameEventsGraph.OnInitialTimeModified?.Invoke((int)_currentInitialHour);
+        GameEventsGraph.OnFinishTimeModified?.Invoke((int)_currentFinishHour);
+
+        _previousInitialHour = _currentInitialHour;
+        _previousFinishHour = _currentFinishHour;
+
+        // Reset score
+        ScoreManager.Instance.ResetScore();
+
+        // Reset attributes
+        AttributeManager.Instance.RestartGlycemia(DateTime.Now);
+        AttributeManager.Instance.RestartActivity(DateTime.Now);
+        AttributeManager.Instance.RestartHunger(DateTime.Now);
+
+        // Reset attributes record
+        DataStorage.ResetGlycemiaGraph();
+        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
+        DataStorage.ResetActivityGraph();
+        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Activity);
+        DataStorage.ResetHungerGraph();
+        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Hunger);
+
+        CloseWarningChangeRangeTime();
+    }
+
+    private void CancelChangeRangeTime()
+    {
+        _sliderInitialHour.SetValueWithoutNotify(_previousInitialHour);
+        SetInitialHourTMP(_previousInitialHour);
+
+        _sliderFinishHour.SetValueWithoutNotify(_previousFinishHour);
+        SetFinishHourTMP(_previousFinishHour);
+
+        _currentInitialHour = _previousInitialHour;
+        _currentFinishHour = _previousFinishHour;
     }
 }

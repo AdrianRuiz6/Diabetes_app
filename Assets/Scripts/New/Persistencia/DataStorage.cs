@@ -8,6 +8,7 @@ using System.Net;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using DG.Tweening.Plugins.Core.PathCore;
+using Unity.VisualScripting;
 
 public static class DataStorage
 {
@@ -79,6 +80,7 @@ public static class DataStorage
     public static List<ScoreRecordData> LoadScoreInfo()
     {
         string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreRecordData.txt");
+
         if (!File.Exists(path))
             return new List<ScoreRecordData>();
 
@@ -107,7 +109,7 @@ public static class DataStorage
 
     public static TimeSpan LoadInitialTime()
     {
-        int hour = PlayerPrefs.GetInt("InitialTime", 14);
+        int hour = PlayerPrefs.GetInt("InitialTime", 0);
         return new TimeSpan(hour, 0, 0);
     }
 
@@ -223,6 +225,11 @@ public static class DataStorage
         string path = $"{Application.persistentDataPath}/GlycemiaGraphData.txt";
         SaveAttributeGraph(dateTime, number, path);
     }
+    public static void ResetGlycemiaGraph()
+    {
+        string path = $"{Application.persistentDataPath}/GlycemiaGraphData.txt";
+        ResetAttributeGraph(path);
+    }
     public static Dictionary<DateTime, int> LoadGlycemiaGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/GlycemiaGraphData.txt";
@@ -234,6 +241,11 @@ public static class DataStorage
         string path = $"{Application.persistentDataPath}/HungerGraphData.txt";
         SaveAttributeGraph(dateTime, number, path);
     }
+    public static void ResetHungerGraph()
+    {
+        string path = $"{Application.persistentDataPath}/HungerGraphData.txt";
+        ResetAttributeGraph(path);
+    }
     public static Dictionary<DateTime, int> LoadHungerGraph(DateTime? requestedDate)
     {
         string path = $"{Application.persistentDataPath}/HungerGraphData.txt";
@@ -244,6 +256,11 @@ public static class DataStorage
     {
         string path = $"{Application.persistentDataPath}/ActivityGraphData.txt";
         SaveAttributeGraph(dateTime, number, path);
+    }
+    public static void ResetActivityGraph()
+    {
+        string path = $"{Application.persistentDataPath}/ActivityGraphData.txt";
+        ResetAttributeGraph(path);
     }
     public static Dictionary<DateTime, int> LoadActivityGraph(DateTime? requestedDate)
     {
@@ -264,12 +281,38 @@ public static class DataStorage
 
         foreach (AttributeData attributeData in originalAttributeList.attributeList)
         {
-            // DateTime currentDateAndTime = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
             newAttributeList.attributeList.Add(attributeData);
         }
 
         AttributeData newAttributeData = new AttributeData(dateTime, number);
         newAttributeList.attributeList.Add(newAttributeData);
+
+        string json = JsonUtility.ToJson(newAttributeList, true);
+        using (StreamWriter streamWriter = new StreamWriter(path))
+        {
+            streamWriter.Write(json);
+        }
+    }
+
+    private static void ResetAttributeGraph(string path)
+    {
+        AttributeDataList originalAttributeList = new AttributeDataList();
+        AttributeDataList newAttributeList = new AttributeDataList();
+
+        if (File.Exists(path))
+        {
+            string existingJson = File.ReadAllText(path);
+            originalAttributeList = JsonUtility.FromJson<AttributeDataList>(existingJson) ?? new AttributeDataList();
+        }
+
+        foreach (AttributeData attributeData in originalAttributeList.attributeList)
+        {
+            DateTime currentDate = DateTime.Parse(attributeData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            if (currentDate.Date != DateTime.Now.Date)
+            {
+                newAttributeList.attributeList.Add(attributeData);
+            }
+        }
 
         string json = JsonUtility.ToJson(newAttributeList, true);
         using (StreamWriter streamWriter = new StreamWriter(path))
@@ -428,7 +471,7 @@ public static class DataStorage
 
     public static DateTime LoadLastIterationStartTime()
     {
-        return DateTime.Parse(PlayerPrefs.GetString("LastIntervalStartTime", DateTime.Now.ToString()));
+        return DateTime.Parse(PlayerPrefs.GetString("LastIntervalStartTime", DateTime.Now.Date.ToString()));
     }
     #endregion
 
@@ -484,9 +527,9 @@ public static class DataStorage
         return null;
     }
 
-    public static void SaveGlycemia(float glycemiaValue)
+    public static void SaveGlycemia(int glycemiaValue)
     {
-        PlayerPrefs.SetFloat("Glycemia", glycemiaValue);
+        PlayerPrefs.SetInt("Glycemia", glycemiaValue);
         PlayerPrefs.Save();
     }
 
@@ -495,9 +538,9 @@ public static class DataStorage
         return PlayerPrefs.GetInt("Glycemia", AttributeManager.Instance.initialGlycemiaValue);
     }
 
-    public static void SaveActivity(float activityValue)
+    public static void SaveActivity(int activityValue)
     {
-        PlayerPrefs.SetFloat("Activity", activityValue);
+        PlayerPrefs.SetInt("Activity", activityValue);
         PlayerPrefs.Save();
     }
 
@@ -506,9 +549,9 @@ public static class DataStorage
         return PlayerPrefs.GetInt("Activity", AttributeManager.Instance.initialActivityValue);
     }
 
-    public static void SaveHunger(float hungerValue)
+    public static void SaveHunger(int hungerValue)
     {
-        PlayerPrefs.SetFloat("Hunger", hungerValue);
+        PlayerPrefs.SetInt("Hunger", hungerValue);
         PlayerPrefs.Save();
     }
 
