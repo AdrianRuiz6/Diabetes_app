@@ -8,13 +8,13 @@ public class CheckUserPerformance : State
 
     public override void Execute(AgentQuestions agent)
     {
-        FixedSizeQueue<char> topicPerformance = new FixedSizeQueue<char>();
+        FixedSizeQueue<string> topicPerformance = new FixedSizeQueue<string>();
         bool isPerformanceComplete = true;
 
         foreach (string topic in QuestionManager.Instance._allQuestions.Keys)
         {
             topicPerformance = UserPerformanceManager.Instance.GetTopicPerformance(topic);
-            if (topicPerformance.Contains('P'))
+            if (topicPerformance.Contains("P"))
             {
                 isPerformanceComplete = false;
                 break;

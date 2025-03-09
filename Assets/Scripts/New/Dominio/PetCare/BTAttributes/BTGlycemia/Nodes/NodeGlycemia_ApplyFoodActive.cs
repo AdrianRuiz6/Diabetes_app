@@ -13,7 +13,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
 
         public override NodeState Evaluate(DateTime currentDateTime)
         {
-            GameEventsPetCare.OnModifyGlycemia?.Invoke(+5, currentDateTime);
+            GameEventsPetCare.OnModifyGlycemia?.Invoke(+5, currentDateTime, false);
             return NodeState.SUCCESS;
         }
     }

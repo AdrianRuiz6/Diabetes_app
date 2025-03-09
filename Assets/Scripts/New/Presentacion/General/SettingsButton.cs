@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Master.Domain.Events;
 
 public class SettingsButton : MonoBehaviour
 {
@@ -172,12 +173,27 @@ public class SettingsButton : MonoBehaviour
         AttributeManager.Instance.RestartHunger(DateTime.Now);
 
         // Reset attributes record
-        DataStorage.ResetGlycemiaGraph();
-        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
         DataStorage.ResetActivityGraph();
         GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Activity);
         DataStorage.ResetHungerGraph();
         GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Hunger);
+        DataStorage.ResetGlycemiaGraph();
+        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
+
+        // Reset actions record
+        DataStorage.ResetInsulinGraph();
+        DataStorage.ResetFoodGraph();
+        DataStorage.ResetExerciseGraph();
+        GameEventsGraph.OnUpdatedActionsGraph?.Invoke();
+
+        // Reset actions CD and effects
+        AttributeManager.Instance.DeactivateInsulinButtonCD();
+        AttributeManager.Instance.DeactivateInsulinEffect();
+        AttributeManager.Instance.DeactivateExerciseButtonCD();
+        AttributeManager.Instance.DeactivateExerciseEffect();
+        AttributeManager.Instance.DeactivateFoodButtonCD();
+        AttributeManager.Instance.DeactivateFoodEffect();
+        GameEventsPetCare.OnFinishTimerCD?.Invoke();
 
         CloseWarningChangeRangeTime();
     }

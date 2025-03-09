@@ -120,14 +120,14 @@ public class QuestionManager : MonoBehaviour
 
         foreach (var topic in _allQuestions.Keys)
         {
-            FixedSizeQueue<char> userPerformanceTopic = UserPerformanceManager.Instance.GetTopicPerformance(topic);
+            FixedSizeQueue<string> userPerformanceTopic = UserPerformanceManager.Instance.GetTopicPerformance(topic);
 
             if(userPerformanceTopic.Count() != 0)
             {
                 int correctAnswers = 0;
-                foreach (char answer in userPerformanceTopic)
+                foreach (string answer in userPerformanceTopic)
                 {
-                    if (answer == 'S')
+                    if (answer == "S")
                         correctAnswers++;
                 }
                 float accuracy = (float)correctAnswers / maxQuestionIndex * 100;
@@ -305,6 +305,10 @@ public class QuestionManager : MonoBehaviour
 
     public string GetCorrectAnswer()
     {
+        if(currentQuestionIndex - 1 == 0)
+        {
+            return _iterationQuestions[0].correctAnswer;
+        }
         return _iterationQuestions[currentQuestionIndex - 1].correctAnswer;
     }
 }

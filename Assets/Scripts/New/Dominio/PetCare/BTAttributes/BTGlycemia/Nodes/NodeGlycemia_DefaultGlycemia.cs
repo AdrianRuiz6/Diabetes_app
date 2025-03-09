@@ -24,7 +24,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
             {
                 randomGlycemia = 5;
             }
-            GameEventsPetCare.OnModifyGlycemia?.Invoke(randomGlycemia, currentTime);
+            GameEventsPetCare.OnModifyGlycemia?.Invoke(randomGlycemia, currentTime, false);
             return NodeState.SUCCESS;
         }
     }

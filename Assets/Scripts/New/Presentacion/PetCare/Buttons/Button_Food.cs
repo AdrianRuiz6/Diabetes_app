@@ -63,6 +63,7 @@ public class Button_Food : MonoBehaviour
 
     public void SearchInformation()
     {
+        DeactivateSendButton();
         StartCoroutine(WaitForBotResponse());
     }
 
@@ -77,7 +78,8 @@ public class Button_Food : MonoBehaviour
         if (!string.IsNullOrEmpty(_resultBot))
         {
             _feedBackTMP.text = _resultBot;
-            ActivateSendButton();
+            if (_resultBot != "No has escrito una comida, prueba otra vez.")
+                ActivateSendButton();
         }
         else
         {

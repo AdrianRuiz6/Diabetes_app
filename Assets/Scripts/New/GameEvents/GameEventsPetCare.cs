@@ -9,9 +9,10 @@ namespace Master.Domain.Events
     {
         public static Action <DateTime>OnExecutingAttributes;
         public static Action OnExecutedAttribute;
-        public static Action<int, DateTime?> OnModifyGlycemia;
-        public static Action<int, DateTime?> OnModifyActivity;
-        public static Action<int, DateTime?> OnModifyHunger;
+        public static Action<int, DateTime?, bool> OnModifyGlycemia;
+        public static Action<int, DateTime?, bool> OnModifyActivity;
+        public static Action<int, DateTime?, bool> OnModifyHunger;
         public static Action<string, float> OnStartTimerCD;
+        public static Action OnFinishTimerCD;
     }
 }

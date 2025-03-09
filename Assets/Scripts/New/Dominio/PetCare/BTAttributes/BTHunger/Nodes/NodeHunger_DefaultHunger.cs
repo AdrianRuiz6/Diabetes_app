@@ -13,7 +13,7 @@ namespace Master.Domain.BehaviorTree.Hunger
 
         public override NodeState Evaluate(DateTime currentTime)
         {
-            GameEventsPetCare.OnModifyHunger?.Invoke(2, currentTime);
+            GameEventsPetCare.OnModifyHunger?.Invoke(2, currentTime, false);
             return NodeState.SUCCESS;
         }
     }

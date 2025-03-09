@@ -7,7 +7,7 @@ public class UserPerformanceManager : MonoBehaviour
 {
     public static UserPerformanceManager Instance;
 
-    private Dictionary<string, FixedSizeQueue<char>> _userPerformance;
+    private Dictionary<string, FixedSizeQueue<string>> _userPerformance;
 
     void Awake()
     {
@@ -24,7 +24,7 @@ public class UserPerformanceManager : MonoBehaviour
 
     public void InitializePerformance(List<string> allTopics)
     {
-        _userPerformance = new Dictionary<string, FixedSizeQueue<char>>();
+        _userPerformance = new Dictionary<string, FixedSizeQueue<string>>();
 
         UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(allTopics), _userPerformance);
 
@@ -32,35 +32,35 @@ public class UserPerformanceManager : MonoBehaviour
         {
             while(kvp.Value.Count() < 10)
             {
-                kvp.Value.Enqueue('P');
+                kvp.Value.Enqueue("P");
             }
         }
 
     }
 
-    public FixedSizeQueue<char> GetTopicPerformance(string topic)
+    public FixedSizeQueue<string> GetTopicPerformance(string topic)
     {
-        if (_userPerformance.TryGetValue(topic, out FixedSizeQueue<char> specificTopicPerformance))
+        if (_userPerformance.TryGetValue(topic, out FixedSizeQueue<string> specificTopicPerformance))
         {
             return specificTopicPerformance;
         }
         else
         {
-            return new FixedSizeQueue<char>();
+            return new FixedSizeQueue<string>();
         }
     }
 
     public bool HasPendingAnswers(string topic)
     {
-        FixedSizeQueue<char> topicPerformanceQueue = GetTopicPerformance(topic);
-        return topicPerformanceQueue.Contains('P');
+        FixedSizeQueue<string> topicPerformanceQueue = GetTopicPerformance(topic);
+        return topicPerformanceQueue.Contains("P");
     }
 
     public void UpdatePerformance(List<Question> iterationQuestions)
     {
         foreach(var question in iterationQuestions)
         {
-            FixedSizeQueue<char> specificTopicPerformance = GetTopicPerformance(question.topic);
+            FixedSizeQueue<string> specificTopicPerformance = GetTopicPerformance(question.topic);
             specificTopicPerformance.Enqueue(question.resultAnswer);
         }
     }

@@ -26,12 +26,12 @@ namespace BehaviorTree
 
         void Awake()
         {
-            GameEventsPetCare.OnExecutingAttributes += ExecutingAttribute;
+            GameEventsPetCare.OnExecutingAttributes += EnqueueAttribute;
         }
 
         void OnDestroy()
         {
-            GameEventsPetCare.OnExecutingAttributes -= ExecutingAttribute;
+            GameEventsPetCare.OnExecutingAttributes -= EnqueueAttribute;
         }
 
         protected virtual void Start()
@@ -86,7 +86,7 @@ namespace BehaviorTree
             }
         }
 
-        private void ExecutingAttribute(DateTime currentDateTime)
+        private void EnqueueAttribute(DateTime currentDateTime)
         {
             bool IsInTime = LimitHours.Instance.IsInRange(currentDateTime.TimeOfDay);
             bool IsInCurrentDate = currentDateTime.Date == TimeManager.Instance.currentConnectionDateTime.Date;

@@ -33,11 +33,13 @@ public class Cooldown : MonoBehaviour
     private void Awake()
     {
         GameEventsPetCare.OnStartTimerCD += StartTimerCD;
+        GameEventsPetCare.OnFinishTimerCD += FinishCD;
     }
 
     void OnDestroy()
     {
         GameEventsPetCare.OnStartTimerCD -= StartTimerCD;
+        GameEventsPetCare.OnFinishTimerCD -= FinishCD;
     }
 
     void Update()
@@ -66,9 +68,7 @@ public class Cooldown : MonoBehaviour
 
             if (_time <= 0)
             {
-                _isInCD = false;
-                _backgroundImageCD.enabled = false;
-                _iconImageCD.enabled = false;
+                FinishCD();
             }
 
             if (_isInCD)
@@ -94,6 +94,15 @@ public class Cooldown : MonoBehaviour
             _backgroundImageCD.enabled = true;
             _iconImageCD.enabled = true;
         }
+    }
+
+    private void FinishCD()
+    {
+        _time = 0;
+        _isInCD = false;
+        _backgroundImageCD.enabled = false;
+        _iconImageCD.enabled = false;
+        _button.interactable = true;
     }
 
     public void DisableButton()

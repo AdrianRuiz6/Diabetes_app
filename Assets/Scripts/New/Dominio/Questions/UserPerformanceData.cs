@@ -6,9 +6,9 @@ using UnityEngine;
 public class UserPerformanceData
 {
     public string topic;
-    public List<char> performanceData;
+    public List<string> performanceData;
 
-    public UserPerformanceData(string playerName, List<char> performanceData)
+    public UserPerformanceData(string playerName, List<string> performanceData)
     {
         this.topic = playerName;
         this.performanceData = performanceData;

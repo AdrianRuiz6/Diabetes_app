@@ -29,7 +29,7 @@ public class UI_HungerBar : MonoBehaviour
         GameEventsPetCare.OnModifyHunger -= UpdateVisualBar;
     }
 
-    private void UpdateVisualBar(int newHungerValue, DateTime? currentDateTime)
+    private void UpdateVisualBar(int newHungerValue, DateTime? currentDateTime, bool isRestarting = false)
     {
         _currentHungerValue = Mathf.Clamp(_currentHungerValue + newHungerValue, 0, 100);
         float amount = _currentHungerValue / _maxHunger;

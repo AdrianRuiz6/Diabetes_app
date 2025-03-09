@@ -12,7 +12,7 @@ public class Question
     public string correctAnswer;
     public string advice;
 
-    public char resultAnswer;
+    public string resultAnswer;
 
     public Question(string topic, string question, string answer1, string answer2, string answer3, string correctAnswer, string advice)
     {
@@ -24,24 +24,24 @@ public class Question
         this.correctAnswer = correctAnswer;
         this.advice = advice;
 
-        this.resultAnswer = ' ';
+        this.resultAnswer = " ";
     }
 
     public void answerQuestion(string answer)
     {
         if (string.Equals(answer, correctAnswer))
         {
-            resultAnswer = 'S';
+            resultAnswer = "S";
         }
         else
         {
-            resultAnswer = 'F';
+            resultAnswer = "F";
         }
     }
 
     public bool isCorrect()
     {
-        if (resultAnswer == 'S')
+        if (resultAnswer == "S")
             return true;
         return false;
     }

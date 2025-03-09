@@ -8,8 +8,6 @@ public class ScoreRecord_UI : MonoBehaviour
     [SerializeField] private GameObject _recordElement;
     private List<ScoreRecordData> _infoList;
 
-    private int _currenScore;
-
     public static ScoreRecord_UI Instance;
 
     void Awake()
@@ -54,12 +52,10 @@ public class ScoreRecord_UI : MonoBehaviour
         if(DataStorage.LoadDisconnectionDate().Date == DateTime.Now.Date)
         {
             InitializeElements();
-            _currenScore = DataStorage.LoadCurrentScore();
         }
         else
         {
             ClearElements();
-            _currenScore = 0;
         }
     }
 
@@ -77,8 +73,6 @@ public class ScoreRecord_UI : MonoBehaviour
     {
         if (time.Value.Date == DateTime.Now.Date)
         {
-            _currenScore += addedScore;
-
             string sign = (addedScore >= 0) ? "+" : "";
             string info = $"{sign}{addedScore} por {activity}.";
 

@@ -121,7 +121,7 @@ public class UI_Attribute : MonoBehaviour
         }
     }
 
-    private void UpdateVisualBar(int additionalValue, DateTime? currentDataTime)
+    private void UpdateVisualBar(int additionalValue, DateTime? currentDataTime, bool isRestarting = false)
     {
         _currentValue = Mathf.Clamp(_slider.value + additionalValue, _minValue, _maxValue);
         _slider.SetValueWithoutNotify(_currentValue);

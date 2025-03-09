@@ -29,7 +29,7 @@ public class UI_ActivityBar : MonoBehaviour
         GameEventsPetCare.OnModifyActivity -= UpdateVisualBar;
     }
 
-    private void UpdateVisualBar(int newActivityValue, DateTime? currentDateTime)
+    private void UpdateVisualBar(int newActivityValue, DateTime? currentDateTime, bool isRestarting = false)
     {
         _currentActivityValue = Mathf.Clamp(_currentActivityValue + newActivityValue, 0, 100);
         float amount = _currentActivityValue / _maxActivity;

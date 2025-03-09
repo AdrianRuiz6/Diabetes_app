@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
 
-public class PresentQuestions : State // TODO: aqui se barajean las respuestas y las preguntas.
+public class PresentQuestions : State
 {
     private string _newState;
 

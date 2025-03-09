@@ -109,7 +109,7 @@ public static class DataStorage
 
     public static TimeSpan LoadInitialTime()
     {
-        int hour = PlayerPrefs.GetInt("InitialTime", 0);
+        int hour = PlayerPrefs.GetInt("InitialTime", 14);
         return new TimeSpan(hour, 0, 0);
     }
 
@@ -122,7 +122,7 @@ public static class DataStorage
 
     public static TimeSpan LoadFinishTime()
     {
-        int hour = PlayerPrefs.GetInt("FinishTime", 23);
+        int hour = PlayerPrefs.GetInt("FinishTime", 21);
         return new TimeSpan(hour - 1, 59, 0);
     }
     #endregion
@@ -161,6 +161,51 @@ public static class DataStorage
     {
         string path = $"{Application.persistentDataPath}/ExerciseGraphData.txt";
         return LoadButtonGraph(path, requestedDate);
+    }
+
+    public static void ResetInsulinGraph()
+    {
+        string path = $"{Application.persistentDataPath}/InsulinGraphData.txt";
+        ResetActionsGraph(path);
+    }
+
+    public static void ResetFoodGraph()
+    {
+        string path = $"{Application.persistentDataPath}/FoodGraphData.txt";
+        ResetActionsGraph(path);
+    }
+
+    public static void ResetExerciseGraph()
+    {
+        string path = $"{Application.persistentDataPath}/ExerciseGraphData.txt";
+        ResetActionsGraph(path);
+    }
+
+    private static void ResetActionsGraph(string path)
+    {
+        ButtonDataList originalButtonList = new ButtonDataList();
+        ButtonDataList newButtonList = new ButtonDataList();
+
+        if (File.Exists(path))
+        {
+            string existingJson = File.ReadAllText(path);
+            originalButtonList = JsonUtility.FromJson<ButtonDataList>(existingJson) ?? new ButtonDataList();
+        }
+
+        foreach (ButtonData buttonData in originalButtonList.buttonList)
+        {
+            DateTime currentDate = DateTime.Parse(buttonData.DateAndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            if (currentDate.Date != DateTime.Now.Date)
+            {
+                newButtonList.buttonList.Add(buttonData);
+            }
+        }
+
+        string json = JsonUtility.ToJson(newButtonList, true);
+        using (StreamWriter streamWriter = new StreamWriter(path))
+        {
+            streamWriter.Write(json);
+        }
     }
 
     private static void SaveButtonGraph(DateTime? dateTime, string information, string path)
@@ -584,7 +629,7 @@ public static class DataStorage
         return PlayerPrefs.GetFloat("LeftTimeQuestionTimer", 0);
     }
 
-    public static void SaveUserPerformance(Dictionary<string, FixedSizeQueue<char>> userPerformance)
+    public static void SaveUserPerformance(Dictionary<string, FixedSizeQueue<string>> userPerformance)
     {
         string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
 
@@ -604,16 +649,16 @@ public static class DataStorage
         }
     }
 
-    public static Dictionary<string, FixedSizeQueue<char>> LoadUserPerformance(List<string> allTopics)
+    public static Dictionary<string, FixedSizeQueue<string>> LoadUserPerformance(List<string> allTopics)
     {
         string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
-        Dictionary<string, FixedSizeQueue<char>> userPerformance = new Dictionary<string, FixedSizeQueue<char>>();
+        Dictionary<string, FixedSizeQueue<string>> userPerformance = new Dictionary<string, FixedSizeQueue<string>>();
 
         if (!File.Exists(path))
         {
             foreach (string topic in allTopics)
             {
-                userPerformance.Add(topic, new FixedSizeQueue<char>());
+                userPerformance.Add(topic, new FixedSizeQueue<string>());
             }
 
             return userPerformance;
@@ -629,7 +674,7 @@ public static class DataStorage
 
         foreach (var data in dataList.userPerformanceList)
         {
-            FixedSizeQueue<char> queue = new FixedSizeQueue<char>(data.performanceData);
+            FixedSizeQueue<string> queue = new FixedSizeQueue<string>(data.performanceData);
 
             userPerformance.Add(data.topic, queue);
         }
@@ -638,7 +683,7 @@ public static class DataStorage
         {
             if(userPerformance.ContainsKey(topic) == false)
             {
-                userPerformance.Add(topic, new FixedSizeQueue<char>());
+                userPerformance.Add(topic, new FixedSizeQueue<string>());
             }
         }
 

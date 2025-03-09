@@ -95,15 +95,20 @@ public class UI_Question : MonoBehaviour
             GameEventsQuestions.OnStartTimerUI?.Invoke();
         }else
         {
-            _numberQuestion_TMP.SetText((QuestionManager.Instance.currentQuestionIndex).ToString());
-            _questionTitle_TMP.SetText(currentQuestion.question);
-            _answer1_TMP.SetText(currentQuestion.answer1);
-            _answer2_TMP.SetText(currentQuestion.answer2);
-            _answer3_TMP.SetText(currentQuestion.answer3);
-            _advice_TMP.SetText(currentQuestion.advice);
-
-            Debug.Log("Pregunta número " + QuestionManager.Instance.currentQuestionIndex + ": " + currentQuestion.topic);
+            ShowQuestion();
         }
+    }
+
+    private void ShowQuestion()
+    {
+        _numberQuestion_TMP.SetText((QuestionManager.Instance.currentQuestionIndex).ToString());
+        _questionTitle_TMP.SetText(currentQuestion.question);
+        _answer1_TMP.SetText(currentQuestion.answer1);
+        _answer2_TMP.SetText(currentQuestion.answer2);
+        _answer3_TMP.SetText(currentQuestion.answer3);
+        _advice_TMP.SetText(currentQuestion.advice);
+
+        Debug.Log("Pregunta número " + QuestionManager.Instance.currentQuestionIndex + ": " + currentQuestion.topic);
     }
 
     private void ToggleAdvicePanel()

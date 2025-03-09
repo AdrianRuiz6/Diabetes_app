@@ -29,7 +29,7 @@ public class UI_GlycemiaBar : MonoBehaviour
         GameEventsPetCare.OnModifyGlycemia -= UpdateVisualBar;
     }
 
-    private void UpdateVisualBar(int newGlucoseValue, DateTime? currentDataTime)
+    private void UpdateVisualBar(int newGlucoseValue, DateTime? currentDataTime, bool isRestarting = false)
     {
         _currentHungerValue = Mathf.Clamp(_currentHungerValue + newGlucoseValue, 0, 100);
         float amount = _currentHungerValue / _maxGlucose;

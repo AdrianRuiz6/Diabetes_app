@@ -35,7 +35,7 @@ namespace Master.Domain.Economy
             _sellingColor.a = 1f;
 
             // Añadida función cuando se pulsa el botón.
-            _productButton.onClick.AddListener(OnButtonClick);
+            _productButton.onClick.AddListener(OnProductSelected);
 
             // Cargar datos producto.
             _productState = DataStorage.LoadProduct(_productName);
@@ -63,7 +63,7 @@ namespace Master.Domain.Economy
             }
         }
 
-        void OnButtonClick()
+        void OnProductSelected()
         {
             if (_productState == ProductState.NotPurchased)
             {
@@ -77,9 +77,7 @@ namespace Master.Domain.Economy
                 EquipProduct();
             }else if(_productState == ProductState.Equipped)
             {
-                _productState = ProductState.Purchased;
-                GameEventsEconomy.OnProductBought?.Invoke(_productName);
-                GameEventsEconomy.OnProductEquipped?.Invoke("Base");
+                UnequipProduct();
             }
         }
 
@@ -94,6 +92,13 @@ namespace Master.Domain.Economy
         {
             _productState = ProductState.Equipped;
             GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
+        }
+
+        private void UnequipProduct()
+        {
+            _productState = ProductState.Purchased;
+            GameEventsEconomy.OnProductBought?.Invoke(_productName);
+            GameEventsEconomy.OnProductEquipped?.Invoke("Base");
         }
 
         private void OtherProductEquipped(string productName)

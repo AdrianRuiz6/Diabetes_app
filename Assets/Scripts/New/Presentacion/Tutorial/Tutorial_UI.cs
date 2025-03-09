@@ -6,14 +6,6 @@ public class Tutorial_UI : MonoBehaviour
     [SerializeField] private GameObject _Tutorial_Section;
     private List<GameObject> _pagesList;
 
-    private void Awake()
-    {
-        GameEventsTutorial.OnOpenTutorial += OpenTutorial;
-        GameEventsTutorial.OnCloseTutorial += CloseTutorial;
-        GameEventsTutorial.OnNextPage += NextPage;
-        GameEventsTutorial.OnPrevPage += PreviousPage;
-    }
-
     void Start()
     {
         _pagesList = new List<GameObject>();
@@ -33,11 +25,6 @@ public class Tutorial_UI : MonoBehaviour
     private void OnDestroy()
     {
         DataStorage.SaveIsFirstUsage();
-
-        GameEventsTutorial.OnOpenTutorial -= OpenTutorial;
-        GameEventsTutorial.OnCloseTutorial -= CloseTutorial;
-        GameEventsTutorial.OnNextPage -= NextPage;
-        GameEventsTutorial.OnPrevPage -= PreviousPage;
     }
 
     private void GetAllPages()
@@ -49,7 +36,7 @@ public class Tutorial_UI : MonoBehaviour
         }
     }
 
-    private void OpenTutorial()
+    public void OpenTutorial()
     {
         PageSliding.Instance.MoveToInitialPage();
         _Tutorial_Section.SetActive(true);
@@ -61,7 +48,7 @@ public class Tutorial_UI : MonoBehaviour
         _pagesList[0].SetActive(true);
     }
 
-    private void CloseTutorial()
+    public void CloseTutorial()
     {
         _Tutorial_Section.SetActive(false);
 
@@ -71,7 +58,7 @@ public class Tutorial_UI : MonoBehaviour
         }
     }
 
-    private void NextPage()
+    public void NextPage()
     {
         for(int childIndex = 0; childIndex < _pagesList.Count; childIndex++)
         {
@@ -83,7 +70,7 @@ public class Tutorial_UI : MonoBehaviour
         }
     }
 
-    private void PreviousPage()
+    public void PreviousPage()
     {
         for (int childIndex = 0; childIndex < _pagesList.Count; childIndex++)
         {

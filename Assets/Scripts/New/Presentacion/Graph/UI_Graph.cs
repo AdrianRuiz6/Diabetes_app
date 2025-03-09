@@ -88,9 +88,9 @@ public class UI_Graph : MonoBehaviour
         PlotDataPoints();
     }
 
-    private void SetFilter(GraphFilter filter)
+    private void SetFilter(GraphFilter attribute)
     {
-        _currentFilter = filter;
+        _currentFilter = attribute;
         if (_graphElements.transform.childCount > 0)
         {
             foreach (Transform child in _graphElements.transform)
