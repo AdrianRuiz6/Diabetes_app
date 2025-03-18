@@ -141,6 +141,7 @@ public class UI_Question : MonoBehaviour
 
             EconomyManager.Instance.AddTotalCoins(50);
             ScoreManager.Instance.AddScore(50, DateTime.Now, "respuesta correcta");
+            SoundManager.Instance.PlaySoundEffect("CorrectAnswer");
 
             CorrectAnswer(_answer1_Image);
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer2_TMP.text))
@@ -149,6 +150,7 @@ public class UI_Question : MonoBehaviour
             AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
+            SoundManager.Instance.PlaySoundEffect("WrongAnswer");
             WrongAnswer(_answer1_Image);
             CorrectAnswer(_answer2_Image);
         }else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
@@ -157,6 +159,7 @@ public class UI_Question : MonoBehaviour
             AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
+            SoundManager.Instance.PlaySoundEffect("WrongAnswer");
             WrongAnswer(_answer1_Image);
             CorrectAnswer(_answer3_Image);
         }
@@ -176,6 +179,7 @@ public class UI_Question : MonoBehaviour
             AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
+            SoundManager.Instance.PlaySoundEffect("WrongAnswer");
             WrongAnswer(_answer2_Image);
             CorrectAnswer(_answer1_Image);
         }
@@ -188,6 +192,7 @@ public class UI_Question : MonoBehaviour
 
             EconomyManager.Instance.AddTotalCoins(50);
             ScoreManager.Instance.AddScore(50, DateTime.Now, "respuesta correcta");
+            SoundManager.Instance.PlaySoundEffect("CorrectAnswer");
             CorrectAnswer(_answer2_Image);
         }
         else if (QuestionManager.Instance.GetCorrectAnswer().Equals(_answer3_TMP.text))
@@ -196,6 +201,7 @@ public class UI_Question : MonoBehaviour
             AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
+            SoundManager.Instance.PlaySoundEffect("WrongAnswer");
             WrongAnswer(_answer2_Image);
             CorrectAnswer(_answer3_Image);
         }
@@ -215,6 +221,7 @@ public class UI_Question : MonoBehaviour
             AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
+            SoundManager.Instance.PlaySoundEffect("WrongAnswer");
             WrongAnswer(_answer3_Image);
             CorrectAnswer(_answer1_Image);
         }
@@ -224,6 +231,7 @@ public class UI_Question : MonoBehaviour
             AnimationManager.Instance.PlayAnimation(_loosePointsPrefab, localMousePosition, new Vector3(1, 1, 1), _parentAnimations);
 
             ScoreManager.Instance.SubstractScore(25, DateTime.Now, "respuesta incorrecta");
+            SoundManager.Instance.PlaySoundEffect("WrongAnswer");
             WrongAnswer(_answer3_Image);
             CorrectAnswer(_answer2_Image);
         }
@@ -236,6 +244,7 @@ public class UI_Question : MonoBehaviour
 
             EconomyManager.Instance.AddTotalCoins(50);
             ScoreManager.Instance.AddScore(50, DateTime.Now, "respuesta correcta");
+            SoundManager.Instance.PlaySoundEffect("CorrectAnswer");
             CorrectAnswer(_answer3_Image);
         }
 

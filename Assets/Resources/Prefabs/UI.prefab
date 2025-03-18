@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 211180855071301780}
   - component: {fileID: 6658401846174871694}
   - component: {fileID: 4948329354730889259}
+  - component: {fileID: 2913619647573792826}
+  - component: {fileID: 7295160498545138062}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -126,3 +128,28 @@ MonoBehaviour:
   _labelPrefab: {fileID: 6895354237499799489, guid: 14bc98b0840591943a503f5b8e6c9cfd, type: 3}
   _flashingLineXPrefab: {fileID: 2406138994958824480, guid: 1f41c2d1fba6dd74ea81491afc586692, type: 3}
   _flashingLineYPrefab: {fileID: 6678607878896749534, guid: 9ca8a9b830383794fafffb527097e4af, type: 3}
+--- !u!114 &2913619647573792826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3356269911105652162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a0d7d9d2cb4e24789ad4808e959179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Tutorial_Section: {fileID: 0}
+--- !u!114 &7295160498545138062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3356269911105652162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ef5b94927a8c64580aef4c25955a14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

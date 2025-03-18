@@ -6,18 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
-using DG.Tweening.Plugins.Core.PathCore;
-using Unity.VisualScripting;
 
 public static class DataStorage
 {
     #region Volume
-    public static void SaveMusicVolume(float volume)
-    {
-        PlayerPrefs.SetFloat("MusicVolume", volume);
-        PlayerPrefs.Save();
-    }
 
     public static float LoadMusicVolume()
     {

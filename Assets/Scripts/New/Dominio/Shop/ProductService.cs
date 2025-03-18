@@ -71,11 +71,17 @@ namespace Master.Domain.Economy
                 {
                     UI_confirmationWindowShop.Instance.ShowConfirmationWindow(transform.Find("Product/Dog").gameObject, _sellingPrice.ToString(), BuyProduct);
                 }
+                else
+                {
+                    SoundManager.Instance.PlaySoundEffect("CannotBuyProduct");
+                }
             }
             else if(_productState == ProductState.Purchased)
             {
                 EquipProduct();
-            }else if(_productState == ProductState.Equipped)
+                
+            }
+            else if(_productState == ProductState.Equipped)
             {
                 UnequipProduct();
             }
@@ -86,12 +92,14 @@ namespace Master.Domain.Economy
             _productState = ProductState.Purchased;
             EconomyManager.Instance.SubstractTotalCoins(_sellingPrice);
             GameEventsEconomy.OnProductBought?.Invoke(_productName);
+            SoundManager.Instance.PlaySoundEffect("BuyProduct");
         }
 
         private void EquipProduct()
         {
             _productState = ProductState.Equipped;
             GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
+            SoundManager.Instance.PlaySoundEffect("EquipProduct");
         }
 
         private void UnequipProduct()
@@ -99,6 +107,7 @@ namespace Master.Domain.Economy
             _productState = ProductState.Purchased;
             GameEventsEconomy.OnProductBought?.Invoke(_productName);
             GameEventsEconomy.OnProductEquipped?.Invoke("Base");
+            SoundManager.Instance.PlaySoundEffect("Interaction");
         }
 
         private void OtherProductEquipped(string productName)

@@ -9,10 +9,6 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource _soundEffectsAudioSource;
     [SerializeField] private List<SoundEffect> _soundEffects;
     private Dictionary<string, AudioClip> _soundEffectsDictionary;
-    
-    [Header("Music")]
-    [SerializeField] private AudioSource _musicAudioSource;
-    [SerializeField] private AudioClip _musicClip;
 
     void Awake()
     {
@@ -29,13 +25,11 @@ public class SoundManager : MonoBehaviour
 
     void OnDestroy()
     {
-        DataStorage.SaveMusicVolume(_musicAudioSource.volume);
         DataStorage.SaveSoundEffectsVolume(_soundEffectsAudioSource.volume);
     }
 
     private void Start()
     {
-        SetMusicVolume(DataStorage.LoadMusicVolume());
         SetSoundEffectsVolume(DataStorage.LoadSoundEffectsVolume());
 
         // Inicialización del diccionario de efectos.
@@ -45,10 +39,6 @@ public class SoundManager : MonoBehaviour
             _soundEffectsDictionary[sound.name] = sound.clip;
         }
 
-        // Configuración del AudioSource de música.
-        _musicAudioSource.loop = true;
-        _musicAudioSource.clip = _musicClip;
-        _musicAudioSource.Play();
     }
 
     public void PlaySoundEffect(string soundName)
@@ -61,11 +51,6 @@ public class SoundManager : MonoBehaviour
         {
             Debug.LogWarning($"Efecto de sonido '{soundName}' no encontrado.");
         }
-    }
-
-    public void SetMusicVolume(float volume)
-    {
-        _musicAudioSource.volume = volume;
     }
 
     public void SetSoundEffectsVolume(float volume)

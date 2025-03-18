@@ -13,8 +13,6 @@ public class PressButtonEffect : MonoBehaviour, IPointerDownHandler, IPointerUpH
     private Vector3 _unpressedScale;
     private float _unpressedAnimationDuration;
 
-    private TiltEffect [] _tiltEffectChildren;
-
     void Start()
     {
         _pressedFactor = 0.8f;

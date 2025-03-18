@@ -36,12 +36,6 @@ public class SettingsButton : MonoBehaviour
         _settingsPanel.SetActive(false);
 
         // Configuración inicial del volumen.
-        _sliderMusic.wholeNumbers = false;
-        _sliderMusic.minValue = 0;
-        _sliderMusic.maxValue = 1;
-        _sliderMusic.value = DataStorage.LoadMusicVolume();
-        _sliderMusic.onValueChanged.AddListener(ChangeMusicVolume);
-
         _sliderSoundEffects.wholeNumbers = false;
         _sliderSoundEffects.minValue = 0;
         _sliderSoundEffects.maxValue = 1;
@@ -98,11 +92,6 @@ public class SettingsButton : MonoBehaviour
         _settingsPanel?.SetActive(false);
         CancelChangeRangeTime();
         PageSliding.Instance.ActivatePageSliding();
-    }
-
-    private void ChangeMusicVolume(float value)
-    {
-        SoundManager.Instance.SetMusicVolume(value);
     }
 
     private void ChangeSoundEffectsVolume(float value)
