@@ -27,22 +27,26 @@ public class QuestionManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        GameEventsQuestions.OnConfirmChangeQuestions += InitializeQuestions;
     }
 
     private void OnDestroy()
     {
         DataStorage.SaveCurrentQuestionIndex(currentQuestionIndex);
         DataStorage.SaveIterationQuestions(_iterationQuestions);
+
+        GameEventsQuestions.OnConfirmChangeQuestions -= InitializeQuestions;
     }
 
     void Start()
     {
-        _allQuestions = new Dictionary<string, List<Question>>();
         InitializeQuestions();
     }
 
     public void InitializeQuestions()
     {
+        _allQuestions = new Dictionary<string, List<Question>>();
         List<string> allTopics = new List<string>();
         List<Question> allQuestionsList = new List<Question>();
         UtilityFunctions.CopyList(DataStorage.LoadQuestions(), allQuestionsList);

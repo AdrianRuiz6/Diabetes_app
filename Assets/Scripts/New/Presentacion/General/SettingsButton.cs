@@ -12,7 +12,6 @@ public class SettingsButton : MonoBehaviour
     [SerializeField] private Button _closeSettingsButton;
 
     [Header("Volume")]
-    [SerializeField] private Slider _sliderMusic;
     [SerializeField] private Slider _sliderSoundEffects;
 
     [Header("Limit hours")]
@@ -25,10 +24,30 @@ public class SettingsButton : MonoBehaviour
     [SerializeField] private Button _closeWarningButton;
     [SerializeField] private Button _confirmWarningButton;
 
+    [Header("Change Quetions")]
+    [SerializeField] private GameObject _errorChangeQuestions_Window;
+    [SerializeField] private GameObject _successChangeQuestions_Window;
+    [SerializeField] private TMP_Text _errorChangeQuestions_TMP;
+    [SerializeField] private TMP_InputField _inputChangeQuestiionsIF;
+    private bool _isLoadingQuestions;
+
+    [Header("Credits")]
+    [SerializeField] private GameObject _credits_Section;
+    
     private float _previousInitialHour;
     private float _currentInitialHour;
     private float _previousFinishHour;
     private float _currentFinishHour;
+
+    private void Awake()
+    {
+        GameEventsQuestions.OnFinalizedCreationQuestions += ShowSuccessChangingQuestionsDB;
+    }
+
+    private void OnDestroy()
+    {
+        GameEventsQuestions.OnFinalizedCreationQuestions -= ShowSuccessChangingQuestionsDB;
+    }
 
     void Start()
     {
@@ -62,7 +81,14 @@ public class SettingsButton : MonoBehaviour
         _previousFinishHour = _sliderFinishHour.value;
         _currentFinishHour = _sliderFinishHour.value;
 
-    // Configuración de los botones.
+        //Configuración inicial Preguntas
+        _successChangeQuestions_Window.SetActive(false);
+        _isLoadingQuestions = false;
+
+        //Configuración inicial Créditos
+        CloseCredits();
+
+        // Configuración de los botones.
         _openSettingsButton.onClick.AddListener(OpenSetting);
         _closeSettingsButton.onClick.AddListener(CloseSetting);
         _applySettingsButton.onClick.AddListener(ShowWarningChangeRangeTime);
@@ -197,5 +223,89 @@ public class SettingsButton : MonoBehaviour
 
         _currentInitialHour = _previousInitialHour;
         _currentFinishHour = _previousFinishHour;
+    }
+
+    public void OpenCredits()
+    {
+        _credits_Section.SetActive(true);
+    }
+
+    public void CloseCredits()
+    {
+        _credits_Section.SetActive(false);
+    }
+
+    // Se hacen las llamadas necesarias para saber si el archivo del enlace introducido es válido
+    public void TryChangingQuestionsDB()
+    {
+        int result = DataStorage.SaveURLQuestions(_inputChangeQuestiionsIF.text);
+
+        switch (result)
+        {
+            case 0:
+                // Cargar las nuevas preguntas
+                _isLoadingQuestions = true;
+                _inputChangeQuestiionsIF.text = "";
+
+                // Se reinician valores antes de buscar nuevas preguntas
+                ResetQuestionsValues();
+                // Se vuelven a buscar preguntas
+                GameEventsQuestions.OnConfirmChangeQuestions?.Invoke();
+                break;
+            case -1:
+                // Mostrar error URL vacío
+                ShowErrorChangingQuestionsDB("No se ha escrito ningun enlace.");
+                break;
+            case -2:
+                // Mostrar error de carga de archivo
+                ShowErrorChangingQuestionsDB("Error al acceder al enlace.");
+                break;
+            case -3:
+                // Mostrar error de formato de archivo
+                ShowErrorChangingQuestionsDB("Error en el número de columnas del archivo.");
+                break;
+            case -4:
+                // Mostrar error inesperado
+                ShowErrorChangingQuestionsDB("Error inesperado.");
+                break;
+            case -5:
+                // Mostrar error formato tsv
+                ShowErrorChangingQuestionsDB("El formato del archivo no es \"tsv\".");
+                break;
+        }
+    }
+
+    private void ShowSuccessChangingQuestionsDB()
+    {
+        if (!_isLoadingQuestions)
+            return;
+
+        _isLoadingQuestions = false;
+        _successChangeQuestions_Window.SetActive(true);
+    }
+
+    private void ShowErrorChangingQuestionsDB(string errorMsg)
+    {
+        _errorChangeQuestions_Window.SetActive(true);
+        _errorChangeQuestions_TMP.text = errorMsg;
+    }
+
+    public void ResetQuestionsDB()
+    {
+        // Se reinician valores antes de buscar nuevas preguntas
+        DataStorage.ResetQuestionURL();
+        ResetQuestionsValues();
+
+        // Se vuelven a buscar preguntas
+        _isLoadingQuestions = true;
+        GameEventsQuestions.OnConfirmChangeQuestions?.Invoke();
+    }
+
+    private void ResetQuestionsValues()
+    {
+        // Se reinicia el rendimiento en las preguntas, la iteración de preguntas y el indice de la pregunta.
+        DataStorage.ResetUserPerformance();
+        DataStorage.ResetIterationQuestions();
+        DataStorage.ResetCurrentQuestionIndex();
     }
 }

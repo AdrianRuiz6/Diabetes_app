@@ -1,0 +1,54 @@
+using Master.Domain.Events;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.Sockets;
+using UnityEngine;
+
+public class AttributeSchedule : MonoBehaviour
+{
+    public static AttributeSchedule Instance;
+    private DateTime _lastIterationTime = DateTime.Now;
+
+    public float UpdateInterval = 300; // 5 minutos
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        _lastIterationTime.AddSeconds(-UpdateInterval);
+    }
+
+    private void OnDestroy()
+    {
+         DataStorage.SaveLastIterationStartTime(_lastIterationTime);
+    }
+
+    public void UpdateTimer(float restTimeIteration, DateTime lastTimeInterval)
+    {
+        StopAllCoroutines();
+        _lastIterationTime = lastTimeInterval;
+        StartCoroutine(TimerAttributes(restTimeIteration));
+    }
+
+    private IEnumerator TimerAttributes(float timeFirstIteration)
+    {
+        yield return new WaitForSeconds(timeFirstIteration);
+        GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
+
+        while (true)
+        {
+            _lastIterationTime = DateTime.Now;
+            yield return new WaitForSeconds(UpdateInterval);
+            GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
+        }
+    }
+}

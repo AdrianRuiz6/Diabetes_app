@@ -1,3 +1,4 @@
+using DG.Tweening.Plugins.Core.PathCore;
 using Master.Domain.Economy;
 using Master.Domain.States;
 using System;
@@ -10,7 +11,6 @@ using UnityEngine;
 public static class DataStorage
 {
     #region Volume
-
     public static float LoadMusicVolume()
     {
         return PlayerPrefs.GetFloat("MusicVolume", 1f);
@@ -610,6 +610,12 @@ public static class DataStorage
         return PlayerPrefs.GetInt("CurrentQuestionIndex", 0);
     }
 
+    public static void ResetCurrentQuestionIndex()
+    {
+        PlayerPrefs.SetInt("CurrentQuestionIndex", 0);
+        PlayerPrefs.Save();
+    }
+
     public static void SaveTimeLeftQuestionTimer(float timeLeft)
     {
         PlayerPrefs.SetFloat("LeftTimeQuestionTimer", timeLeft);
@@ -640,6 +646,7 @@ public static class DataStorage
             streamWriter.Write(json);
         }
     }
+
 
     public static Dictionary<string, FixedSizeQueue<string>> LoadUserPerformance(List<string> allTopics)
     {
@@ -682,6 +689,16 @@ public static class DataStorage
         return userPerformance;
     }
 
+    public static void ResetUserPerformance()
+    {
+        string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
     public static void SaveIterationQuestions(List<Question> iterationQuestions)
     {
         string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
@@ -718,9 +735,19 @@ public static class DataStorage
         return currentIterationQuestions.questions;
     }
 
+    public static void ResetIterationQuestions()
+    {
+        string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
     public static List<Question> LoadQuestions()
     {
-        string url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmL6z_aRoGzC_IM7f85ga5WoVNv99d4oUYIsjTrLzUgKLUuzc4xXIY8n_TakI-OQ/pub?gid=180804845&single=true&output=csv";
+        string url = LoadURLQuestions();
         string fileCSV = System.IO.Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
 
         List<Question> questions = new List<Question>();
@@ -745,7 +772,7 @@ public static class DataStorage
                         continue;
                     }
 
-                    string[] values = currentLine.Split(',');
+                    string[] values = currentLine.Split('\t');
 
                     Question question = new Question(
                         values[0], // Topic
@@ -764,7 +791,7 @@ public static class DataStorage
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Failed to load questions: {e.Message}");
+            Debug.LogError($"Error inesperado al cargar preguntas: {e.Message}");
             return null;
         }
         finally
@@ -774,6 +801,99 @@ public static class DataStorage
                 File.Delete(fileCSV);
             }
         }
+    }
+
+    public static int SaveURLQuestions(string url)
+    {
+        // Comprobar errores
+        string fileCSV = System.IO.Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
+
+        try
+        {
+            if (!url.Contains("output=tsv"))
+            {
+                // -5 significa que la URL no tiene formato tsv
+                return -5;
+            }
+
+            // Validar que el URL no está vacío
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                // -1 significa que la URL está vacía
+                Debug.LogError("El URL proporcionado está vacío.");
+                return -1;
+            }
+
+            // Intentar descargar el archivo CSV desde la URL
+            using (WebClient webClient = new WebClient())
+            {
+                try
+                {
+                    webClient.DownloadFile(url, fileCSV);
+                }
+                catch (WebException webEx)
+                {
+                    // -2 significa que no carga el archivo
+                    Debug.LogError($"Error descargando archivo desde la URL: {webEx.Message}");
+                    return -2;
+                }
+            }
+
+            // Leer y procesar el archivo
+            using (StreamReader reader = new StreamReader(fileCSV))
+            {
+                string currentLine;
+                bool isHeader = true;
+
+                while ((currentLine = reader.ReadLine()) != null)
+                {
+                    if (isHeader)
+                    {
+                        isHeader = false;
+                        continue;
+                    }
+
+                    string[] values = currentLine.Split('\t');
+
+                    if (values.Length != 7)
+                    {
+                        // -3 significa que el número de columnas del archivo no es válido
+                        Debug.LogError($"Formato inválido en línea: {values.Length}");
+                        return -3;
+                    }
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            // -4 significa que ha habido un error inesperado
+            Debug.LogError($"Error inesperado al cargar preguntas: {e.Message}");
+            return -4;
+        }
+        finally
+        {
+            if (File.Exists(fileCSV))
+            {
+                File.Delete(fileCSV);
+            }
+        }
+
+        // Guardar URL de la pregunta: devolver 0 significa éxito.
+        PlayerPrefs.SetString("urlQuestions", url);
+
+        return 0;
+    }
+
+    public static string LoadURLQuestions()
+    {
+        string defaultURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmL6z_aRoGzC_IM7f85ga5WoVNv99d4oUYIsjTrLzUgKLUuzc4xXIY8n_TakI-OQ/pub?output=tsv";
+
+        return PlayerPrefs.GetString("urlQuestions", defaultURL);
+    }
+
+    public static void ResetQuestionURL()
+    {
+        PlayerPrefs.DeleteKey("urlQuestions");
     }
     #endregion
 }

@@ -7,32 +7,32 @@ public class UI_QuestionsManager : MonoBehaviour
 {
     [SerializeField] private GameObject _timerPanel;
     [SerializeField] private GameObject _questionPanel;
-    [SerializeField] private GameObject _problemLoadingPanel;
+    [SerializeField] private GameObject _loadingPanel;
 
-    private bool _IsExistingProblemsLoading;
+    private bool _isLoadingQuestions;
+    private enum PanelType { Timer, Question }
 
     void Awake()
     {
         // Events
-        GameEventsQuestions.OnStartQuestionUI += ActivateQuestionsPanel;
+        GameEventsQuestions.OnStartQuestionUI += ActivateQuestionPanel;
         GameEventsQuestions.OnStartTimerUI += ActivateTimerPanel;
-        GameEventsQuestions.OnFinalizedCreationQuestions += TurnFalseProblemsLoading;
+        GameEventsQuestions.OnFinalizedCreationQuestions += FinishLoadingQuestions;
     }
 
     void OnDestroy()
     {
         // Events
-        GameEventsQuestions.OnStartQuestionUI -= ActivateQuestionsPanel;
+        GameEventsQuestions.OnStartQuestionUI -= ActivateQuestionPanel;
         GameEventsQuestions.OnStartTimerUI -= ActivateTimerPanel;
-        GameEventsQuestions.OnFinalizedCreationQuestions -= TurnFalseProblemsLoading;
+        GameEventsQuestions.OnFinalizedCreationQuestions -= FinishLoadingQuestions;
     }
 
     private void Start()
     {
-        _IsExistingProblemsLoading = true;
+        _isLoadingQuestions = true;
 
-        DeactivateAllPanels();
-        ActivateTimerPanel();
+        SwitchPanel(PanelType.Timer);
 
         float previousTimeLeft = DataStorage.LoadTimeLeftQuestionTimer();
         DateTime lastTimeDisconnected = DataStorage.LoadDisconnectionDate();
@@ -42,47 +42,52 @@ public class UI_QuestionsManager : MonoBehaviour
         GameEventsQuestions.OnModifyTimer?.Invoke(currentTimeLeft);
     }
 
-
-    private void TurnFalseProblemsLoading()
+    private void Update()
     {
-        _IsExistingProblemsLoading = false;
-        if (_problemLoadingPanel.activeSelf == true)
+        if (_isLoadingQuestions)
         {
-            ActivateQuestionsPanel();
-        }
-    }
-
-    private void ActivateQuestionsPanel()
-    {
-        DeactivateAllPanels();
-        if(_IsExistingProblemsLoading == true)
-        {
-            ActivateProblemLoadingPanel();
+            _loadingPanel.SetActive(true);
         }
         else
         {
-            _questionPanel.SetActive(true);
+            _loadingPanel.SetActive(false);
         }
+    }
+
+    private void StartLoadingQuestions()
+    {
+        _isLoadingQuestions = true;
+    }
+
+    private void FinishLoadingQuestions()
+    {
+        _isLoadingQuestions = false;
+    }
+
+    private void ActivateQuestionPanel()
+    {
+        SwitchPanel(PanelType.Question);
     }
 
     private void ActivateTimerPanel()
     {
-        _IsExistingProblemsLoading = true;
-
-        DeactivateAllPanels();
-        _timerPanel.SetActive(true);
+        StartLoadingQuestions();
+        SwitchPanel(PanelType.Timer);
     }
 
-    private void ActivateProblemLoadingPanel()
+    private void SwitchPanel(PanelType panel)
     {
-        DeactivateAllPanels();
-        _problemLoadingPanel.SetActive(true);
-    }
-
-    private void DeactivateAllPanels()
-    {
-        _timerPanel.SetActive(false);
-        _questionPanel.SetActive(false);
-        _problemLoadingPanel.SetActive(false);
+        if (panel == PanelType.Timer)
+        {
+            _timerPanel.SetActive(true);
+            _questionPanel.SetActive(false);
+            _loadingPanel.SetActive(false);
+        }
+        else if (panel == PanelType.Question)
+        {
+            _timerPanel.SetActive(false);
+            _questionPanel.SetActive(true);
+            _loadingPanel.SetActive(false);
+        }
     }
 }
