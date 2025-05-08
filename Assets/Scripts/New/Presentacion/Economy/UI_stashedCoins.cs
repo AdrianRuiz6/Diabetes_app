@@ -3,7 +3,7 @@ using Master.Domain.Events;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_stashedCoins : MonoBehaviour
+public class UI_StashedCoins : MonoBehaviour
 {
     private Button _stashedCoinsBtn;
     [SerializeField] private GameObject _stashedCoinsObject;

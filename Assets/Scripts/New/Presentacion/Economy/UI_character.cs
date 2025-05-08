@@ -2,7 +2,7 @@ using Master.Domain.Events;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class UI_character : MonoBehaviour
+public class UI_Character : MonoBehaviour
 {
     private Image _characterImage;
 

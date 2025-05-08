@@ -69,7 +69,7 @@ namespace Master.Domain.Economy
             {
                 if(EconomyManager.Instance.GetCoins() >= _sellingPrice)
                 {
-                    UI_confirmationWindowShop.Instance.ShowConfirmationWindow(transform.Find("Product/Dog").gameObject, _sellingPrice.ToString(), BuyProduct);
+                    UI_ConfirmationWindowShop.Instance.ShowConfirmationWindow(transform.Find("Product/Dog").gameObject, _sellingPrice.ToString(), BuyProduct);
                 }
                 else
                 {

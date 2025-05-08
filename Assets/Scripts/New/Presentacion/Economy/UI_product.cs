@@ -2,7 +2,7 @@ using Master.Domain.Events;
 using UnityEngine;
 using TMPro;
 
-public class UI_product : MonoBehaviour
+public class UI_Product : MonoBehaviour
 {
     [SerializeField] private string _productName;
     [SerializeField] private GameObject _equippedIcon;

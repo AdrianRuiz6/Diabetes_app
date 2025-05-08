@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CurrentScore_UI : MonoBehaviour
+public class UI_CurrentScore : MonoBehaviour
 {
     private TMP_Text _currentScore_TMP;
 

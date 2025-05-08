@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public class UI_confirmationWindowShop : MonoBehaviour
+public class UI_ConfirmationWindowShop : MonoBehaviour
 {
     [SerializeField] private GameObject _windowPanel;
     [SerializeField] private TextMeshProUGUI _priceTMP;
@@ -14,7 +14,7 @@ public class UI_confirmationWindowShop : MonoBehaviour
 
     private Action onConfirmPurchase;
 
-    public static UI_confirmationWindowShop Instance;
+    public static UI_ConfirmationWindowShop Instance;
 
     void Awake()
     {

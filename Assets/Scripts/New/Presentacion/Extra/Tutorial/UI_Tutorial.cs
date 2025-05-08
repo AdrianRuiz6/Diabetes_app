@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tutorial_UI : MonoBehaviour
+public class UI_Tutorial : MonoBehaviour
 {
     [SerializeField] private GameObject _Tutorial_Section;
     private List<GameObject> _pagesList;

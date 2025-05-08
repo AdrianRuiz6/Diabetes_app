@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class HigherScore_UI : MonoBehaviour
+public class UI_HigherScore : MonoBehaviour
 {
     private TMP_Text _higherScore_TMP;
 

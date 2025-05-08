@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UI_coins : MonoBehaviour
+public class UI_Coins : MonoBehaviour
 {
     private TMP_Text _coinsAmountText;
 

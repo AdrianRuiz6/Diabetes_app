@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ScoreRecord_UI : MonoBehaviour
+public class UI_ScoreRecord : MonoBehaviour
 {
     [SerializeField] private GameObject _recordElement;
     private List<ScoreRecordData> _infoList;
 
-    public static ScoreRecord_UI Instance;
+    public static UI_ScoreRecord Instance;
 
     void Awake()
     {
