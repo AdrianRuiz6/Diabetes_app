@@ -23,14 +23,14 @@ public class LimitHours : MonoBehaviour
             Destroy(gameObject);
         }
 
-        GameEventsGraph.OnInitialTimeModified += ModifyInitialHour;
-        GameEventsGraph.OnFinishTimeModified += ModifyFinishHour;
+        GameEvents_Graph.OnInitialTimeModified += ModifyInitialHour;
+        GameEvents_Graph.OnFinishTimeModified += ModifyFinishHour;
     }
 
     private void OnDestroy()
     {
-        GameEventsGraph.OnInitialTimeModified -= ModifyInitialHour;
-        GameEventsGraph.OnFinishTimeModified -= ModifyFinishHour;
+        GameEvents_Graph.OnInitialTimeModified -= ModifyInitialHour;
+        GameEvents_Graph.OnFinishTimeModified -= ModifyFinishHour;
 
         DataStorage.SaveInitialTime(initialTime);
         DataStorage.SaveFinishTime(finishTime);

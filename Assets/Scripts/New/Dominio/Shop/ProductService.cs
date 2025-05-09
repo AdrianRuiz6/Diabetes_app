@@ -16,7 +16,7 @@ namespace Master.Domain.Economy
 
         private void Awake()
         {
-            GameEventsEconomy.OnProductEquipped += OtherProductEquipped;
+            GameEvents_Economy.OnProductEquipped += OtherProductEquipped;
         }
         private void OnDestroy()
         {
@@ -24,7 +24,7 @@ namespace Master.Domain.Economy
             DataStorage.SaveProduct(_productName, _productState);
 
             // Cierre de eventos.
-            GameEventsEconomy.OnProductEquipped -= OtherProductEquipped;
+            GameEvents_Economy.OnProductEquipped -= OtherProductEquipped;
         }
 
         void Start()
@@ -41,10 +41,10 @@ namespace Master.Domain.Economy
             _productState = DataStorage.LoadProduct(_productName);
             if(_productState == ProductState.Equipped)
             {
-                GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
+                GameEvents_Economy.OnProductEquipped?.Invoke(_productName);
             }else if(_productState == ProductState.Purchased)
             {
-                GameEventsEconomy.OnProductBought?.Invoke(_productName);
+                GameEvents_Economy.OnProductBought?.Invoke(_productName);
             }
         }
 
@@ -54,11 +54,11 @@ namespace Master.Domain.Economy
             {
                 if (EconomyManager.Instance.GetCoins() < _sellingPrice)
                 {
-                    GameEventsEconomy.OnNotEnoughMoney(_productName);
+                    GameEvents_Economy.OnNotEnoughMoney(_productName);
                 }
                 else
                 {
-                    GameEventsEconomy.OnEnoughMoney(_productName);
+                    GameEvents_Economy.OnEnoughMoney(_productName);
                 }
             }
         }
@@ -91,22 +91,22 @@ namespace Master.Domain.Economy
         {
             _productState = ProductState.Purchased;
             EconomyManager.Instance.SubstractTotalCoins(_sellingPrice);
-            GameEventsEconomy.OnProductBought?.Invoke(_productName);
+            GameEvents_Economy.OnProductBought?.Invoke(_productName);
             SoundManager.Instance.PlaySoundEffect("BuyProduct");
         }
 
         private void EquipProduct()
         {
             _productState = ProductState.Equipped;
-            GameEventsEconomy.OnProductEquipped?.Invoke(_productName);
+            GameEvents_Economy.OnProductEquipped?.Invoke(_productName);
             SoundManager.Instance.PlaySoundEffect("EquipProduct");
         }
 
         private void UnequipProduct()
         {
             _productState = ProductState.Purchased;
-            GameEventsEconomy.OnProductBought?.Invoke(_productName);
-            GameEventsEconomy.OnProductEquipped?.Invoke("Base");
+            GameEvents_Economy.OnProductBought?.Invoke(_productName);
+            GameEvents_Economy.OnProductEquipped?.Invoke("Base");
             SoundManager.Instance.PlaySoundEffect("Interaction");
         }
 

@@ -25,7 +25,7 @@ public class UI_DateChanger : MonoBehaviour
     private void UpdateDate()
     {
         _date_TMP.text = $"{_currentDate.ToString("dd")} / {_currentDate.ToString("MM")} / {_currentDate.Year - 2000}";
-        GameEventsGraph.OnUpdatedDateGraph?.Invoke(_currentDate);
+        GameEvents_Graph.OnUpdatedDateGraph?.Invoke(_currentDate);
     }
 
     private void PreviousDate()

@@ -42,13 +42,13 @@ public class AttributeSchedule : MonoBehaviour
     private IEnumerator TimerAttributes(float timeFirstIteration)
     {
         yield return new WaitForSeconds(timeFirstIteration);
-        GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
+        GameEvents_PetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
 
         while (true)
         {
             _lastIterationTime = DateTime.Now;
             yield return new WaitForSeconds(UpdateInterval);
-            GameEventsPetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
+            GameEvents_PetCare.OnExecutingAttributes?.Invoke(DateTime.Now);
         }
     }
 }

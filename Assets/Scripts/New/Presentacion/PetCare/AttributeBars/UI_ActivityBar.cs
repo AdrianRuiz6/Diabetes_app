@@ -21,12 +21,12 @@ public class UI_ActivityBar : MonoBehaviour
 
     void Awake()
     {
-        GameEventsPetCare.OnModifyActivity += UpdateVisualBar;
+        GameEvents_PetCare.OnModifyActivity += UpdateVisualBar;
     }
 
     void OnDestroy()
     {
-        GameEventsPetCare.OnModifyActivity -= UpdateVisualBar;
+        GameEvents_PetCare.OnModifyActivity -= UpdateVisualBar;
     }
 
     private void UpdateVisualBar(int newActivityValue, DateTime? currentDateTime, bool isRestarting = false)

@@ -21,12 +21,12 @@ public class UI_HungerBar : MonoBehaviour
 
     void Awake()
     {
-        GameEventsPetCare.OnModifyHunger += UpdateVisualBar;
+        GameEvents_PetCare.OnModifyHunger += UpdateVisualBar;
     }
 
     void OnDestroy()
     {
-        GameEventsPetCare.OnModifyHunger -= UpdateVisualBar;
+        GameEvents_PetCare.OnModifyHunger -= UpdateVisualBar;
     }
 
     private void UpdateVisualBar(int newHungerValue, DateTime? currentDateTime, bool isRestarting = false)

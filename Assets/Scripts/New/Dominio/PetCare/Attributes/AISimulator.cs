@@ -127,11 +127,11 @@ public class AISimulator : MonoBehaviour
         {
             timePassed = lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime) - AttributeManager.Instance.lastTimeInsulinUsed.Value;
             secondsPassed = (float)timePassed?.TotalSeconds;
-            restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
+            restTimeEffects = AttributeManager.Instance.timeEffectActions - secondsPassed;
 
             Debug.Log($"SIMULATION: Insulin - Time Passed (lastTimeUsed -> DisconectionTIme): {secondsPassed}, Rest of the time: {restTimeEffects}");
 
-            if (secondsPassed < AttributeManager.Instance.timeEffectButtons)
+            if (secondsPassed < AttributeManager.Instance.timeEffectActions)
             {
                 timeDisconnected = (float)(currentTime - lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime))?.TotalSeconds;
                 AttributeManager.Instance.isInsulinEffectActive = true;
@@ -154,11 +154,11 @@ public class AISimulator : MonoBehaviour
         {
             timePassed = lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime) - AttributeManager.Instance.lastTimeExerciseUsed.Value;
             secondsPassed = (float)timePassed?.TotalSeconds;
-            restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
+            restTimeEffects = AttributeManager.Instance.timeEffectActions - secondsPassed;
 
             Debug.Log($"SIMULATION: Exercise - Time Passed (lastTimeUsed -> DisconectionTIme): {secondsPassed}, Rest of the time: {restTimeEffects}");
 
-            if (secondsPassed < AttributeManager.Instance.timeEffectButtons)
+            if (secondsPassed < AttributeManager.Instance.timeEffectActions)
             {
                 timeDisconnected = (float)(currentTime - lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime))?.TotalSeconds;
                 AttributeManager.Instance.isExerciseEffectActive = true;
@@ -180,11 +180,11 @@ public class AISimulator : MonoBehaviour
         {
             timePassed = lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime) - AttributeManager.Instance.lastTimeFoodUsed.Value;
             secondsPassed = (float)timePassed?.TotalSeconds;
-            restTimeEffects = AttributeManager.Instance.timeEffectButtons - secondsPassed;
+            restTimeEffects = AttributeManager.Instance.timeEffectActions - secondsPassed;
 
             Debug.Log($"SIMULATION: Food - Time Passed (lastTimeUsed -> DisconectionTIme): {secondsPassed}, Rest of the time: {restTimeEffects}");
 
-            if (secondsPassed < AttributeManager.Instance.timeEffectButtons)
+            if (secondsPassed < AttributeManager.Instance.timeEffectActions)
             {
                 timeDisconnected = (float)(currentTime - lastTimeDisconnected.GetValueOrDefault((DateTime)currentTime))?.TotalSeconds;
                 AttributeManager.Instance.isFoodEffectActive = true;
@@ -210,7 +210,7 @@ public class AISimulator : MonoBehaviour
         {
             Debug.Log($"SIMULATION: Iteration {iteration + 1}/{_iterationsTotal}");
 
-            GameEventsPetCare.OnExecutingAttributes?.Invoke(_dateTimesQueue.Dequeue());
+            GameEvents_PetCare.OnExecutingAttributes?.Invoke(_dateTimesQueue.Dequeue());
 
             _iterationsEffectsInsulin--;
             _iterationsEffectsExercise--;

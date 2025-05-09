@@ -35,32 +35,32 @@ namespace Master.Domain.Economy
         {
             _stashedCoins = DataStorage.LoadStashedCoins();
             _totalCoins = DataStorage.LoadTotalCoins();
-            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+            GameEvents_Economy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
         }
 
         public void AddStashedCoins(int coins)
         {
             _stashedCoins += coins;
-            GameEventsEconomy.OnStashedCoinsUpdated?.Invoke(_stashedCoins);
+            GameEvents_Economy.OnStashedCoinsUpdated?.Invoke(_stashedCoins);
         }
 
         public void StashedCoinsToTotalCoins()
         {
             _totalCoins += _stashedCoins;
             _stashedCoins = 0;
-            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+            GameEvents_Economy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
         }
 
         public void AddTotalCoins(int coins)
         {
             _totalCoins += coins;
-            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+            GameEvents_Economy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
         }
 
         public void SubstractTotalCoins(int coins)
         {
             _totalCoins -= coins;
-            GameEventsEconomy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+            GameEvents_Economy.OnTotalCoinsUpdated?.Invoke(_totalCoins);
         }
 
         public int GetCoins()

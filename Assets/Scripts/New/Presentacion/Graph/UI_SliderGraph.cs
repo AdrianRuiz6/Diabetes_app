@@ -24,22 +24,22 @@ public class UI_SliderGraph : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsGraph.OnInitialTimeModified += ModifyInitialHour;
-        GameEventsGraph.OnFinishTimeModified += ModifyFinishHour;
+        GameEvents_Graph.OnInitialTimeModified += ModifyInitialHour;
+        GameEvents_Graph.OnFinishTimeModified += ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedActionsGraph += LoadData;
+        GameEvents_Graph.OnUpdatedActionsGraph += LoadData;
 
-        GameEventsGraph.OnUpdatedDateGraph += UpdateDate;
+        GameEvents_Graph.OnUpdatedDateGraph += UpdateDate;
     }
 
     private void OnDestroy()
     {
-        GameEventsGraph.OnInitialTimeModified -= ModifyInitialHour;
-        GameEventsGraph.OnFinishTimeModified -= ModifyFinishHour;
+        GameEvents_Graph.OnInitialTimeModified -= ModifyInitialHour;
+        GameEvents_Graph.OnFinishTimeModified -= ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedActionsGraph -= LoadData;
+        GameEvents_Graph.OnUpdatedActionsGraph -= LoadData;
 
-        GameEventsGraph.OnUpdatedDateGraph -= UpdateDate;
+        GameEvents_Graph.OnUpdatedDateGraph -= UpdateDate;
     }
 
     void Start()

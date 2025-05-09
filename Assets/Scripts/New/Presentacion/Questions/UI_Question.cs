@@ -44,7 +44,7 @@ public class UI_Question : MonoBehaviour
 
     void Awake()
     {
-        GameEventsQuestions.OnFinalizedCreationQuestions += PrepareNextQuestion;
+        GameEvents_Questions.OnFinalizedCreationQuestions += PrepareNextQuestion;
     }
 
     void OnDestroy()
@@ -59,7 +59,7 @@ public class UI_Question : MonoBehaviour
         _nextQuestion_Btn.onClick.RemoveAllListeners();
 
         // Events
-        GameEventsQuestions.OnFinalizedCreationQuestions -= PrepareNextQuestion;
+        GameEvents_Questions.OnFinalizedCreationQuestions -= PrepareNextQuestion;
     }
 
     void Start()
@@ -92,7 +92,7 @@ public class UI_Question : MonoBehaviour
 
         if(currentQuestion == null)
         {
-            GameEventsQuestions.OnStartTimerUI?.Invoke();
+            GameEvents_Questions.OnStartTimerUI?.Invoke();
         }else
         {
             ShowQuestion();
@@ -116,13 +116,13 @@ public class UI_Question : MonoBehaviour
         if (_advicePanel.activeSelf == true)
         {
             _openAdvice_Btn.gameObject.SetActive(true);
-            PageSliding.Instance.ActivatePageSliding();
+            Animation_PageSliding.Instance.ActivatePageSliding();
             _advicePanel.SetActive(false);
         }
         else
         {
             _openAdvice_Btn.gameObject.SetActive(false);
-            PageSliding.Instance.DeactivatePageSliding();
+            Animation_PageSliding.Instance.DeactivatePageSliding();
             _advicePanel.SetActive(true);
         }
     }

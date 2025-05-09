@@ -9,14 +9,14 @@ public class AgentQuestions : MonoBehaviour
 
     void Awake()
     {
-        GameEventsQuestions.OnExecuteQuestionSearch += ExecuteQuestionSearch;
-        GameEventsQuestions.OnFinalizedCreationQuestions += FinalizeQuestionSearch;
+        GameEvents_Questions.OnExecuteQuestionSearch += ExecuteQuestionSearch;
+        GameEvents_Questions.OnFinalizedCreationQuestions += FinalizeQuestionSearch;
     }
 
     private void OnDestroy()
     {
-        GameEventsQuestions.OnExecuteQuestionSearch -= ExecuteQuestionSearch;
-        GameEventsQuestions.OnFinalizedCreationQuestions -= FinalizeQuestionSearch;
+        GameEvents_Questions.OnExecuteQuestionSearch -= ExecuteQuestionSearch;
+        GameEvents_Questions.OnFinalizedCreationQuestions -= FinalizeQuestionSearch;
     }
 
     void Start()
@@ -40,7 +40,7 @@ public class AgentQuestions : MonoBehaviour
 
     private void ExecuteQuestionSearch()
     {
-        currentState = new CheckUserPerformance();
+        currentState = new State_CheckUserPerformance();
         executing = true;
     }
 

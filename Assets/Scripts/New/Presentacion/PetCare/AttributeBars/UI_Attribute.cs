@@ -31,13 +31,13 @@ public class UI_Attribute : MonoBehaviour
         switch (_attributeType)
         {
             case AttributeType.Glycemia:
-                GameEventsPetCare.OnModifyGlycemia += UpdateVisualBar;
+                GameEvents_PetCare.OnModifyGlycemia += UpdateVisualBar;
                 break;
             case AttributeType.Activity:
-                GameEventsPetCare.OnModifyActivity += UpdateVisualBar;
+                GameEvents_PetCare.OnModifyActivity += UpdateVisualBar;
                 break;
             case AttributeType.Hunger:
-                GameEventsPetCare.OnModifyHunger += UpdateVisualBar;
+                GameEvents_PetCare.OnModifyHunger += UpdateVisualBar;
                 break;
         }
     }
@@ -47,13 +47,13 @@ public class UI_Attribute : MonoBehaviour
         switch (_attributeType)
         {
             case AttributeType.Glycemia:
-                GameEventsPetCare.OnModifyGlycemia -= UpdateVisualBar;
+                GameEvents_PetCare.OnModifyGlycemia -= UpdateVisualBar;
                 break;
             case AttributeType.Activity:
-                GameEventsPetCare.OnModifyActivity -= UpdateVisualBar;
+                GameEvents_PetCare.OnModifyActivity -= UpdateVisualBar;
                 break;
             case AttributeType.Hunger:
-                GameEventsPetCare.OnModifyHunger -= UpdateVisualBar;
+                GameEvents_PetCare.OnModifyHunger -= UpdateVisualBar;
                 break;
         }
     }

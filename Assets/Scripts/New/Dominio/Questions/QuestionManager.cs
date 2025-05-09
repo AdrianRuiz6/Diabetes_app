@@ -28,7 +28,7 @@ public class QuestionManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        GameEventsQuestions.OnConfirmChangeQuestions += InitializeQuestions;
+        GameEvents_Questions.OnConfirmChangeQuestions += InitializeQuestions;
     }
 
     private void OnDestroy()
@@ -36,7 +36,7 @@ public class QuestionManager : MonoBehaviour
         DataStorage.SaveCurrentQuestionIndex(currentQuestionIndex);
         DataStorage.SaveIterationQuestions(_iterationQuestions);
 
-        GameEventsQuestions.OnConfirmChangeQuestions -= InitializeQuestions;
+        GameEvents_Questions.OnConfirmChangeQuestions -= InitializeQuestions;
     }
 
     void Start()
@@ -89,11 +89,11 @@ public class QuestionManager : MonoBehaviour
         
         if(_iterationQuestions.Count == 0)
         {
-            GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
+            GameEvents_Questions.OnExecuteQuestionSearch?.Invoke();
         }
         else
         {
-            GameEventsQuestions.OnFinalizedCreationQuestions?.Invoke();
+            GameEvents_Questions.OnFinalizedCreationQuestions?.Invoke();
         }
     }
 
@@ -294,7 +294,7 @@ public class QuestionManager : MonoBehaviour
         _iterationQuestions = new List<Question>();
         currentQuestionIndex = 0;
 
-        GameEventsQuestions.OnExecuteQuestionSearch?.Invoke();
+        GameEvents_Questions.OnExecuteQuestionSearch?.Invoke();
     }
 
     public void RandomizeOrderQuestions()

@@ -15,18 +15,18 @@ public class UI_Product : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsEconomy.OnProductEquipped += OnProductEquipped;
-        GameEventsEconomy.OnProductBought += OnProductBought;
-        GameEventsEconomy.OnNotEnoughMoney += OnNotEnoughMoney;
-        GameEventsEconomy.OnEnoughMoney += OnEnoughMoney;
+        GameEvents_Economy.OnProductEquipped += OnProductEquipped;
+        GameEvents_Economy.OnProductBought += OnProductBought;
+        GameEvents_Economy.OnNotEnoughMoney += OnNotEnoughMoney;
+        GameEvents_Economy.OnEnoughMoney += OnEnoughMoney;
     }
 
     void OnDestroy()
     {
-        GameEventsEconomy.OnProductEquipped -= OnProductEquipped;
-        GameEventsEconomy.OnProductBought -= OnProductBought;
-        GameEventsEconomy.OnNotEnoughMoney -= OnNotEnoughMoney;
-        GameEventsEconomy.OnEnoughMoney -= OnEnoughMoney;
+        GameEvents_Economy.OnProductEquipped -= OnProductEquipped;
+        GameEvents_Economy.OnProductBought -= OnProductBought;
+        GameEvents_Economy.OnNotEnoughMoney -= OnNotEnoughMoney;
+        GameEvents_Economy.OnEnoughMoney -= OnEnoughMoney;
     }
 
     void Start()

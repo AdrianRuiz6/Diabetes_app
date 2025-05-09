@@ -16,15 +16,15 @@ public class UI_QuestionsTimer : MonoBehaviour
     void Awake()
     {
         // Events
-        GameEventsQuestions.OnStartTimerUI += StartTimer;
-        GameEventsQuestions.OnModifyTimer += ModifyCurrentTimer;
+        GameEvents_Questions.OnStartTimerUI += StartTimer;
+        GameEvents_Questions.OnModifyTimer += ModifyCurrentTimer;
     }
 
     void OnDestroy()
     {
         // Events
-        GameEventsQuestions.OnStartTimerUI -= StartTimer;
-        GameEventsQuestions.OnModifyTimer -= ModifyCurrentTimer;
+        GameEvents_Questions.OnStartTimerUI -= StartTimer;
+        GameEvents_Questions.OnModifyTimer -= ModifyCurrentTimer;
 
         DataStorage.SaveTimeLeftQuestionTimer(_timer);
     }
@@ -55,7 +55,7 @@ public class UI_QuestionsTimer : MonoBehaviour
     private void FinalizeTimer()
     {
         _isTimerActive = false;
-        GameEventsQuestions.OnStartQuestionUI?.Invoke();
+        GameEvents_Questions.OnStartQuestionUI?.Invoke();
     }
 
     private void TimerToClock()

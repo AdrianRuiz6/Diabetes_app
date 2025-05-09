@@ -18,12 +18,12 @@ public class UI_Character : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsEconomy.OnProductEquipped += OnProductEquiped;
+        GameEvents_Economy.OnProductEquipped += OnProductEquiped;
     }
 
     void OnDestroy()
     {
-        GameEventsEconomy.OnProductEquipped -= OnProductEquiped;
+        GameEvents_Economy.OnProductEquipped -= OnProductEquiped;
     }
 
     private void Start()

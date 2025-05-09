@@ -11,12 +11,12 @@ public class UI_StashedCoins : MonoBehaviour
 
     void Awake()
     {
-        GameEventsEconomy.OnStashedCoinsUpdated += UpdateStashedCoins;
+        GameEvents_Economy.OnStashedCoinsUpdated += UpdateStashedCoins;
     }
 
     void OnDestroy()
     {
-        GameEventsEconomy.OnStashedCoinsUpdated -= UpdateStashedCoins;
+        GameEvents_Economy.OnStashedCoinsUpdated -= UpdateStashedCoins;
     }
 
     void Start()

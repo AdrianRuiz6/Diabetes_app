@@ -10,14 +10,14 @@ public class UI_CurrentScore : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsScore.OnResetScore += ModifyOnMidnight;
-        GameEventsScore.OnModifyCurrentScore += ModifyCurrentScoreTMP;
+        GameEvents_Score.OnResetScore += ModifyOnMidnight;
+        GameEvents_Score.OnModifyCurrentScore += ModifyCurrentScoreTMP;
     }
 
     private void OnDestroy()
     {
-        GameEventsScore.OnResetScore -= ModifyOnMidnight;
-        GameEventsScore.OnModifyCurrentScore -= ModifyCurrentScoreTMP;
+        GameEvents_Score.OnResetScore -= ModifyOnMidnight;
+        GameEvents_Score.OnModifyCurrentScore -= ModifyCurrentScoreTMP;
     }
 
     void Start()

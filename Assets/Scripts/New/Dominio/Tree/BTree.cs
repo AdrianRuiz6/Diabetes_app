@@ -26,12 +26,12 @@ namespace BehaviorTree
 
         void Awake()
         {
-            GameEventsPetCare.OnExecutingAttributes += EnqueueAttribute;
+            GameEvents_PetCare.OnExecutingAttributes += EnqueueAttribute;
         }
 
         void OnDestroy()
         {
-            GameEventsPetCare.OnExecutingAttributes -= EnqueueAttribute;
+            GameEvents_PetCare.OnExecutingAttributes -= EnqueueAttribute;
         }
 
         protected virtual void Start()

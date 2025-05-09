@@ -17,7 +17,7 @@ namespace Master.Domain.BehaviorTree.Activity
         protected override Node SetUpTree()
         {
             #region LongTermButtons
-            Node checkExerciseActive = new NodeActivity_CheckExerciseActive();
+            Node checkExerciseActive = new Node_CheckExerciseActive();
             Node applyExerciseActive = new NodeActivity_ApplyExerciseActive();
 
             Node longTermExerciseButton = new NodeSequenceLeftRight(
@@ -35,7 +35,7 @@ namespace Master.Domain.BehaviorTree.Activity
                 );
             #endregion
             #region OtherAttributesEffects
-            Node checkHighHunger = new NodeActivity_CheckHighHunger();
+            Node checkHighHunger = new Node_CheckHighHunger();
             Node applyHighHunger = new NodeActivity_ApplyHighHunger();
 
             Node highHunger = new NodeSequenceLeftRight(
@@ -53,7 +53,7 @@ namespace Master.Domain.BehaviorTree.Activity
                 );
             #endregion
             #region DefaultActivity
-            Node defaultActivity = new NodeActivity_DefaultActivity();
+            Node defaultActivity = new Node_DefaultActivity();
             #endregion
 
             #region Root

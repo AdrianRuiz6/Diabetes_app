@@ -2,6 +2,7 @@ using BehaviorTree;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Domain.BehaviorTree.Activity;
 
 namespace Master.Domain.BehaviorTree.Glycemia
 {
@@ -16,7 +17,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
         protected override Node SetUpTree()
         {
             #region CryticalGlucemia
-            Node checkCriticalGlycemia = new NodeGlycemia_CheckCriticalGlycemia();
+            Node checkCriticalGlycemia = new Node_CheckCriticalGlycemia();
             Node applyCriticalGlycemia = new NodeGlycemia_ApplyCriticalGlycemia();
 
             Node cryticalGlycemia = new NodeSequenceLeftRight(
@@ -28,11 +29,11 @@ namespace Master.Domain.BehaviorTree.Glycemia
                 );
             #endregion
             #region LongTermButtons
-            Node checkInsulineActive = new NodeGlycemia_CheckInsulineActive();
-            Node applyInsulineActive = new NodeGlycemia_ApplyInsulineActive();
-            Node checkExerciseActive = new NodeGlycemia_CheckExerciseActive();
+            Node checkInsulineActive = new Node_CheckInsulinActive();
+            Node applyInsulineActive = new NodeGlycemia_ApplyInsulinActive();
+            Node checkExerciseActive = new Node_CheckExerciseActive();
             Node applyExerciseActive = new NodeGlycemia_ApplyExerciseActive();
-            Node checkFoodActive = new NodeGlycemia_CheckFoodActive();
+            Node checkFoodActive = new Node_CheckFoodActive();
             Node applyFoodActive = new NodeGlycemia_ApplyFoodActive();
 
             Node longTermInsulineButton = new NodeSequenceLeftRight(
@@ -66,7 +67,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
                 );
             #endregion
             #region OtherAttributesEffects
-            Node checkLowActivity = new NodeGlycemia_CheckLowActivity();
+            Node checkLowActivity = new Node_CheckLowActivity();
             Node applyLowActivity = new NodeGlycemia_ApplyLowActivity();
 
             Node lowActivity = new NodeSequenceLeftRight(
@@ -84,7 +85,7 @@ namespace Master.Domain.BehaviorTree.Glycemia
                 );
             #endregion
             #region DefaultGlycemia
-            Node defaultGlycemia = new NodeGlycemia_DefaultGlycemia();
+            Node defaultGlycemia = new Node_DefaultGlycemia();
             #endregion
 
             #region Root

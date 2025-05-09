@@ -15,17 +15,17 @@ public class UI_QuestionsManager : MonoBehaviour
     void Awake()
     {
         // Events
-        GameEventsQuestions.OnStartQuestionUI += ActivateQuestionPanel;
-        GameEventsQuestions.OnStartTimerUI += ActivateTimerPanel;
-        GameEventsQuestions.OnFinalizedCreationQuestions += FinishLoadingQuestions;
+        GameEvents_Questions.OnStartQuestionUI += ActivateQuestionPanel;
+        GameEvents_Questions.OnStartTimerUI += ActivateTimerPanel;
+        GameEvents_Questions.OnFinalizedCreationQuestions += FinishLoadingQuestions;
     }
 
     void OnDestroy()
     {
         // Events
-        GameEventsQuestions.OnStartQuestionUI -= ActivateQuestionPanel;
-        GameEventsQuestions.OnStartTimerUI -= ActivateTimerPanel;
-        GameEventsQuestions.OnFinalizedCreationQuestions -= FinishLoadingQuestions;
+        GameEvents_Questions.OnStartQuestionUI -= ActivateQuestionPanel;
+        GameEvents_Questions.OnStartTimerUI -= ActivateTimerPanel;
+        GameEvents_Questions.OnFinalizedCreationQuestions -= FinishLoadingQuestions;
     }
 
     private void Start()
@@ -39,7 +39,7 @@ public class UI_QuestionsManager : MonoBehaviour
 
         TimeSpan timeDisconnected = DateTime.Now - lastTimeDisconnected;
         float currentTimeLeft = previousTimeLeft - (float)timeDisconnected.TotalSeconds;
-        GameEventsQuestions.OnModifyTimer?.Invoke(currentTimeLeft);
+        GameEvents_Questions.OnModifyTimer?.Invoke(currentTimeLeft);
     }
 
     private void Update()

@@ -6,7 +6,8 @@ public enum AttributeRangeValue
 {
     Good,
     Intermediate,
-    Bad
+    Bad,
+    Critical
 }
 
 [System.Serializable]

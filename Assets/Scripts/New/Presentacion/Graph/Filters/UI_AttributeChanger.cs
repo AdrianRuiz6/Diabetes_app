@@ -22,14 +22,14 @@ public class UI_AttributeChanger : MonoBehaviour
 
     private void UpdateGlycemia()
     {
-        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
+        GameEvents_Graph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Glycemia);
     }
     private void UpdateActivity()
     {
-        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Activity);
+        GameEvents_Graph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Activity);
     }
     private void UpdateHunger()
     {
-        GameEventsGraph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Hunger);
+        GameEvents_Graph.OnUpdatedAttributeGraph?.Invoke(GraphFilter.Hunger);
     }
 }

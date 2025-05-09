@@ -21,12 +21,12 @@ public class UI_GlycemiaBar : MonoBehaviour
 
     void Awake()
     {
-        GameEventsPetCare.OnModifyGlycemia += UpdateVisualBar;
+        GameEvents_PetCare.OnModifyGlycemia += UpdateVisualBar;
     }
 
     void OnDestroy()
     {
-        GameEventsPetCare.OnModifyGlycemia -= UpdateVisualBar;
+        GameEvents_PetCare.OnModifyGlycemia -= UpdateVisualBar;
     }
 
     private void UpdateVisualBar(int newGlucoseValue, DateTime? currentDataTime, bool isRestarting = false)

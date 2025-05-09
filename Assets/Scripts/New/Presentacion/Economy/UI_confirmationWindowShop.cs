@@ -38,7 +38,7 @@ public class UI_ConfirmationWindowShop : MonoBehaviour
 
     public void ShowConfirmationWindow(GameObject productImage, string productPrice, Action confirmAction)
     {
-        PageSliding.Instance.DeactivatePageSliding();
+        Animation_PageSliding.Instance.DeactivatePageSliding();
 
         float left = 242.8945f;
         float top = 712.4613f;
@@ -62,7 +62,7 @@ public class UI_ConfirmationWindowShop : MonoBehaviour
 
     private void ConfirmPurchase()
     {
-        PageSliding.Instance.ActivatePageSliding();
+        Animation_PageSliding.Instance.ActivatePageSliding();
 
         onConfirmPurchase?.Invoke();
         _windowPanel.SetActive(false);
@@ -71,7 +71,7 @@ public class UI_ConfirmationWindowShop : MonoBehaviour
 
     private void CancelPurchase()
     {
-        PageSliding.Instance.ActivatePageSliding();
+        Animation_PageSliding.Instance.ActivatePageSliding();
 
         _windowPanel.SetActive(false);
         Destroy(_currentProductImage);

@@ -22,16 +22,16 @@ public class UI_ScoreRecord : MonoBehaviour
             Destroy(gameObject);
         }
 
-        GameEventsScore.OnResetScore += ClearElements;
-        GameEventsScore.OnModifyCurrentScore += AddElement;
+        GameEvents_Score.OnResetScore += ClearElements;
+        GameEvents_Score.OnModifyCurrentScore += AddElement;
     }
 
     void OnDestroy()
     {
         DataStorage.SaveScoreInfo(_infoList);
 
-        GameEventsScore.OnResetScore -= ClearElements;
-        GameEventsScore.OnModifyCurrentScore -= AddElement;
+        GameEvents_Score.OnResetScore -= ClearElements;
+        GameEvents_Score.OnModifyCurrentScore -= AddElement;
     }
 
     //void OnApplicationPause(bool pauseStatus)

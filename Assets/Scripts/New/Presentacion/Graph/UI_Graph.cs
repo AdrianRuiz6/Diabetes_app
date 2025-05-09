@@ -39,22 +39,22 @@ public class UI_Graph : MonoBehaviour
 
     private void Awake()
     {
-        GameEventsGraph.OnInitialTimeModified += ModifyInitialHour;
-        GameEventsGraph.OnFinishTimeModified += ModifyFinishHour;
+        GameEvents_Graph.OnInitialTimeModified += ModifyInitialHour;
+        GameEvents_Graph.OnFinishTimeModified += ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedAttributeGraph += SetFilter;
+        GameEvents_Graph.OnUpdatedAttributeGraph += SetFilter;
 
-        GameEventsGraph.OnUpdatedDateGraph += UpdateDate;
+        GameEvents_Graph.OnUpdatedDateGraph += UpdateDate;
     }
 
     private void OnDestroy()
     {
-        GameEventsGraph.OnInitialTimeModified -= ModifyInitialHour;
-        GameEventsGraph.OnFinishTimeModified -= ModifyFinishHour;
+        GameEvents_Graph.OnInitialTimeModified -= ModifyInitialHour;
+        GameEvents_Graph.OnFinishTimeModified -= ModifyFinishHour;
 
-        GameEventsGraph.OnUpdatedAttributeGraph -= SetFilter;
+        GameEvents_Graph.OnUpdatedAttributeGraph -= SetFilter;
 
-        GameEventsGraph.OnUpdatedDateGraph -= UpdateDate;
+        GameEvents_Graph.OnUpdatedDateGraph -= UpdateDate;
     }
 
     private void Start()

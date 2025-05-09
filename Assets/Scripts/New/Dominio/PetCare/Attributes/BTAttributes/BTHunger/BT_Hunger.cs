@@ -1,8 +1,10 @@
 using BehaviorTree;
-using Master.Domain.BehaviorTree.Glycemia;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Domain.BehaviorTree.Activity;
+using Master.Domain.BehaviorTree.Glycemia;
+
 
 namespace Master.Domain.BehaviorTree.Hunger
 {
@@ -17,9 +19,9 @@ namespace Master.Domain.BehaviorTree.Hunger
         protected override Node SetUpTree()
         {
             #region LongTermButtons
-            Node checkExerciseActive = new NodeHunger_CheckExerciseActive();
+            Node checkExerciseActive = new Node_CheckExerciseActive();
             Node applyExerciseActive = new NodeHunger_ApplyExerciseActive();
-            Node checkFoodActive = new NodeHunger_CheckFoodActive();
+            Node checkFoodActive = new Node_CheckFoodActive();
             Node applyFoodActive = new NodeHunger_ApplyExerciseActive();
 
             Node longTermExerciseButton = new NodeSequenceLeftRight(
@@ -45,9 +47,9 @@ namespace Master.Domain.BehaviorTree.Hunger
                 );
             #endregion
             #region OtherAttributesEffects
-            Node checkLowGlycemia = new NodeHunger_CheckLowGlycemia();
+            Node checkLowGlycemia = new Node_CheckLowGlycemia();
             Node applyLowGlycemia = new NodeHunger_ApplyLowGlycemia();
-            Node checkHighGlycemia = new NodeHunger_CheckHighGlycemia();
+            Node checkHighGlycemia = new Node_CheckHighGlycemia();
             Node applyHighGlycemia = new NodeHunger_ApplyHighGlycemia();
 
             Node lowGlycemia = new NodeSequenceLeftRight(
@@ -73,7 +75,7 @@ namespace Master.Domain.BehaviorTree.Hunger
                 );
             #endregion
             #region DefaultGlycemia
-            Node defaultHunger = new NodeHunger_DefaultHunger();
+            Node defaultHunger = new Node_DefaultHunger();
             #endregion
 
             #region Root

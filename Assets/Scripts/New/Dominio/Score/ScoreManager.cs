@@ -52,7 +52,7 @@ public class ScoreManager : MonoBehaviour
         if(_currentScore > _highestScore)
         {
             _highestScore = _currentScore;
-            GameEventsScore.OnModifyHighestScore?.Invoke(_highestScore);
+            GameEvents_Score.OnModifyHighestScore?.Invoke(_highestScore);
         }
     }
 
@@ -70,7 +70,7 @@ public class ScoreManager : MonoBehaviour
 
             CheckHighestScore();
             _currentScore = 0;
-            GameEventsScore.OnResetScore?.Invoke();
+            GameEvents_Score.OnResetScore?.Invoke();
             break;
         }
     }
@@ -78,7 +78,7 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int score, DateTime? time, string activity)
     {
         _currentScore += score;
-        GameEventsScore.OnModifyCurrentScore?.Invoke(score, time, activity);
+        GameEvents_Score.OnModifyCurrentScore?.Invoke(score, time, activity);
     }
 
     public void SubstractScore(int score, DateTime? time, string activity)
@@ -86,18 +86,18 @@ public class ScoreManager : MonoBehaviour
         if(_currentScore - score < 0)
         {
             _currentScore = 0;
-            GameEventsScore.OnModifyCurrentScore?.Invoke(-score, time, activity);
+            GameEvents_Score.OnModifyCurrentScore?.Invoke(-score, time, activity);
         }
         else
         {
             _currentScore -= score;
-            GameEventsScore.OnModifyCurrentScore?.Invoke(-score, time, activity);
+            GameEvents_Score.OnModifyCurrentScore?.Invoke(-score, time, activity);
         }
     }
 
     public void ResetScore()
     {
-        GameEventsScore.OnResetScore?.Invoke();
+        GameEvents_Score.OnResetScore?.Invoke();
         _currentScore = 0;
     }
 }
