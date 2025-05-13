@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class IterationQuestionsDataList
+namespace Master.Persistence.Questions
 {
-    public List<Question> questions = new List<Question>();
+    [System.Serializable]
+    public class IterationQuestionsDataList
+    {
+        public List<Question> questions = new List<Question>();
+    }
 }

@@ -1,23 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Master.Domain.Questions;
 
-public class State_WaitForRestart : State
+namespace Master.Domain.Questions
 {
-    private string _newState;
-
-    public override void Execute(AgentQuestions agent)
+    public class State_WaitForRestart : StateQuestions
     {
-        if (agent.executing == true)
+        private string _newState;
+
+        public override void Execute(AgentQuestions agent)
         {
-            _newState = "CheckUserPerformance";
-            agent.Change_state(new State_CheckUserPerformance());
+            if (agent.executing == true)
+            {
+                _newState = "CheckUserPerformance";
+                agent.Change_state(new State_CheckUserPerformance());
+            }
+        }
+
+        public override void OnExit()
+        {
+            Debug.Log("State changed to: " + _newState);
         }
     }
-
-    public override void OnExit()
-    {
-        Debug.Log("State changed to: " + _newState);
-    }
 }
-    

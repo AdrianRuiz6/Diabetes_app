@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class ButtonData
+namespace Master.Persistence.Graph
 {
-    public string DateAndTime;
-    public string Information;
-
-    public ButtonData(DateTime? dateTime, string information)
+    [System.Serializable]
+    public class ButtonData
     {
-        this.DateAndTime = dateTime.ToString();
-        this.Information = information;
+        public string DateAndTime;
+        public string Information;
+
+        public ButtonData(DateTime? dateTime, string information)
+        {
+            this.DateAndTime = dateTime.ToString();
+            this.Information = information;
+        }
     }
 }

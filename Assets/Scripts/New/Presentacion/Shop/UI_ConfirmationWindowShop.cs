@@ -2,78 +2,82 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Master.Presentation.Animations;
 
-public class UI_ConfirmationWindowShop : MonoBehaviour
+namespace Master.Presentation.Shop
 {
-    [SerializeField] private GameObject _windowPanel;
-    [SerializeField] private TextMeshProUGUI _priceTMP;
-    [SerializeField] private Button confirmButton;
-    [SerializeField] private Button cancelButton;
-
-    GameObject _currentProductImage;
-
-    private Action onConfirmPurchase;
-
-    public static UI_ConfirmationWindowShop Instance;
-
-    void Awake()
+    public class UI_ConfirmationWindowShop : MonoBehaviour
     {
-        if (Instance == null)
+        [SerializeField] private GameObject _windowPanel;
+        [SerializeField] private TextMeshProUGUI _priceTMP;
+        [SerializeField] private Button confirmButton;
+        [SerializeField] private Button cancelButton;
+
+        GameObject _currentProductImage;
+
+        private Action onConfirmPurchase;
+
+        public static UI_ConfirmationWindowShop Instance;
+
+        void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
         }
-        else if (Instance != this)
+
+        void Start()
         {
-            Destroy(gameObject);
+            _windowPanel.SetActive(false);
+            confirmButton.onClick.AddListener(ConfirmPurchase);
+            cancelButton.onClick.AddListener(CancelPurchase);
         }
-    }
 
-    void Start()
-    {
-        _windowPanel.SetActive(false);
-        confirmButton.onClick.AddListener(ConfirmPurchase);
-        cancelButton.onClick.AddListener(CancelPurchase);
-    }
+        public void ShowConfirmationWindow(GameObject productImage, string productPrice, Action confirmAction)
+        {
+            Animation_PageSliding.Instance.DeactivatePageSliding();
 
-    public void ShowConfirmationWindow(GameObject productImage, string productPrice, Action confirmAction)
-    {
-        Animation_PageSliding.Instance.DeactivatePageSliding();
+            float left = 242.8945f;
+            float top = 712.4613f;
+            float right = 242.8943f;
+            float bottom = 648.4613f;
+            float posZ = 0.9980469f;
 
-        float left = 242.8945f;
-        float top = 712.4613f;
-        float right = 242.8943f;
-        float bottom = 648.4613f;
-        float posZ = 0.9980469f;
+            _currentProductImage = Instantiate(productImage, _windowPanel.transform);
+            RectTransform rectTransformProductImage = _currentProductImage.GetComponent<RectTransform>();
+            rectTransformProductImage.offsetMin = new Vector2(left, bottom);
+            rectTransformProductImage.offsetMax = new Vector2(-right, -top);
+            Vector3 position = rectTransformProductImage.localPosition;
+            position.z = posZ;
+            rectTransformProductImage.localPosition = position;
 
-        _currentProductImage = Instantiate(productImage, _windowPanel.transform);
-        RectTransform rectTransformProductImage = _currentProductImage.GetComponent<RectTransform>();
-        rectTransformProductImage.offsetMin = new Vector2(left, bottom);
-        rectTransformProductImage.offsetMax = new Vector2(-right, -top);
-        Vector3 position = rectTransformProductImage.localPosition;
-        position.z = posZ;
-        rectTransformProductImage.localPosition = position;
+            _priceTMP.text = productPrice;
+            onConfirmPurchase = confirmAction;
 
-        _priceTMP.text = productPrice;
-        onConfirmPurchase = confirmAction;
+            _windowPanel.SetActive(true);
+        }
 
-        _windowPanel.SetActive(true);
-    }
+        private void ConfirmPurchase()
+        {
+            Animation_PageSliding.Instance.ActivatePageSliding();
 
-    private void ConfirmPurchase()
-    {
-        Animation_PageSliding.Instance.ActivatePageSliding();
+            onConfirmPurchase?.Invoke();
+            _windowPanel.SetActive(false);
+            Destroy(_currentProductImage);
+        }
 
-        onConfirmPurchase?.Invoke();
-        _windowPanel.SetActive(false);
-        Destroy(_currentProductImage);
-    }
+        private void CancelPurchase()
+        {
+            Animation_PageSliding.Instance.ActivatePageSliding();
 
-    private void CancelPurchase()
-    {
-        Animation_PageSliding.Instance.ActivatePageSliding();
-
-        _windowPanel.SetActive(false);
-        Destroy(_currentProductImage);
+            _windowPanel.SetActive(false);
+            Destroy(_currentProductImage);
+        }
     }
 }

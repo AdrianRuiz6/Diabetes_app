@@ -1,10 +1,7 @@
-using BehaviorTree;
+using Master.Domain.BehaviorTree;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace Master.Domain.BehaviorTree.Hunger
+namespace Master.Domain.PetCare
 {
     public class Node_CheckLowGlycemia : Node
     {

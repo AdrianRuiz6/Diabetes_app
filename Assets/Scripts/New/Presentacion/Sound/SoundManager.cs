@@ -1,60 +1,64 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Persistence;
 
-public class SoundManager : MonoBehaviour
+namespace Master.Presentation.Sound
 {
-    public static SoundManager Instance;
-
-    [Header("Sound effects")]
-    [SerializeField] private AudioSource _soundEffectsAudioSource;
-    [SerializeField] private List<SoundEffect> _soundEffects;
-    private Dictionary<string, AudioClip> _soundEffectsDictionary;
-
-    void Awake()
+    public class SoundManager : MonoBehaviour
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
+        public static SoundManager Instance;
 
-    void OnDestroy()
-    {
-        DataStorage.SaveSoundEffectsVolume(_soundEffectsAudioSource.volume);
-    }
+        [Header("Sound effects")]
+        [SerializeField] private AudioSource _soundEffectsAudioSource;
+        [SerializeField] private List<SoundEffect> _soundEffects;
+        private Dictionary<string, AudioClip> _soundEffectsDictionary;
 
-    private void Start()
-    {
-        SetSoundEffectsVolume(DataStorage.LoadSoundEffectsVolume());
-
-        // Inicialización del diccionario de efectos.
-        _soundEffectsDictionary = new Dictionary<string, AudioClip>();
-        foreach (SoundEffect sound in _soundEffects)
+        void Awake()
         {
-            _soundEffectsDictionary[sound.name] = sound.clip;
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
         }
 
-    }
-
-    public void PlaySoundEffect(string soundName)
-    {
-        if (_soundEffectsDictionary.TryGetValue(soundName, out AudioClip clip))
+        void OnDestroy()
         {
-            _soundEffectsAudioSource.PlayOneShot(clip);
+            DataStorage.SaveSoundEffectsVolume(_soundEffectsAudioSource.volume);
         }
-        else
-        {
-            Debug.LogWarning($"Efecto de sonido '{soundName}' no encontrado.");
-        }
-    }
 
-    public void SetSoundEffectsVolume(float volume)
-    {
-        _soundEffectsAudioSource.volume = volume;
+        private void Start()
+        {
+            SetSoundEffectsVolume(DataStorage.LoadSoundEffectsVolume());
+
+            // Inicialización del diccionario de efectos.
+            _soundEffectsDictionary = new Dictionary<string, AudioClip>();
+            foreach (SoundEffect sound in _soundEffects)
+            {
+                _soundEffectsDictionary[sound.name] = sound.clip;
+            }
+
+        }
+
+        public void PlaySoundEffect(string soundName)
+        {
+            if (_soundEffectsDictionary.TryGetValue(soundName, out AudioClip clip))
+            {
+                _soundEffectsAudioSource.PlayOneShot(clip);
+            }
+            else
+            {
+                Debug.LogWarning($"Efecto de sonido '{soundName}' no encontrado.");
+            }
+        }
+
+        public void SetSoundEffectsVolume(float volume)
+        {
+            _soundEffectsAudioSource.volume = volume;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Auxiliar;
 
 [System.Serializable]
 public class Question

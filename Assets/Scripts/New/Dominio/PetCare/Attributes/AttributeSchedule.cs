@@ -1,9 +1,10 @@
-using Master.Domain.Events;
+using Master.Domain.GameEvents;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
+using Master.Persistence;
 
 public class AttributeSchedule : MonoBehaviour
 {

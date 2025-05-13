@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class AttributeData
+namespace Master.Persistence.Graph
 {
-    public string DateAndTime;
-    public int Value;
-
-    public AttributeData(DateTime? dateTime, int value)
+    [System.Serializable]
+    public class AttributeData
     {
-        this.DateAndTime = dateTime.ToString();
-        this.Value = value;
+        public string DateAndTime;
+        public int Value;
+
+        public AttributeData(DateTime? dateTime, int value)
+        {
+            this.DateAndTime = dateTime.ToString();
+            this.Value = value;
+        }
     }
 }

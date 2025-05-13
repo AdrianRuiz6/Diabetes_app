@@ -1,27 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Domain.Questions;
 
-public class State_ProcessQuestions : State
+namespace Master.Domain.Questions
 {
-    private string _newState;
-
-    public override void Execute(AgentQuestions agent)
+    public class State_ProcessQuestions : StateQuestions
     {
-        Dictionary<string, float> appareanceProportions = new Dictionary<string, float>();
-        Dictionary<string, int> questionCount = new Dictionary<string, int>();
+        private string _newState;
 
-        appareanceProportions = QuestionManager.Instance.CalculateAppearanceProportions();
-        questionCount = QuestionManager.Instance.AdjustQuestionCount(appareanceProportions);
+        public override void Execute(AgentQuestions agent)
+        {
+            Dictionary<string, float> appareanceProportions = new Dictionary<string, float>();
+            Dictionary<string, int> questionCount = new Dictionary<string, int>();
 
-        QuestionManager.Instance.SelectRandomQuestions(amountQuestionsPerTopic: questionCount);
+            appareanceProportions = QuestionManager.Instance.CalculateAppearanceProportions();
+            questionCount = QuestionManager.Instance.AdjustQuestionCount(appareanceProportions);
 
-        _newState = "PresentQuestions";
-        agent.Change_state(new State_PresentQuestions());
-    }
+            QuestionManager.Instance.SelectRandomQuestions(amountQuestionsPerTopic: questionCount);
 
-    public override void OnExit()
-    {
-        Debug.Log("State changed to: " + _newState);
+            _newState = "PresentQuestions";
+            agent.Change_state(new State_PresentQuestions());
+        }
+
+        public override void OnExit()
+        {
+            Debug.Log("State changed to: " + _newState);
+        }
     }
 }

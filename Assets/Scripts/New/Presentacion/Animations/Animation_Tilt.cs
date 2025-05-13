@@ -3,56 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Animation_Tilt : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+namespace Master.Presentation.Animations
 {
-    [SerializeField] private float _rotationSpeed = 1f;
-    [SerializeField] private float _tiltAngle = 1f;
-    private float _startingRotationOffset;
-
-    private bool _isPressButtonEffect;
-
-    private void Start()
+    public class Animation_Tilt : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        _startingRotationOffset = Random.Range(0f, 2f * Mathf.PI);
+        [SerializeField] private float _rotationSpeed = 1f;
+        [SerializeField] private float _tiltAngle = 1f;
+        private float _startingRotationOffset;
 
-        Animation_PressButton pressButtonEffect = GetComponentInParent<Animation_PressButton>();
-        if (pressButtonEffect != null)
+        private bool _isPressButtonEffect;
+
+        private void Start()
         {
-            _isPressButtonEffect = true;
+            _startingRotationOffset = Random.Range(0f, 2f * Mathf.PI);
+
+            Animation_PressButton pressButtonEffect = GetComponentInParent<Animation_PressButton>();
+            if (pressButtonEffect != null)
+            {
+                _isPressButtonEffect = true;
+            }
+            else
+            {
+                _isPressButtonEffect = false;
+            }
         }
-        else
+
+        private void Update()
         {
-            _isPressButtonEffect = false;
+            RotateButton();
         }
-    }
 
-    private void Update()
-    {
-        RotateButton();
-    }
-
-    private void RotateButton()
-    {
-        float rotationAngle = Time.time * _rotationSpeed + _startingRotationOffset;
-        float tiltX = Mathf.Sin(rotationAngle) * _tiltAngle;
-        float tiltY = Mathf.Cos(rotationAngle) * _tiltAngle;
-
-        transform.rotation = Quaternion.Euler(tiltX, tiltY, transform.rotation.eulerAngles.z);
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        if (_isPressButtonEffect)
+        private void RotateButton()
         {
-            ExecuteEvents.ExecuteHierarchy(transform.parent.gameObject, eventData, ExecuteEvents.pointerDownHandler);
+            float rotationAngle = Time.time * _rotationSpeed + _startingRotationOffset;
+            float tiltX = Mathf.Sin(rotationAngle) * _tiltAngle;
+            float tiltY = Mathf.Cos(rotationAngle) * _tiltAngle;
+
+            transform.rotation = Quaternion.Euler(tiltX, tiltY, transform.rotation.eulerAngles.z);
         }
-    }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (_isPressButtonEffect)
+        public void OnPointerDown(PointerEventData eventData)
         {
-            ExecuteEvents.ExecuteHierarchy(transform.parent.gameObject, eventData, ExecuteEvents.pointerUpHandler);
+            if (_isPressButtonEffect)
+            {
+                ExecuteEvents.ExecuteHierarchy(transform.parent.gameObject, eventData, ExecuteEvents.pointerDownHandler);
+            }
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (_isPressButtonEffect)
+            {
+                ExecuteEvents.ExecuteHierarchy(transform.parent.gameObject, eventData, ExecuteEvents.pointerUpHandler);
+            }
         }
     }
 }

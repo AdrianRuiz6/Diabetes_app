@@ -1,8 +1,11 @@
-using Master.Domain.Economy;
+using Master.Domain.Shop;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class ScoreRecordDataList
+namespace Master.Persistence.Score
 {
-    public List<ScoreRecordData> score = new List<ScoreRecordData>();
+    [System.Serializable]
+    public class ScoreRecordDataList
+    {
+        public List<ScoreRecordData> score = new List<ScoreRecordData>();
+    }
 }

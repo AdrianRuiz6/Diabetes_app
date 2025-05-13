@@ -1,7 +1,7 @@
 using System;
 
 
-namespace Master.Domain.Events
+namespace Master.Domain.GameEvents
 {
     public static class GameEvents_Economy
     {

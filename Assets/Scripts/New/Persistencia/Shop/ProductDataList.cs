@@ -1,10 +1,13 @@
-using Master.Domain.Economy;
+using Master.Domain.Shop;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class ProductDataList
+namespace Master.Persistence.Shop
 {
-    public List<ProductData> products = new List<ProductData>();
+    [System.Serializable]
+    public class ProductDataList
+    {
+        public List<ProductData> products = new List<ProductData>();
+    }
 }

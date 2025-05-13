@@ -1,72 +1,77 @@
-using Master.Domain.Events;
+using Master.Domain.GameEvents;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Persistence;
+using Master.Auxiliar;
 
-public class UserPerformanceManager : MonoBehaviour
+namespace Master.Domain.Questions
 {
-    public static UserPerformanceManager Instance;
-
-    private Dictionary<string, FixedSizeQueue<string>> _userPerformance;
-
-    void Awake()
+    public class UserPerformanceManager : MonoBehaviour
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
+        public static UserPerformanceManager Instance;
 
-    public void InitializePerformance(List<string> allTopics)
-    {
-        _userPerformance = new Dictionary<string, FixedSizeQueue<string>>();
+        private Dictionary<string, FixedSizeQueue<string>> _userPerformance;
 
-        UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(allTopics), _userPerformance);
-
-        foreach(var kvp in _userPerformance)
+        void Awake()
         {
-            while(kvp.Value.Count() < 10)
+            if (Instance == null)
             {
-                kvp.Value.Enqueue("P");
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
             }
         }
 
-    }
-
-    public FixedSizeQueue<string> GetTopicPerformance(string topic)
-    {
-        if (_userPerformance.TryGetValue(topic, out FixedSizeQueue<string> specificTopicPerformance))
+        public void InitializePerformance(List<string> allTopics)
         {
-            return specificTopicPerformance;
+            _userPerformance = new Dictionary<string, FixedSizeQueue<string>>();
+
+            UtilityFunctions.CopyDictionaryPerformance(DataStorage.LoadUserPerformance(allTopics), _userPerformance);
+
+            foreach (var kvp in _userPerformance)
+            {
+                while (kvp.Value.Count() < 10)
+                {
+                    kvp.Value.Enqueue("P");
+                }
+            }
+
         }
-        else
+
+        public FixedSizeQueue<string> GetTopicPerformance(string topic)
         {
-            return new FixedSizeQueue<string>();
+            if (_userPerformance.TryGetValue(topic, out FixedSizeQueue<string> specificTopicPerformance))
+            {
+                return specificTopicPerformance;
+            }
+            else
+            {
+                return new FixedSizeQueue<string>();
+            }
         }
-    }
 
-    public bool HasPendingAnswers(string topic)
-    {
-        FixedSizeQueue<string> topicPerformanceQueue = GetTopicPerformance(topic);
-        return topicPerformanceQueue.Contains("P");
-    }
-
-    public void UpdatePerformance(List<Question> iterationQuestions)
-    {
-        foreach(var question in iterationQuestions)
+        public bool HasPendingAnswers(string topic)
         {
-            FixedSizeQueue<string> specificTopicPerformance = GetTopicPerformance(question.topic);
-            specificTopicPerformance.Enqueue(question.resultAnswer);
+            FixedSizeQueue<string> topicPerformanceQueue = GetTopicPerformance(topic);
+            return topicPerformanceQueue.Contains("P");
         }
-    }
 
-    void OnDestroy()
-    {
-        DataStorage.SaveUserPerformance(_userPerformance);
+        public void UpdatePerformance(List<Question> iterationQuestions)
+        {
+            foreach (var question in iterationQuestions)
+            {
+                FixedSizeQueue<string> specificTopicPerformance = GetTopicPerformance(question.topic);
+                specificTopicPerformance.Enqueue(question.resultAnswer);
+            }
+        }
+
+        void OnDestroy()
+        {
+            DataStorage.SaveUserPerformance(_userPerformance);
+        }
     }
 }

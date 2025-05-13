@@ -1,37 +1,38 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-
-public class AnimationManager : MonoBehaviour
+namespace Master.Presentation.Animations
 {
-    public static AnimationManager Instance;
-
-    void Awake()
+    public class AnimationManager : MonoBehaviour
     {
-        if (Instance == null)
+        public static AnimationManager Instance;
+
+        void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
         }
-        else if (Instance != this)
+
+        public void PlayAnimation(GameObject prefab, Vector3 position, Vector3 scale, GameObject parent)
         {
-            Destroy(gameObject);
+            GameObject animatedObject = Instantiate(prefab, position, Quaternion.identity);
+            animatedObject.transform.SetParent(parent.transform, false);
+            animatedObject.transform.localScale = scale;
+            StartCoroutine(DestroyAnimatedObject(animatedObject));
         }
-    }
 
-    public void PlayAnimation(GameObject prefab, Vector3 position, Vector3 scale, GameObject parent)
-    {
-        GameObject animatedObject = Instantiate(prefab, position, Quaternion.identity);
-        animatedObject.transform.SetParent(parent.transform, false);
-        animatedObject.transform.localScale = scale;
-        StartCoroutine(DestroyAnimatedObject(animatedObject));
-    }
-
-    private IEnumerator DestroyAnimatedObject(GameObject animatedObject)
-    {
-        yield return new WaitForSeconds(3f);
-        Destroy(animatedObject);
+        private IEnumerator DestroyAnimatedObject(GameObject animatedObject)
+        {
+            yield return new WaitForSeconds(3f);
+            Destroy(animatedObject);
+        }
     }
 }

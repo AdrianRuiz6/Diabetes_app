@@ -1,11 +1,8 @@
-using BehaviorTree;
-using Master.Domain.Events;
+using Master.Domain.BehaviorTree;
+using Master.Domain.GameEvents;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace Master.Domain.BehaviorTree.Activity
+namespace Master.Domain.PetCare
 {
     public class NodeActivity_ApplyExerciseActive : Node
     {

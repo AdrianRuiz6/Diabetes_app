@@ -1,121 +1,125 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Master.Presentation.Animations;
+using Master.Domain.PetCare;
 
-public class UI_Action_Food : MonoBehaviour
+namespace Master.Presentation.PetCare
 {
-    [SerializeField] private TMP_Text _feedBackTMP;
-    [SerializeField] private TMP_InputField _inputTMP;
-
-    [SerializeField] private Button _openButton;
-    [SerializeField] private Button _searchButton;
-    [SerializeField] private Button _sendButton;
-    [SerializeField] private Image _sendImage;
-    [SerializeField] private Button _closeButton;
-
-    [SerializeField] private GameObject _submenuPanel;
-
-    [SerializeField] private FoodBot _foodBot;
-
-    private string _resultBot;
-    private float _ration;
-
-    void Start()
+    public class UI_Action_Food : MonoBehaviour
     {
-        _openButton.onClick.AddListener(OpenSubMenu);
-        _closeButton.onClick.AddListener(CloseSubMenu);
-        _sendButton.onClick.AddListener(SendInformation);
-        _searchButton.onClick.AddListener(SearchInformation);
+        [SerializeField] private TMP_Text _feedBackTMP;
+        [SerializeField] private TMP_InputField _inputTMP;
 
-        _foodBot = new FoodBot();
-    }
+        [SerializeField] private Button _openButton;
+        [SerializeField] private Button _searchButton;
+        [SerializeField] private Button _sendButton;
+        [SerializeField] private Image _sendImage;
+        [SerializeField] private Button _closeButton;
 
-    private void ActivateSendButton()
-    {
-        _sendImage.color = Color.white;
-        _sendButton.interactable = true;
-    }
-    private void DeactivateSendButton()
-    {
-        _sendImage.color = Color.gray;
-        _sendButton.interactable = false;
-    }
+        [SerializeField] private GameObject _submenuPanel;
 
-    private void OpenSubMenu()
-    {
-        Animation_PageSliding.Instance.DeactivatePageSliding();
-        DeactivateSendButton();
-        _resultBot = "";
-        _inputTMP.text = "";
-        _feedBackTMP.text = "";
-        _ration = 0;
+        [SerializeField] private FoodBot _foodBot;
 
-        _submenuPanel.SetActive(true);        
-    }
+        private string _resultBot;
+        private float _ration;
 
-    private void CloseSubMenu()
-    {
-        Animation_PageSliding.Instance.ActivatePageSliding();
-        _submenuPanel.SetActive(false);
-    }
-
-    public void SearchInformation()
-    {
-        DeactivateSendButton();
-        StartCoroutine(WaitForBotResponse());
-    }
-
-    private IEnumerator WaitForBotResponse()
-    {
-        yield return StartCoroutine(_foodBot.Ask(_inputTMP.text));
-
-        yield return new WaitUntil(() => _foodBot.isResponseAvailable);
-
-        _resultBot = _foodBot.GetResponse();
-
-        if (!string.IsNullOrEmpty(_resultBot))
+        void Start()
         {
-            _feedBackTMP.text = _resultBot;
-            if (_resultBot != "No has escrito una comida, prueba otra vez.")
-                ActivateSendButton();
+            _openButton.onClick.AddListener(OpenSubMenu);
+            _closeButton.onClick.AddListener(CloseSubMenu);
+            _sendButton.onClick.AddListener(SendInformation);
+            _searchButton.onClick.AddListener(SearchInformation);
+
+            _foodBot = new FoodBot();
         }
-        else
+
+        private void ActivateSendButton()
         {
-            _feedBackTMP.text = "Lo siento, ahora mismo no puedo pensar en una respuesta :/";
+            _sendImage.color = Color.white;
+            _sendButton.interactable = true;
         }
-    }
-    public void SendInformation()
-    {
-        // Se parsea la respuesta de ChatGPT.
-        _ration = ExtractRationsFromText(_resultBot);
-        Debug.Log($"FOOD BUTTON -Rations parsed-: {_ration}");
-
-        // Se envía la información a AttributeManager.
-        AttributeManager.Instance.ActivateFoodAction(_ration, _inputTMP.text);
-
-        // Se desactiva el panel.
-        _submenuPanel.SetActive(false);
-    }
-
-    private float ExtractRationsFromText(string text)
-    {
-        float number = 0f;
-        string numberString = "";
-        foreach (char c in text)
+        private void DeactivateSendButton()
         {
-            if (char.IsDigit(c))
+            _sendImage.color = Color.gray;
+            _sendButton.interactable = false;
+        }
+
+        private void OpenSubMenu()
+        {
+            Animation_PageSliding.Instance.DeactivatePageSliding();
+            DeactivateSendButton();
+            _resultBot = "";
+            _inputTMP.text = "";
+            _feedBackTMP.text = "";
+            _ration = 0;
+
+            _submenuPanel.SetActive(true);
+        }
+
+        private void CloseSubMenu()
+        {
+            Animation_PageSliding.Instance.ActivatePageSliding();
+            _submenuPanel.SetActive(false);
+        }
+
+        public void SearchInformation()
+        {
+            DeactivateSendButton();
+            StartCoroutine(WaitForBotResponse());
+        }
+
+        private IEnumerator WaitForBotResponse()
+        {
+            yield return StartCoroutine(_foodBot.Ask(_inputTMP.text));
+
+            yield return new WaitUntil(() => _foodBot.isResponseAvailable);
+
+            _resultBot = _foodBot.GetResponse();
+
+            if (!string.IsNullOrEmpty(_resultBot))
             {
-                numberString += c;
+                _feedBackTMP.text = _resultBot;
+                if (_resultBot != "No has escrito una comida, prueba otra vez.")
+                    ActivateSendButton();
+            }
+            else
+            {
+                _feedBackTMP.text = "Lo siento, ahora mismo no puedo pensar en una respuesta :/";
             }
         }
-        if (!string.IsNullOrEmpty(numberString))
+        public void SendInformation()
         {
-            float.TryParse(numberString, out number);
-            number /= 10;
+            // Se parsea la respuesta de ChatGPT.
+            _ration = ExtractRationsFromText(_resultBot);
+            Debug.Log($"FOOD BUTTON -Rations parsed-: {_ration}");
+
+            // Se envía la información a AttributeManager.
+            AttributeManager.Instance.ActivateFoodAction(_ration, _inputTMP.text);
+
+            // Se desactiva el panel.
+            _submenuPanel.SetActive(false);
         }
 
-        return number;
+        private float ExtractRationsFromText(string text)
+        {
+            float number = 0f;
+            string numberString = "";
+            foreach (char c in text)
+            {
+                if (char.IsDigit(c))
+                {
+                    numberString += c;
+                }
+            }
+            if (!string.IsNullOrEmpty(numberString))
+            {
+                float.TryParse(numberString, out number);
+                number /= 10;
+            }
+
+            return number;
+        }
     }
 }

@@ -1,83 +1,88 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Presentation.Animations;
+using Master.Persistence;
 
-public class UI_Tutorial : MonoBehaviour
+namespace Master.Presentation.Tutorial
 {
-    [SerializeField] private GameObject _Tutorial_Section;
-    private List<GameObject> _pagesList;
-
-    void Start()
+    public class UI_Tutorial : MonoBehaviour
     {
-        _pagesList = new List<GameObject>();
+        [SerializeField] private GameObject _Tutorial_Section;
+        private List<GameObject> _pagesList;
 
-        GetAllPages();
-
-        if (DataStorage.LoadIsFirstUsage() == true)
+        void Start()
         {
-            OpenTutorial();
-        }
-        else
-        {
-            CloseTutorial();
-        }
-    }
+            _pagesList = new List<GameObject>();
 
-    private void OnDestroy()
-    {
-        DataStorage.SaveIsFirstUsage();
-    }
+            GetAllPages();
 
-    private void GetAllPages()
-    {
-        for(int childIndex = 0;  childIndex < _Tutorial_Section.transform.childCount; childIndex++)
-        {
-            GameObject newPage = _Tutorial_Section.transform.GetChild(childIndex).gameObject;
-            _pagesList.Add(newPage);
-        }
-    }
-
-    public void OpenTutorial()
-    {
-        Animation_PageSliding.Instance.MoveToInitialPage();
-        _Tutorial_Section.SetActive(true);
-
-        foreach (GameObject page in _pagesList)
-        {
-            page.SetActive(false);
-        }
-        _pagesList[0].SetActive(true);
-    }
-
-    public void CloseTutorial()
-    {
-        _Tutorial_Section.SetActive(false);
-
-        foreach (GameObject page in _pagesList)
-        {
-            page.SetActive(false);
-        }
-    }
-
-    public void NextPage()
-    {
-        for(int childIndex = 0; childIndex < _pagesList.Count; childIndex++)
-        {
-            if (_pagesList[childIndex].activeSelf == true)
+            if (DataStorage.LoadIsFirstUsage() == true)
             {
-                _pagesList[childIndex].SetActive(false);
-                _pagesList[++childIndex].SetActive(true);
+                OpenTutorial();
+            }
+            else
+            {
+                CloseTutorial();
             }
         }
-    }
 
-    public void PreviousPage()
-    {
-        for (int childIndex = 0; childIndex < _pagesList.Count; childIndex++)
+        private void OnDestroy()
         {
-            if (_pagesList[childIndex].activeSelf == true)
+            DataStorage.SaveIsFirstUsage();
+        }
+
+        private void GetAllPages()
+        {
+            for (int childIndex = 0; childIndex < _Tutorial_Section.transform.childCount; childIndex++)
             {
-                _pagesList[childIndex].SetActive(false);
-                _pagesList[--childIndex].SetActive(true);
+                GameObject newPage = _Tutorial_Section.transform.GetChild(childIndex).gameObject;
+                _pagesList.Add(newPage);
+            }
+        }
+
+        public void OpenTutorial()
+        {
+            Animation_PageSliding.Instance.MoveToInitialPage();
+            _Tutorial_Section.SetActive(true);
+
+            foreach (GameObject page in _pagesList)
+            {
+                page.SetActive(false);
+            }
+            _pagesList[0].SetActive(true);
+        }
+
+        public void CloseTutorial()
+        {
+            _Tutorial_Section.SetActive(false);
+
+            foreach (GameObject page in _pagesList)
+            {
+                page.SetActive(false);
+            }
+        }
+
+        public void NextPage()
+        {
+            for (int childIndex = 0; childIndex < _pagesList.Count; childIndex++)
+            {
+                if (_pagesList[childIndex].activeSelf == true)
+                {
+                    _pagesList[childIndex].SetActive(false);
+                    _pagesList[++childIndex].SetActive(true);
+                }
+            }
+        }
+
+        public void PreviousPage()
+        {
+            for (int childIndex = 0; childIndex < _pagesList.Count; childIndex++)
+            {
+                if (_pagesList[childIndex].activeSelf == true)
+                {
+                    _pagesList[childIndex].SetActive(false);
+                    _pagesList[--childIndex].SetActive(true);
+                }
             }
         }
     }

@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Master.Domain.States;
-using Master.Domain.Events;
+using Master.Domain.GameEvents;
+using Master.Presentation.Shop;
+using Master.Presentation.Sound;
+using Master.Persistence;
 
-namespace Master.Domain.Economy
+namespace Master.Domain.Shop
 {
     public class ProductService : MonoBehaviour
     {

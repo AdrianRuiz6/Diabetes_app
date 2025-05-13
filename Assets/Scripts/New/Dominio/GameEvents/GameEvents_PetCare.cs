@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Master.Domain.Events
+namespace Master.Domain.GameEvents
 {
     public static class GameEvents_PetCare
     {

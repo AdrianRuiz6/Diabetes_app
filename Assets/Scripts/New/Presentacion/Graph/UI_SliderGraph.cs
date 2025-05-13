@@ -3,224 +3,230 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Master.Persistence;
+using Master.Domain.GameEvents;
+using Master.Domain.Time;
 
-public class UI_SliderGraph : MonoBehaviour
+namespace Master.Presentation.Graph
 {
-    private Slider _slider;
-
-    [SerializeField] private TMP_Text _time_TMP;
-    [SerializeField] private TMP_Text _insulinInfo_TMP;
-    [SerializeField] private TMP_Text _exerciseInfo_TMP;
-    [SerializeField] private TMP_Text _foodInfo_TMP;
-
-    private int _minHour = 0;
-    private int _maxHour = 0;
-
-    private List<DateTime> _availableTimes = new List<DateTime>();
-    private Dictionary<DateTime, string> _insulinInfo = new Dictionary<DateTime, string>();
-    private Dictionary<DateTime, string> _exerciseInfo = new Dictionary<DateTime, string>();
-    private Dictionary<DateTime, string> _foodInfo = new Dictionary<DateTime, string>();
-    private DateTime _currentDate = DateTime.Now;
-
-    private void Awake()
+    public class UI_SliderGraph : MonoBehaviour
     {
-        GameEvents_Graph.OnInitialTimeModified += ModifyInitialHour;
-        GameEvents_Graph.OnFinishTimeModified += ModifyFinishHour;
+        private Slider _slider;
 
-        GameEvents_Graph.OnUpdatedActionsGraph += LoadData;
+        [SerializeField] private TMP_Text _time_TMP;
+        [SerializeField] private TMP_Text _insulinInfo_TMP;
+        [SerializeField] private TMP_Text _exerciseInfo_TMP;
+        [SerializeField] private TMP_Text _foodInfo_TMP;
 
-        GameEvents_Graph.OnUpdatedDateGraph += UpdateDate;
-    }
+        private int _minHour = 0;
+        private int _maxHour = 0;
 
-    private void OnDestroy()
-    {
-        GameEvents_Graph.OnInitialTimeModified -= ModifyInitialHour;
-        GameEvents_Graph.OnFinishTimeModified -= ModifyFinishHour;
+        private List<DateTime> _availableTimes = new List<DateTime>();
+        private Dictionary<DateTime, string> _insulinInfo = new Dictionary<DateTime, string>();
+        private Dictionary<DateTime, string> _exerciseInfo = new Dictionary<DateTime, string>();
+        private Dictionary<DateTime, string> _foodInfo = new Dictionary<DateTime, string>();
+        private DateTime _currentDate = DateTime.Now;
 
-        GameEvents_Graph.OnUpdatedActionsGraph -= LoadData;
-
-        GameEvents_Graph.OnUpdatedDateGraph -= UpdateDate;
-    }
-
-    void Start()
-    {
-        _slider = GetComponent<Slider>();
-        _slider.wholeNumbers = true;
-
-        // Se establece el minimo y máximo de la franja horaria.
-        ModifyInitialHour(LimitHours.Instance.initialTime.Hours);
-        ModifyFinishHour(LimitHours.Instance.finishTime.Hours);
-
-        // Iniciar datos fecha actual.
-        UpdateDate(DateTime.Now);
-
-        _slider.onValueChanged.AddListener(ChangeValue);
-    }
-
-    private void UpdateDate(DateTime newCurrentDate)
-    {
-        _currentDate = newCurrentDate;
-        LoadData();
-
-        _slider.SetValueWithoutNotify(0);
-        UpdateAdditionalInfo(0);
-    }
-
-    // Se coloca en el valor disponible más cercano, escribe la fecha en el TMP correspondiente
-    // y actualiza los datos de la información de los botones.
-    private void ChangeValue(float value)
-    {
-        int closeValue = FindCloseValueTo((int)value);
-
-        if(_slider.value != closeValue)
+        private void Awake()
         {
-            _slider.SetValueWithoutNotify(closeValue);
-        }
-        UpdateAdditionalInfo(closeValue);
-    }
+            GameEvents_Graph.OnInitialTimeModified += ModifyInitialHour;
+            GameEvents_Graph.OnFinishTimeModified += ModifyFinishHour;
 
-    // Ajusta el Slider al valor de _avalilableTimes de botón más cercano.
-    private int FindCloseValueTo(int value)
-    {
-        if(_availableTimes.Count <= 0)
-        {
-            return 0;
+            GameEvents_Graph.OnUpdatedActionsGraph += LoadData;
+
+            GameEvents_Graph.OnUpdatedDateGraph += UpdateDate;
         }
 
-        int closeValue = GetSliderValueAccordingTime(_availableTimes[0]);
-        int minimumDistance = Mathf.Abs(value - closeValue);
-
-        foreach(DateTime newDate in _availableTimes)
+        private void OnDestroy()
         {
-            int currentValue = GetSliderValueAccordingTime(newDate);
-            int currentDistance = Mathf.Abs(value - currentValue);
+            GameEvents_Graph.OnInitialTimeModified -= ModifyInitialHour;
+            GameEvents_Graph.OnFinishTimeModified -= ModifyFinishHour;
 
-            if (currentDistance < minimumDistance)
+            GameEvents_Graph.OnUpdatedActionsGraph -= LoadData;
+
+            GameEvents_Graph.OnUpdatedDateGraph -= UpdateDate;
+        }
+
+        void Start()
+        {
+            _slider = GetComponent<Slider>();
+            _slider.wholeNumbers = true;
+
+            // Se establece el minimo y máximo de la franja horaria.
+            ModifyInitialHour(LimitHours.Instance.initialTime.Hours);
+            ModifyFinishHour(LimitHours.Instance.finishTime.Hours);
+
+            // Iniciar datos fecha actual.
+            UpdateDate(DateTime.Now);
+
+            _slider.onValueChanged.AddListener(ChangeValue);
+        }
+
+        private void UpdateDate(DateTime newCurrentDate)
+        {
+            _currentDate = newCurrentDate;
+            LoadData();
+
+            _slider.SetValueWithoutNotify(0);
+            UpdateAdditionalInfo(0);
+        }
+
+        // Se coloca en el valor disponible más cercano, escribe la fecha en el TMP correspondiente
+        // y actualiza los datos de la información de los botones.
+        private void ChangeValue(float value)
+        {
+            int closeValue = FindCloseValueTo((int)value);
+
+            if (_slider.value != closeValue)
             {
-                minimumDistance = currentDistance;
-                closeValue = currentValue;
+                _slider.SetValueWithoutNotify(closeValue);
+            }
+            UpdateAdditionalInfo(closeValue);
+        }
+
+        // Ajusta el Slider al valor de _avalilableTimes de botón más cercano.
+        private int FindCloseValueTo(int value)
+        {
+            if (_availableTimes.Count <= 0)
+            {
+                return 0;
+            }
+
+            int closeValue = GetSliderValueAccordingTime(_availableTimes[0]);
+            int minimumDistance = Mathf.Abs(value - closeValue);
+
+            foreach (DateTime newDate in _availableTimes)
+            {
+                int currentValue = GetSliderValueAccordingTime(newDate);
+                int currentDistance = Mathf.Abs(value - currentValue);
+
+                if (currentDistance < minimumDistance)
+                {
+                    minimumDistance = currentDistance;
+                    closeValue = currentValue;
+                }
+            }
+
+            return closeValue;
+        }
+
+        // Escribe la fecha en el TMP correspondiente y actualiza los datos de la información de los botones.
+        private void UpdateAdditionalInfo(int value)
+        {
+            DateTime currentTimeSlider = GetTimeAccordingSliderValue(value);
+            _time_TMP.text = $"{currentTimeSlider.TimeOfDay}";
+
+            bool isInsulinInfoFound = false;
+            bool isExerciseInfoFound = false;
+            bool isFoodInfoFound = false;
+
+            foreach (KeyValuePair<DateTime, String> kvp in _insulinInfo)
+            {
+                if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+                {
+                    _insulinInfo_TMP.text = kvp.Value.ToString();
+                    isInsulinInfoFound = true;
+                }
+            }
+            if (isInsulinInfoFound == false)
+            {
+                _insulinInfo_TMP.text = "---";
+            }
+
+            foreach (KeyValuePair<DateTime, String> kvp in _exerciseInfo)
+            {
+                if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+                {
+                    _exerciseInfo_TMP.text = kvp.Value.ToString();
+                    isExerciseInfoFound = true;
+                }
+            }
+            if (isExerciseInfoFound == false)
+            {
+                _exerciseInfo_TMP.text = "---";
+            }
+
+            foreach (KeyValuePair<DateTime, String> kvp in _foodInfo)
+            {
+                if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+                {
+                    _foodInfo_TMP.text = kvp.Value.ToString();
+                    isFoodInfoFound = true;
+                }
+            }
+            if (isFoodInfoFound == false)
+            {
+                _foodInfo_TMP.text = "---";
             }
         }
 
-        return closeValue;
-    }
-
-    // Escribe la fecha en el TMP correspondiente y actualiza los datos de la información de los botones.
-    private void UpdateAdditionalInfo(int value)
-    {
-        DateTime currentTimeSlider = GetTimeAccordingSliderValue(value);
-        _time_TMP.text = $"{currentTimeSlider.TimeOfDay}";
-
-        bool isInsulinInfoFound = false;
-        bool isExerciseInfoFound = false;
-        bool isFoodInfoFound = false;
-
-        foreach(KeyValuePair<DateTime, String> kvp in _insulinInfo)
+        private void ModifyInitialHour(int hour)
         {
-            if(currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+            _minHour = hour;
+            _slider.minValue = 0;
+            int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
+            _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
+
+            _slider.SetValueWithoutNotify(0);
+            UpdateAdditionalInfo(0);
+        }
+
+        private void ModifyFinishHour(int hour)
+        {
+            _maxHour = hour;
+            int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
+            _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
+
+            _slider.SetValueWithoutNotify(0);
+            UpdateAdditionalInfo(0);
+        }
+
+        private int GetSliderValueAccordingTime(DateTime dateTime)
+        {
+            int dateTimeAux = (dateTime.Hour < _minHour) ? dateTime.Hour + 24 : dateTime.Hour;
+            int sliderValue = (dateTimeAux - _minHour) * 60 + dateTime.Minute;
+            return sliderValue;
+        }
+
+        private DateTime GetTimeAccordingSliderValue(int sliderValue)
+        {
+            DateTime additionalTime = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, sliderValue / 60, sliderValue % 60, 0);
+            DateTime minimumTime = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, _minHour, 0, 0);
+            DateTime time = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, minimumTime.Hour + additionalTime.Hour, additionalTime.Minute, 0);
+            return time;
+        }
+
+        // Carga los datos de los botones y llena la lista de availableDates
+        private void LoadData()
+        {
+            _insulinInfo.Clear();
+            _exerciseInfo.Clear();
+            _foodInfo.Clear();
+            _availableTimes.Clear();
+
+            _insulinInfo = DataStorage.LoadInsulinGraph(_currentDate);
+            foreach (DateTime newDate in _insulinInfo.Keys)
             {
-                _insulinInfo_TMP.text = kvp.Value.ToString();
-                isInsulinInfoFound = true;
+                if (!_availableTimes.Contains(newDate))
+                {
+                    _availableTimes.Add(newDate);
+                }
             }
-        }
-        if(isInsulinInfoFound == false)
-        {
-            _insulinInfo_TMP.text = "---";
-        }
-
-        foreach (KeyValuePair<DateTime, String> kvp in _exerciseInfo)
-        {
-            if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+            _exerciseInfo = DataStorage.LoadExerciseGraph(_currentDate);
+            foreach (DateTime newDate in _exerciseInfo.Keys)
             {
-                _exerciseInfo_TMP.text = kvp.Value.ToString();
-                isExerciseInfoFound = true;
+                if (!_availableTimes.Contains(newDate))
+                {
+                    _availableTimes.Add(newDate);
+                }
             }
-        }
-        if (isExerciseInfoFound == false)
-        {
-            _exerciseInfo_TMP.text = "---";
-        }
-
-        foreach (KeyValuePair<DateTime, String> kvp in _foodInfo)
-        {
-            if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+            _foodInfo = DataStorage.LoadFoodGraph(_currentDate);
+            foreach (DateTime newDate in _foodInfo.Keys)
             {
-                _foodInfo_TMP.text = kvp.Value.ToString();
-                isFoodInfoFound = true;
-            }
-        }
-        if (isFoodInfoFound == false)
-        {
-            _foodInfo_TMP.text = "---";
-        }
-    }
-
-    private void ModifyInitialHour(int hour)
-    {
-        _minHour = hour;
-        _slider.minValue = 0;
-        int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
-        _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
-
-        _slider.SetValueWithoutNotify(0);
-        UpdateAdditionalInfo(0);
-    }
-
-    private void ModifyFinishHour(int hour)
-    {
-        _maxHour = hour;
-        int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
-        _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
-
-        _slider.SetValueWithoutNotify(0);
-        UpdateAdditionalInfo(0);
-    }
-
-    private int GetSliderValueAccordingTime(DateTime dateTime)
-    {
-        int dateTimeAux = (dateTime.Hour < _minHour) ? dateTime.Hour + 24 : dateTime.Hour;
-        int sliderValue = (dateTimeAux - _minHour) * 60 + dateTime.Minute;
-        return sliderValue;
-    }
-
-    private DateTime GetTimeAccordingSliderValue(int sliderValue)
-    {
-        DateTime additionalTime = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, sliderValue / 60, sliderValue % 60, 0);
-        DateTime minimumTime = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, _minHour, 0, 0);
-        DateTime time = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, minimumTime.Hour + additionalTime.Hour, additionalTime.Minute, 0);
-        return time;
-    }
-
-    // Carga los datos de los botones y llena la lista de availableDates
-    private void LoadData()
-    {
-        _insulinInfo.Clear();
-        _exerciseInfo.Clear();
-        _foodInfo.Clear();
-        _availableTimes.Clear();
-
-        _insulinInfo = DataStorage.LoadInsulinGraph(_currentDate);
-        foreach (DateTime newDate in _insulinInfo.Keys)
-        {
-            if (!_availableTimes.Contains(newDate))
-            {
-                _availableTimes.Add(newDate);
-            }
-        }
-        _exerciseInfo = DataStorage.LoadExerciseGraph(_currentDate);
-        foreach (DateTime newDate in _exerciseInfo.Keys)
-        {
-            if (!_availableTimes.Contains(newDate))
-            {
-                _availableTimes.Add(newDate);
-            }
-        }
-        _foodInfo = DataStorage.LoadFoodGraph(_currentDate);
-        foreach (DateTime newDate in _foodInfo.Keys)
-        {
-            if (!_availableTimes.Contains(newDate))
-            {
-                _availableTimes.Add(newDate);
+                if (!_availableTimes.Contains(newDate))
+                {
+                    _availableTimes.Add(newDate);
+                }
             }
         }
     }

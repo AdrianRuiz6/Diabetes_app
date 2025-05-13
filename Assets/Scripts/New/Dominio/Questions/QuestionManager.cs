@@ -2,8 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Notifications.Android;
 using UnityEngine;
+using Master.Persistence;
+using Master.Auxiliar;
+using Master.Domain.GameEvents;
+using Master.Domain.Questions;
+
 
 public class QuestionManager : MonoBehaviour
 {

@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class UserPerformanceData
+namespace Master.Persistence.Questions
 {
-    public string topic;
-    public List<string> performanceData;
-
-    public UserPerformanceData(string playerName, List<string> performanceData)
+    [System.Serializable]
+    public class UserPerformanceData
     {
-        this.topic = playerName;
-        this.performanceData = performanceData;
+        public string topic;
+        public List<string> performanceData;
+
+        public UserPerformanceData(string playerName, List<string> performanceData)
+        {
+            this.topic = playerName;
+            this.performanceData = performanceData;
+        }
     }
 }

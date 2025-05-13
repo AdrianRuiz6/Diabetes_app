@@ -2,23 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
+using Master.Domain.Questions;
+using Master.Domain.GameEvents;
 
-public class State_PresentQuestions : State
+namespace Master.Domain.Questions
 {
-    private string _newState;
-
-    public override void Execute(AgentQuestions agent)
+    public class State_PresentQuestions : StateQuestions
     {
-        QuestionManager.Instance.RandomizeOrderQuestions();
+        private string _newState;
 
-        GameEvents_Questions.OnFinalizedCreationQuestions?.Invoke();
+        public override void Execute(AgentQuestions agent)
+        {
+            QuestionManager.Instance.RandomizeOrderQuestions();
 
-        _newState = "WaitForRestart";
-        agent.Change_state(new State_WaitForRestart());
-    }
+            GameEvents_Questions.OnFinalizedCreationQuestions?.Invoke();
 
-    public override void OnExit()
-    {
-        Debug.Log("State changed to: " + _newState);
+            _newState = "WaitForRestart";
+            agent.Change_state(new State_WaitForRestart());
+        }
+
+        public override void OnExit()
+        {
+            Debug.Log("State changed to: " + _newState);
+        }
     }
 }

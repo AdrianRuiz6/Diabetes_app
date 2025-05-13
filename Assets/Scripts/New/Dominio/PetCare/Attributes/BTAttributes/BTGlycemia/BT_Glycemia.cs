@@ -1,10 +1,7 @@
-using BehaviorTree;
-using System.Collections;
+using Master.Domain.BehaviorTree;
 using System.Collections.Generic;
-using UnityEngine;
-using Master.Domain.BehaviorTree.Activity;
 
-namespace Master.Domain.BehaviorTree.Glycemia
+namespace Master.Domain.PetCare
 {
     public class BT_Glycemia : BTree
     {

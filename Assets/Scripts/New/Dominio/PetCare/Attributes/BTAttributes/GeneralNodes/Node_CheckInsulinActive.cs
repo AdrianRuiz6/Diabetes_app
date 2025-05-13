@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using BehaviorTree;
+using Master.Domain.BehaviorTree;
 using System;
 
-namespace Master.Domain.BehaviorTree.Glycemia
+namespace Master.Domain.PetCare
 {
     public class Node_CheckInsulinActive : Node
     {

@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GameEvents_Score
+namespace Master.Domain.GameEvents
 {
-    public static Action<int, DateTime?, string> OnModifyCurrentScore;
-    public static Action<int> OnModifyHighestScore;
-    public static Action OnResetScore;
+    public static class GameEvents_Score
+    {
+        public static Action<int, DateTime?, string> OnModifyCurrentScore;
+        public static Action<int> OnModifyHighestScore;
+        public static Action OnResetScore;
+    }
 }

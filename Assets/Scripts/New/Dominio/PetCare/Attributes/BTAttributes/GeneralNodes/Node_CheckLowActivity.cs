@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BehaviorTree;
+using Master.Domain.BehaviorTree;
 using System;
-using Master.Domain.Economy;
 
-namespace Master.Domain.BehaviorTree.Glycemia
+namespace Master.Domain.PetCare
 {
     public class Node_CheckLowActivity : Node
     {

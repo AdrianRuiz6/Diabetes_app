@@ -1,52 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Events;
-using System;
+using Master.Presentation.Animations;
 
-public abstract class UI_Actions_PetCare : MonoBehaviour
+namespace Master.Presentation.PetCare
 {
-    [SerializeField] private Slider _slider;
-
-    [SerializeField] protected TMP_Text ValueTMP;
-
-    [SerializeField] private Button _openButton;
-    [SerializeField] private Button _sendButton;
-    [SerializeField] private Button _closeButton;
-
-    [SerializeField] private GameObject _submenuPanel;
-
-    void Start()
+    public abstract class UI_Actions_PetCare : MonoBehaviour
     {
-        _slider.onValueChanged.AddListener(UpdatedValueSlider);
+        [SerializeField] private Slider _slider;
 
-        _openButton.onClick.AddListener(OpenSubMenu);
-        _closeButton.onClick.AddListener(CloseSubMenu);
-        _sendButton.onClick.AddListener(SendInformation);
-    }
+        [SerializeField] protected TMP_Text ValueTMP;
 
-    public abstract void UpdatedValueSlider(float value);
+        [SerializeField] private Button _openButton;
+        [SerializeField] private Button _sendButton;
+        [SerializeField] private Button _closeButton;
 
-    private void OpenSubMenu()
-    {
-        Animation_PageSliding.Instance.DeactivatePageSliding();
-        _submenuPanel.SetActive(true);
+        [SerializeField] private GameObject _submenuPanel;
 
-        _slider.value = 1;
-        UpdatedValueSlider(1);
-    }
+        void Start()
+        {
+            _slider.onValueChanged.AddListener(UpdatedValueSlider);
 
-    private void CloseSubMenu()
-    {
-        Animation_PageSliding.Instance.ActivatePageSliding();
-        _submenuPanel.SetActive(false);
-    }
+            _openButton.onClick.AddListener(OpenSubMenu);
+            _closeButton.onClick.AddListener(CloseSubMenu);
+            _sendButton.onClick.AddListener(SendInformation);
+        }
 
-    public virtual void SendInformation()
-    {
-        Animation_PageSliding.Instance.ActivatePageSliding();
-        _submenuPanel.SetActive(false);
+        public abstract void UpdatedValueSlider(float value);
+
+        private void OpenSubMenu()
+        {
+            Animation_PageSliding.Instance.DeactivatePageSliding();
+            _submenuPanel.SetActive(true);
+
+            _slider.value = 1;
+            UpdatedValueSlider(1);
+        }
+
+        private void CloseSubMenu()
+        {
+            Animation_PageSliding.Instance.ActivatePageSliding();
+            _submenuPanel.SetActive(false);
+        }
+
+        public virtual void SendInformation()
+        {
+            Animation_PageSliding.Instance.ActivatePageSliding();
+            _submenuPanel.SetActive(false);
+        }
     }
 }

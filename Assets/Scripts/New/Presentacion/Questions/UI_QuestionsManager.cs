@@ -2,92 +2,97 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Persistence;
+using Master.Domain.GameEvents;
 
-public class UI_QuestionsManager : MonoBehaviour
+namespace Master.Presentation.Questions
 {
-    [SerializeField] private GameObject _timerPanel;
-    [SerializeField] private GameObject _questionPanel;
-    [SerializeField] private GameObject _loadingPanel;
-
-    private bool _isLoadingQuestions;
-    private enum PanelType { Timer, Question }
-
-    void Awake()
+    public class UI_QuestionsManager : MonoBehaviour
     {
-        // Events
-        GameEvents_Questions.OnStartQuestionUI += ActivateQuestionPanel;
-        GameEvents_Questions.OnStartTimerUI += ActivateTimerPanel;
-        GameEvents_Questions.OnFinalizedCreationQuestions += FinishLoadingQuestions;
-    }
+        [SerializeField] private GameObject _timerPanel;
+        [SerializeField] private GameObject _questionPanel;
+        [SerializeField] private GameObject _loadingPanel;
 
-    void OnDestroy()
-    {
-        // Events
-        GameEvents_Questions.OnStartQuestionUI -= ActivateQuestionPanel;
-        GameEvents_Questions.OnStartTimerUI -= ActivateTimerPanel;
-        GameEvents_Questions.OnFinalizedCreationQuestions -= FinishLoadingQuestions;
-    }
+        private bool _isLoadingQuestions;
+        private enum PanelType { Timer, Question }
 
-    private void Start()
-    {
-        _isLoadingQuestions = true;
-
-        SwitchPanel(PanelType.Timer);
-
-        float previousTimeLeft = DataStorage.LoadTimeLeftQuestionTimer();
-        DateTime lastTimeDisconnected = DataStorage.LoadDisconnectionDate();
-
-        TimeSpan timeDisconnected = DateTime.Now - lastTimeDisconnected;
-        float currentTimeLeft = previousTimeLeft - (float)timeDisconnected.TotalSeconds;
-        GameEvents_Questions.OnModifyTimer?.Invoke(currentTimeLeft);
-    }
-
-    private void Update()
-    {
-        if (_isLoadingQuestions)
+        void Awake()
         {
-            _loadingPanel.SetActive(true);
+            // Events
+            GameEvents_Questions.OnStartQuestionUI += ActivateQuestionPanel;
+            GameEvents_Questions.OnStartTimerUI += ActivateTimerPanel;
+            GameEvents_Questions.OnFinalizedCreationQuestions += FinishLoadingQuestions;
         }
-        else
+
+        void OnDestroy()
         {
-            _loadingPanel.SetActive(false);
+            // Events
+            GameEvents_Questions.OnStartQuestionUI -= ActivateQuestionPanel;
+            GameEvents_Questions.OnStartTimerUI -= ActivateTimerPanel;
+            GameEvents_Questions.OnFinalizedCreationQuestions -= FinishLoadingQuestions;
         }
-    }
 
-    private void StartLoadingQuestions()
-    {
-        _isLoadingQuestions = true;
-    }
-
-    private void FinishLoadingQuestions()
-    {
-        _isLoadingQuestions = false;
-    }
-
-    private void ActivateQuestionPanel()
-    {
-        SwitchPanel(PanelType.Question);
-    }
-
-    private void ActivateTimerPanel()
-    {
-        StartLoadingQuestions();
-        SwitchPanel(PanelType.Timer);
-    }
-
-    private void SwitchPanel(PanelType panel)
-    {
-        if (panel == PanelType.Timer)
+        private void Start()
         {
-            _timerPanel.SetActive(true);
-            _questionPanel.SetActive(false);
-            _loadingPanel.SetActive(false);
+            _isLoadingQuestions = true;
+
+            SwitchPanel(PanelType.Timer);
+
+            float previousTimeLeft = DataStorage.LoadTimeLeftQuestionTimer();
+            DateTime lastTimeDisconnected = DataStorage.LoadDisconnectionDate();
+
+            TimeSpan timeDisconnected = DateTime.Now - lastTimeDisconnected;
+            float currentTimeLeft = previousTimeLeft - (float)timeDisconnected.TotalSeconds;
+            GameEvents_Questions.OnModifyTimer?.Invoke(currentTimeLeft);
         }
-        else if (panel == PanelType.Question)
+
+        private void Update()
         {
-            _timerPanel.SetActive(false);
-            _questionPanel.SetActive(true);
-            _loadingPanel.SetActive(false);
+            if (_isLoadingQuestions)
+            {
+                _loadingPanel.SetActive(true);
+            }
+            else
+            {
+                _loadingPanel.SetActive(false);
+            }
+        }
+
+        private void StartLoadingQuestions()
+        {
+            _isLoadingQuestions = true;
+        }
+
+        private void FinishLoadingQuestions()
+        {
+            _isLoadingQuestions = false;
+        }
+
+        private void ActivateQuestionPanel()
+        {
+            SwitchPanel(PanelType.Question);
+        }
+
+        private void ActivateTimerPanel()
+        {
+            StartLoadingQuestions();
+            SwitchPanel(PanelType.Timer);
+        }
+
+        private void SwitchPanel(PanelType panel)
+        {
+            if (panel == PanelType.Timer)
+            {
+                _timerPanel.SetActive(true);
+                _questionPanel.SetActive(false);
+                _loadingPanel.SetActive(false);
+            }
+            else if (panel == PanelType.Question)
+            {
+                _timerPanel.SetActive(false);
+                _questionPanel.SetActive(true);
+                _loadingPanel.SetActive(false);
+            }
         }
     }
 }

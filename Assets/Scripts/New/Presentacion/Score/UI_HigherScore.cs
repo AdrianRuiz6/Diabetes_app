@@ -2,29 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Master.Persistence;
+using Master.Domain.GameEvents;
 
-public class UI_HigherScore : MonoBehaviour
+namespace Master.Presentation.Score
 {
-    private TMP_Text _higherScore_TMP;
-
-    private void Awake()
+    public class UI_HigherScore : MonoBehaviour
     {
-        GameEvents_Score.OnModifyHighestScore += ModifyHigherScoreTMP;
-    }
+        private TMP_Text _higherScore_TMP;
 
-    private void OnDestroy()
-    {
-        GameEvents_Score.OnModifyHighestScore -= ModifyHigherScoreTMP;
-    }
+        private void Awake()
+        {
+            GameEvents_Score.OnModifyHighestScore += ModifyHigherScoreTMP;
+        }
 
-    void Start()
-    {
-        _higherScore_TMP = GetComponent<TMP_Text>();
-        _higherScore_TMP.text = DataStorage.LoadHighestScore().ToString();
-    }
+        private void OnDestroy()
+        {
+            GameEvents_Score.OnModifyHighestScore -= ModifyHigherScoreTMP;
+        }
 
-    private void ModifyHigherScoreTMP(int higherScore)
-    {
-        _higherScore_TMP.text = higherScore.ToString();
+        void Start()
+        {
+            _higherScore_TMP = GetComponent<TMP_Text>();
+            _higherScore_TMP.text = DataStorage.LoadHighestScore().ToString();
+        }
+
+        private void ModifyHigherScoreTMP(int higherScore)
+        {
+            _higherScore_TMP.text = higherScore.ToString();
+        }
     }
 }

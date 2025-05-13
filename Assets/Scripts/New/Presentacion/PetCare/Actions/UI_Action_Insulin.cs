@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Master.Domain.PetCare;
 
-public class UI_Action_Insulin : UI_Actions_PetCare
+namespace Master.Presentation.PetCare
 {
-    public override void UpdatedValueSlider(float value)
+    public class UI_Action_Insulin : UI_Actions_PetCare
     {
-        ValueTMP.text = value.ToString();
-    }
+        public override void UpdatedValueSlider(float value)
+        {
+            ValueTMP.text = value.ToString();
+        }
 
-    public override void SendInformation()
-    {
-        AttributeManager.Instance.ActivateInsulinAction(int.Parse(ValueTMP.text));
+        public override void SendInformation()
+        {
+            AttributeManager.Instance.ActivateInsulinAction(int.Parse(ValueTMP.text));
 
-        base.SendInformation();
+            base.SendInformation();
+        }
     }
 }

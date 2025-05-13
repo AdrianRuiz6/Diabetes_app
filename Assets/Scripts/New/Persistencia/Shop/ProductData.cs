@@ -1,9 +1,9 @@
-using Master.Domain.States;
+using Master.Domain.Shop;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Master.Domain.Economy
+namespace Master.Persistence.Shop
 {
     [System.Serializable]
     public class ProductData

@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Master.Domain.Questions;
 
-public class State_GenerateInitialQuestions : State
+namespace Master.Domain.Questions
 {
-    private string _newState;
-
-    public override void Execute(AgentQuestions agent)
+    public class State_GenerateInitialQuestions : StateQuestions
     {
-        QuestionManager.Instance.SelectRandomQuestions();
+        private string _newState;
 
-        _newState = "PresentQuestions";
-        agent.Change_state(new State_PresentQuestions());
-    }
+        public override void Execute(AgentQuestions agent)
+        {
+            QuestionManager.Instance.SelectRandomQuestions();
 
-    public override void OnExit()
-    {
-        Debug.Log("State changed to: " + _newState);
+            _newState = "PresentQuestions";
+            agent.Change_state(new State_PresentQuestions());
+        }
+
+        public override void OnExit()
+        {
+            Debug.Log("State changed to: " + _newState);
+        }
     }
 }

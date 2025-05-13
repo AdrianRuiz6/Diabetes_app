@@ -5,41 +5,45 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Master.Domain.GameEvents;
 
-public class UI_DateChanger : MonoBehaviour
+namespace Master.Presentation.Graph
 {
-    [SerializeField] private TMP_Text _date_TMP;
-    [SerializeField] private Button _previousDate;
-    [SerializeField] private Button _nextDate;
-
-    private DateTime _currentDate = DateTime.Now.Date;
-
-    void Start()
+    public class UI_DateChanger : MonoBehaviour
     {
-        _date_TMP.text = $"{_currentDate.ToString("dd")} / {_currentDate.ToString("MM")} / {_currentDate.Year - 2000}";
+        [SerializeField] private TMP_Text _date_TMP;
+        [SerializeField] private Button _previousDate;
+        [SerializeField] private Button _nextDate;
 
-        _previousDate.onClick.AddListener(PreviousDate);
-        _nextDate.onClick.AddListener(NextDate);
-    }
+        private DateTime _currentDate = DateTime.Now.Date;
 
-    private void UpdateDate()
-    {
-        _date_TMP.text = $"{_currentDate.ToString("dd")} / {_currentDate.ToString("MM")} / {_currentDate.Year - 2000}";
-        GameEvents_Graph.OnUpdatedDateGraph?.Invoke(_currentDate);
-    }
-
-    private void PreviousDate()
-    {
-        _currentDate = _currentDate.AddDays(-1);
-        UpdateDate();
-    }
-
-    private void NextDate()
-    {
-        if (_currentDate.AddDays(1) <= DateTime.Now.Date)
+        void Start()
         {
-            _currentDate = _currentDate.AddDays(1);
+            _date_TMP.text = $"{_currentDate.ToString("dd")} / {_currentDate.ToString("MM")} / {_currentDate.Year - 2000}";
+
+            _previousDate.onClick.AddListener(PreviousDate);
+            _nextDate.onClick.AddListener(NextDate);
+        }
+
+        private void UpdateDate()
+        {
+            _date_TMP.text = $"{_currentDate.ToString("dd")} / {_currentDate.ToString("MM")} / {_currentDate.Year - 2000}";
+            GameEvents_Graph.OnUpdatedDateGraph?.Invoke(_currentDate);
+        }
+
+        private void PreviousDate()
+        {
+            _currentDate = _currentDate.AddDays(-1);
             UpdateDate();
+        }
+
+        private void NextDate()
+        {
+            if (_currentDate.AddDays(1) <= DateTime.Now.Date)
+            {
+                _currentDate = _currentDate.AddDays(1);
+                UpdateDate();
+            }
         }
     }
 }

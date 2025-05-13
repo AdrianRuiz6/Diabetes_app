@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class ButtonDataList
+namespace Master.Persistence.Graph
 {
-    public List<ButtonData> buttonList = new List<ButtonData>();
+    [System.Serializable]
+    public class ButtonDataList
+    {
+        public List<ButtonData> buttonList = new List<ButtonData>();
+    }
 }

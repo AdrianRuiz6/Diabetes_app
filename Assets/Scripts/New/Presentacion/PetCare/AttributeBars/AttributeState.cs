@@ -2,20 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AttributeRangeValue
+namespace Master.Presentation.PetCare
 {
-    Good,
-    Intermediate,
-    Bad,
-    Critical
+    public enum AttributeRangeValue
+    {
+        Good,
+        Intermediate,
+        Bad,
+        Critical
+    }
 }
 
-[System.Serializable]
-public class AttributeState
+namespace Master.Presentation.PetCare
 {
-    public string Name;
-    public int MinValue;
-    public int MaxValue;
-    public Color StateColor;
-    public AttributeRangeValue RangeValue;
+    [System.Serializable]
+    public class AttributeState
+    {
+        public string Name;
+        public int MinValue;
+        public int MaxValue;
+        public Color StateColor;
+        public AttributeRangeValue RangeValue;
+    }
 }

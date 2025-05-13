@@ -1,88 +1,91 @@
-using Master.Domain.Events;
+using Master.Domain.GameEvents;
 using UnityEngine;
 using TMPro;
 
-public class UI_Product : MonoBehaviour
+namespace Master.Presentation.Shop
 {
-    [SerializeField] private string _productName;
-    [SerializeField] private GameObject _equippedIcon;
-    [SerializeField] private GameObject _boughtIcon;
-    [SerializeField] private Color _textColorNotEnoughMoney;
-    [SerializeField] private GameObject _priceUI;
-    [SerializeField] private TextMeshProUGUI _price_text;
-
-    private bool _isBought;
-
-    private void Awake()
+    public class UI_Product : MonoBehaviour
     {
-        GameEvents_Economy.OnProductEquipped += OnProductEquipped;
-        GameEvents_Economy.OnProductBought += OnProductBought;
-        GameEvents_Economy.OnNotEnoughMoney += OnNotEnoughMoney;
-        GameEvents_Economy.OnEnoughMoney += OnEnoughMoney;
-    }
+        [SerializeField] private string _productName;
+        [SerializeField] private GameObject _equippedIcon;
+        [SerializeField] private GameObject _boughtIcon;
+        [SerializeField] private Color _textColorNotEnoughMoney;
+        [SerializeField] private GameObject _priceUI;
+        [SerializeField] private TextMeshProUGUI _price_text;
 
-    void OnDestroy()
-    {
-        GameEvents_Economy.OnProductEquipped -= OnProductEquipped;
-        GameEvents_Economy.OnProductBought -= OnProductBought;
-        GameEvents_Economy.OnNotEnoughMoney -= OnNotEnoughMoney;
-        GameEvents_Economy.OnEnoughMoney -= OnEnoughMoney;
-    }
+        private bool _isBought;
 
-    void Start()
-    {
-        _priceUI.SetActive(true);
-        _equippedIcon.SetActive(false);
-        _boughtIcon.SetActive(false);
-
-        _isBought = false;
-    }
-
-    private void OnProductEquipped(string productName)
-    {
-        if (productName == _productName)
+        private void Awake()
         {
-            _priceUI.SetActive(false);
-            _boughtIcon.SetActive(false);
-            _isBought = true;
-
-            _equippedIcon.SetActive(true);
+            GameEvents_Economy.OnProductEquipped += OnProductEquipped;
+            GameEvents_Economy.OnProductBought += OnProductBought;
+            GameEvents_Economy.OnNotEnoughMoney += OnNotEnoughMoney;
+            GameEvents_Economy.OnEnoughMoney += OnEnoughMoney;
         }
-        else
+
+        void OnDestroy()
         {
+            GameEvents_Economy.OnProductEquipped -= OnProductEquipped;
+            GameEvents_Economy.OnProductBought -= OnProductBought;
+            GameEvents_Economy.OnNotEnoughMoney -= OnNotEnoughMoney;
+            GameEvents_Economy.OnEnoughMoney -= OnEnoughMoney;
+        }
+
+        void Start()
+        {
+            _priceUI.SetActive(true);
             _equippedIcon.SetActive(false);
-            if (_isBought == true)
+            _boughtIcon.SetActive(false);
+
+            _isBought = false;
+        }
+
+        private void OnProductEquipped(string productName)
+        {
+            if (productName == _productName)
             {
-                OnProductBought(_productName);
+                _priceUI.SetActive(false);
+                _boughtIcon.SetActive(false);
+                _isBought = true;
+
+                _equippedIcon.SetActive(true);
+            }
+            else
+            {
+                _equippedIcon.SetActive(false);
+                if (_isBought == true)
+                {
+                    OnProductBought(_productName);
+                }
             }
         }
-    }
 
-    private void OnProductBought(string productName)
-    {
-        if (productName == _productName)
+        private void OnProductBought(string productName)
         {
-            _priceUI.SetActive(false);
-            _equippedIcon.SetActive(false);
-            _isBought = true;
+            if (productName == _productName)
+            {
+                _priceUI.SetActive(false);
+                _equippedIcon.SetActive(false);
+                _isBought = true;
 
-            _boughtIcon.SetActive(true);
+                _boughtIcon.SetActive(true);
+            }
         }
-    }
 
-    private void OnNotEnoughMoney(string productName)
-    {
-        if (productName == _productName)
+        private void OnNotEnoughMoney(string productName)
         {
-            _price_text.color = _textColorNotEnoughMoney;
+            if (productName == _productName)
+            {
+                _price_text.color = _textColorNotEnoughMoney;
+            }
         }
-    }
 
-    private void OnEnoughMoney(string productName)
-    {
-        if (productName == _productName)
+        private void OnEnoughMoney(string productName)
         {
-            _price_text.color = Color.white;
+            if (productName == _productName)
+            {
+                _price_text.color = Color.white;
+            }
         }
     }
 }

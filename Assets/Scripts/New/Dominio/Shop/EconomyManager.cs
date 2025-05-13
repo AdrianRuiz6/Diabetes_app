@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Master.Domain.Events;
+using Master.Domain.GameEvents;
+using Master.Persistence;
 
-namespace Master.Domain.Economy
+namespace Master.Domain.Shop
 {
     public class EconomyManager : MonoBehaviour
     {

@@ -1,42 +1,46 @@
 using System;
 using UnityEngine;
+using Master.Persistence;
 
-public class TimeManager : MonoBehaviour
+namespace Master.Domain.Time
 {
-    public static TimeManager Instance;
-    public DateTime lastDisconnectionDateTime;
-    public DateTime currentConnectionDateTime;
-
-    void Awake()
+    public class TimeManager : MonoBehaviour
     {
-        if (Instance == null)
+        public static TimeManager Instance;
+        public DateTime lastDisconnectionDateTime;
+        public DateTime currentConnectionDateTime;
+
+        void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+
+            lastDisconnectionDateTime = DataStorage.LoadDisconnectionDate();
+            currentConnectionDateTime = DateTime.Now;
         }
 
-        lastDisconnectionDateTime = DataStorage.LoadDisconnectionDate();
-        currentConnectionDateTime = DateTime.Now;
-    }
-
-    public bool IsConnected(DateTime dateTimeToEvaluate)
-    {
-        if(dateTimeToEvaluate > lastDisconnectionDateTime && dateTimeToEvaluate < currentConnectionDateTime)
+        public bool IsConnected(DateTime dateTimeToEvaluate)
         {
-            return false;
+            if (dateTimeToEvaluate > lastDisconnectionDateTime && dateTimeToEvaluate < currentConnectionDateTime)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
-        else
-        {
-            return true;
-        }
-    }
 
-    private void OnDestroy()
-    {
-        DataStorage.SaveDisconnectionDate();
+        private void OnDestroy()
+        {
+            DataStorage.SaveDisconnectionDate();
+        }
     }
 }

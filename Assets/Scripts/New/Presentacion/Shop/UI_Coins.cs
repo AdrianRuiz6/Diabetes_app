@@ -1,26 +1,29 @@
-using Master.Domain.Events;
+using Master.Domain.GameEvents;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UI_Coins : MonoBehaviour
+namespace Master.Presentation.Shop
 {
-    private TMP_Text _coinsAmountText;
-
-    private void Awake()
+    public class UI_Coins : MonoBehaviour
     {
-        GameEvents_Economy.OnTotalCoinsUpdated += OnCoinsUpdated;
-        _coinsAmountText = GetComponent<TMP_Text>();
-    }
+        private TMP_Text _coinsAmountText;
 
-    void OnDestroy()
-    {
-        GameEvents_Economy.OnTotalCoinsUpdated -= OnCoinsUpdated;
-    }
+        private void Awake()
+        {
+            GameEvents_Economy.OnTotalCoinsUpdated += OnCoinsUpdated;
+            _coinsAmountText = GetComponent<TMP_Text>();
+        }
 
-    private void OnCoinsUpdated(int coins)
-    {
-        _coinsAmountText.text = coins.ToString();
+        void OnDestroy()
+        {
+            GameEvents_Economy.OnTotalCoinsUpdated -= OnCoinsUpdated;
+        }
+
+        private void OnCoinsUpdated(int coins)
+        {
+            _coinsAmountText.text = coins.ToString();
+        }
     }
 }

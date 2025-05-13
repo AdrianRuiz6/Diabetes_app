@@ -1,32 +1,35 @@
 using System;
 using UnityEngine;
 
-[System.Serializable]
-public class ScoreRecordData
+namespace Master.Persistence.Score
 {
-    [SerializeField] private string time;
-    [SerializeField] private string info;
-    [System.NonSerialized] public GameObject element;
-
-    public ScoreRecordData(DateTime time, string info, GameObject element)
+    [System.Serializable]
+    public class ScoreRecordData
     {
-        this.time = time.ToString();
-        this.info = info;
-        this.element = element;
-    }
+        [SerializeField] private string time;
+        [SerializeField] private string info;
+        [System.NonSerialized] public GameObject element;
 
-    public DateTime GetTime()
-    {
-        return DateTime.Parse(time);
-    }
+        public ScoreRecordData(DateTime time, string info, GameObject element)
+        {
+            this.time = time.ToString();
+            this.info = info;
+            this.element = element;
+        }
 
-    public string GetInfo()
-    {
-        return info;
-    }
+        public DateTime GetTime()
+        {
+            return DateTime.Parse(time);
+        }
 
-    public GameObject GetElement()
-    {
-        return element;
+        public string GetInfo()
+        {
+            return info;
+        }
+
+        public GameObject GetElement()
+        {
+            return element;
+        }
     }
 }
