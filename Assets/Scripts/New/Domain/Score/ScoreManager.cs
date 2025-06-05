@@ -5,6 +5,7 @@ using Master.Persistence;
 using Master.Domain.GameEvents;
 using Master.Persistence.Connection;
 using Master.Persistence.Score;
+using JetBrains.Annotations;
 
 namespace Master.Domain.Score
 {
@@ -28,12 +29,6 @@ namespace Master.Domain.Score
             }
         }
 
-        private void OnDestroy()
-        {
-            DataStorage_Score.SaveCurrentScore(_currentScore);
-            DataStorage_Score.SaveHighestScore(_highestScore);
-        }
-
         private void Start()
         {
             _highestScore = DataStorage_Score.LoadHighestScore();
@@ -42,7 +37,7 @@ namespace Master.Domain.Score
             if (DataStorage_Connection.LoadDisconnectionDate().Date < DateTime.Now.Date)
             {
                 CheckHighestScore();
-                _currentScore = 0;
+                SetCurrentScore(0);
             }
 
             StartCoroutine(CheckScoreAtMidnight());
@@ -52,7 +47,7 @@ namespace Master.Domain.Score
         {
             if (_currentScore > _highestScore)
             {
-                _highestScore = _currentScore;
+                SetHighestScore(_currentScore);
                 GameEvents_Score.OnModifyHighestScore?.Invoke(_highestScore);
             }
         }
@@ -70,7 +65,7 @@ namespace Master.Domain.Score
                 }
 
                 CheckHighestScore();
-                _currentScore = 0;
+                SetCurrentScore(0);
                 GameEvents_Score.OnResetScore?.Invoke();
                 break;
             }
@@ -78,7 +73,7 @@ namespace Master.Domain.Score
 
         public void AddScore(int score, DateTime? time, string activity)
         {
-            _currentScore += score;
+            SetCurrentScore(_currentScore + score);
             GameEvents_Score.OnModifyCurrentScore?.Invoke(score, time, activity);
         }
 
@@ -86,12 +81,12 @@ namespace Master.Domain.Score
         {
             if (_currentScore - score < 0)
             {
-                _currentScore = 0;
+                SetCurrentScore(0);
                 GameEvents_Score.OnModifyCurrentScore?.Invoke(-score, time, activity);
             }
             else
             {
-                _currentScore -= score;
+                SetCurrentScore(_currentScore - score);
                 GameEvents_Score.OnModifyCurrentScore?.Invoke(-score, time, activity);
             }
         }
@@ -99,7 +94,20 @@ namespace Master.Domain.Score
         public void ResetScore()
         {
             GameEvents_Score.OnResetScore?.Invoke();
-            _currentScore = 0;
+            SetCurrentScore(0);
+        }
+
+        private void SetCurrentScore(int newCurrentScore)
+        {
+            _currentScore = newCurrentScore;
+            DataStorage_Score.SaveCurrentScore(_currentScore);
+            
+        }
+
+        private void SetHighestScore(int newHighestScore)
+        {
+            _highestScore = newHighestScore;
+            DataStorage_Score.SaveHighestScore(_highestScore);
         }
     }
 }

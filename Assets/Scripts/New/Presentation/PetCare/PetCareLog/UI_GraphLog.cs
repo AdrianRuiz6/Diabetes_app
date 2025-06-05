@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using TMPro;
 using Master.Persistence;
 using Master.Domain.GameEvents;
-using Master.Domain.Time;
+using Master.Domain.Settings;
 using Master.Persistence.PetCare;
 
 namespace Master.Presentation.PetCare.Log
@@ -77,8 +77,8 @@ namespace Master.Presentation.PetCare.Log
             _currentFilter = GraphFilter.Glycemia;
 
             // Se establece el minimo y máximo de la franja horaria.
-            ModifyInitialHour(LimitHours.Instance.initialTime.Hours);
-            ModifyFinishHour(LimitHours.Instance.finishTime.Hours);
+            ModifyInitialHour(SettingsManager.Instance.initialTime.Hours);
+            ModifyFinishHour(SettingsManager.Instance.finishTime.Hours);
         }
 
         private void UpdateDate(DateTime newCurrentDate)
@@ -261,7 +261,7 @@ namespace Master.Presentation.PetCare.Log
                 }
 
                 // Se calcula el tiempo en formato decimal
-                int limitMinutes = (currentHour == LimitHours.Instance.finishTime.Hours) ? 59 : 60;
+                int limitMinutes = (currentHour == SettingsManager.Instance.finishTime.Hours) ? 59 : 60;
                 float currentTimeDecimal = currentHour + (currentMinute / (float)limitMinutes);
 
                 // Se calcula la posición en el eje horizontal basada en el tiempo decimal.

@@ -4,40 +4,35 @@ using System.IO;
 using System.Net;
 using UnityEngine;
 using System.Linq;
+using Master.Domain.Questions;
 
 namespace Master.Persistence.Questions
 {
-    public static class DataStorage_Questions
+    public class DataStorage_Questions : IQuestionRepository
     {
-        public static void SaveCurrentQuestionIndex(int currentQuestionIndex)
+        public void SaveCurrentQuestionIndex(int currentQuestionIndex)
         {
             PlayerPrefs.SetInt("CurrentQuestionIndex", currentQuestionIndex);
             PlayerPrefs.Save();
         }
 
-        public static int LoadCurrentQuestionIndex()
+        public int LoadCurrentQuestionIndex()
         {
             return PlayerPrefs.GetInt("CurrentQuestionIndex", 0);
         }
 
-        public static void ResetCurrentQuestionIndex()
-        {
-            PlayerPrefs.SetInt("CurrentQuestionIndex", 0);
-            PlayerPrefs.Save();
-        }
-
-        public static void SaveTimeLeftQuestionTimer(float timeLeft)
+        public void SaveTimeLeftQuestionTimer(float timeLeft)
         {
             PlayerPrefs.SetFloat("LeftTimeQuestionTimer", timeLeft);
             PlayerPrefs.Save();
         }
 
-        public static float LoadTimeLeftQuestionTimer()
+        public float LoadTimeLeftQuestionTimer()
         {
             return PlayerPrefs.GetFloat("LeftTimeQuestionTimer", 0);
         }
 
-        public static void SaveUserPerformance(Dictionary<string, FixedSizeQueue<string>> userPerformance)
+        public void SaveUserPerformance(Dictionary<string, FixedSizeQueue<string>> userPerformance)
         {
             string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
 
@@ -58,7 +53,7 @@ namespace Master.Persistence.Questions
         }
 
 
-        public static Dictionary<string, FixedSizeQueue<string>> LoadUserPerformance(List<string> allTopics)
+        public Dictionary<string, FixedSizeQueue<string>> LoadUserPerformance(List<string> allTopics)
         {
             string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
             Dictionary<string, FixedSizeQueue<string>> userPerformance = new Dictionary<string, FixedSizeQueue<string>>();
@@ -99,7 +94,7 @@ namespace Master.Persistence.Questions
             return userPerformance;
         }
 
-        public static void ResetUserPerformance()
+        public void ResetUserPerformance()
         {
             string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
 
@@ -109,7 +104,7 @@ namespace Master.Persistence.Questions
             }
         }
 
-        public static void SaveIterationQuestions(List<Question> iterationQuestions)
+        public void SaveIterationQuestions(List<Question> iterationQuestions)
         {
             string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
 
@@ -127,7 +122,7 @@ namespace Master.Persistence.Questions
             }
         }
 
-        public static List<Question> LoadIterationQuestions()
+        public List<Question> LoadIterationQuestions()
         {
             string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
             if (!File.Exists(path))
@@ -145,7 +140,7 @@ namespace Master.Persistence.Questions
             return currentIterationQuestions.questions;
         }
 
-        public static void ResetIterationQuestions()
+        public void ResetIterationQuestions()
         {
             string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
 
@@ -155,7 +150,7 @@ namespace Master.Persistence.Questions
             }
         }
 
-        public static List<Question> LoadQuestions()
+        public List<Question> LoadQuestions()
         {
             string url = LoadURLQuestions();
             string fileCSV = System.IO.Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
@@ -213,7 +208,7 @@ namespace Master.Persistence.Questions
             }
         }
 
-        public static int SaveURLQuestions(string url)
+        public int SaveURLQuestions(string url)
         {
             // Comprobar errores
             string fileCSV = System.IO.Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
@@ -294,14 +289,14 @@ namespace Master.Persistence.Questions
             return 0;
         }
 
-        public static string LoadURLQuestions()
+        public string LoadURLQuestions()
         {
             string defaultURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmL6z_aRoGzC_IM7f85ga5WoVNv99d4oUYIsjTrLzUgKLUuzc4xXIY8n_TakI-OQ/pub?output=tsv";
 
             return PlayerPrefs.GetString("urlQuestions", defaultURL);
         }
 
-        public static void ResetQuestionURL()
+        public void ResetQuestionURL()
         {
             PlayerPrefs.DeleteKey("urlQuestions");
         }

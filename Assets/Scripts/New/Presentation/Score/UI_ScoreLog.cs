@@ -73,6 +73,7 @@ namespace Master.Presentation.Score
             }
 
             _infoList.Clear();
+            DataStorage_Score.SaveScoreInfo(_infoList);
         }
 
         public void AddElement(int addedScore, DateTime? time, string activity)
@@ -99,6 +100,7 @@ namespace Master.Presentation.Score
                 // Se inserta el nuevo elemento en la posición correcta en la jerarquía.
                 int siblingIndex = _infoList.Count - index - 1;
                 newElement.transform.SetSiblingIndex(siblingIndex);
+                DataStorage_Score.SaveScoreInfo(_infoList);
             }
         }
 

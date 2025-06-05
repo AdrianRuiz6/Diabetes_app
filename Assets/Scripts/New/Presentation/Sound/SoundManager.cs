@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Master.Persistence;
 using Master.Persistence.Settings;
+using Master.Domain.GameEvents;
 
 namespace Master.Presentation.Sound
 {
@@ -25,17 +26,17 @@ namespace Master.Presentation.Sound
             {
                 Destroy(gameObject);
             }
+
+            GameEvents_Settings.OnSoundEffectsModified += SetSoundEffectsVolume;
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
-            DataStorage_Settings.SaveSoundEffectsVolume(_soundEffectsAudioSource.volume);
+            GameEvents_Settings.OnSoundEffectsModified -= SetSoundEffectsVolume;
         }
 
         private void Start()
         {
-            SetSoundEffectsVolume(DataStorage_Settings.LoadSoundEffectsVolume());
-
             // Inicialización del diccionario de efectos.
             _soundEffectsDictionary = new Dictionary<string, AudioClip>();
             foreach (SoundEffect sound in _soundEffects)
@@ -57,7 +58,7 @@ namespace Master.Presentation.Sound
             }
         }
 
-        public void SetSoundEffectsVolume(float volume)
+        private void SetSoundEffectsVolume(float volume)
         {
             _soundEffectsAudioSource.volume = volume;
         }

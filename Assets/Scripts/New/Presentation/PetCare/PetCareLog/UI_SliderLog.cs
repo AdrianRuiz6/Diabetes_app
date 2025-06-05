@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Persistence;
 using Master.Domain.GameEvents;
-using Master.Domain.Time;
+using Master.Domain.Settings;
 using Master.Persistence.PetCare;
 
 namespace Master.Presentation.PetCare.Log
@@ -54,8 +54,8 @@ namespace Master.Presentation.PetCare.Log
             _slider.wholeNumbers = true;
 
             // Se establece el minimo y máximo de la franja horaria.
-            ModifyInitialHour(LimitHours.Instance.initialTime.Hours);
-            ModifyFinishHour(LimitHours.Instance.finishTime.Hours);
+            ModifyInitialHour(SettingsManager.Instance.initialTime.Hours);
+            ModifyFinishHour(SettingsManager.Instance.finishTime.Hours);
 
             // Iniciar datos fecha actual.
             UpdateDate(DateTime.Now);

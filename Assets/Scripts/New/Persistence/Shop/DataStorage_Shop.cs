@@ -1,87 +1,78 @@
 using Master.Domain.Shop;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Master.Persistence.Shop
 {
-    public static class DataStorage_Shop
+    public class DataStorage_Shop : IShopRepository
     {
-        public static void SaveStashedCoins(int coins)
+        public void SaveStashedCoins(int coins)
         {
             PlayerPrefs.SetInt("StashedCoins", coins);
             PlayerPrefs.Save();
         }
 
-        public static int LoadStashedCoins()
+        public int LoadStashedCoins()
         {
             return PlayerPrefs.GetInt("StashedCoins", 0);
         }
 
-        public static void SaveTotalCoins(int coins)
+        public void SaveTotalCoins(int coins)
         {
             PlayerPrefs.SetInt("Coins", coins);
             PlayerPrefs.Save();
         }
 
-        public static int LoadTotalCoins()
+        public int LoadTotalCoins()
         {
             return PlayerPrefs.GetInt("Coins", 0);
         }
 
-        public static void SaveProduct(string nameProduct, ProductState productState)
+        public void SaveProducts(Dictionary<string, ProductState> newAllProducts)
         {
             string path = $"{Application.persistentDataPath}/ProductData.txt";
 
             ProductDataList allProducts = new ProductDataList();
 
-            if (File.Exists(path))
+            foreach (var entry in newAllProducts)
             {
-                string existingJson = File.ReadAllText(path);
-                allProducts = JsonUtility.FromJson<ProductDataList>(existingJson) ?? new ProductDataList();
-            }
-
-            ProductData existingProduct = allProducts.products.FirstOrDefault(p => p.ProductName == nameProduct);
-            if (existingProduct != null)
-            {
-                existingProduct.ProductState = productState;
-            }
-            else
-            {
-                ProductData productData = new ProductData(nameProduct, productState);
-                allProducts.products.Add(productData);
+                allProducts.products.Add(new ProductData(entry.Key, entry.Value));
             }
 
             string json = JsonUtility.ToJson(allProducts, true);
-
             using (StreamWriter streamWriter = new StreamWriter(path))
             {
                 streamWriter.Write(json);
             }
         }
 
-        public static ProductState LoadProduct(string name)
+        public Dictionary<string, ProductState> LoadProducts()
         {
             string path = $"{Application.persistentDataPath}/ProductData.txt";
+            Dictionary<string, ProductState> result = new Dictionary<string, ProductState>();
+
             if (!File.Exists(path))
-                return ProductState.NotPurchased;
+                return result;
 
             string existingJson = null;
-
             using (StreamReader streamReader = new StreamReader(path))
             {
                 existingJson = streamReader.ReadToEnd();
             }
-
             ProductDataList allProducts = JsonUtility.FromJson<ProductDataList>(existingJson);
 
-            ProductData result = allProducts.products.FirstOrDefault(product => product.ProductName == name);
-            if (result == null)
+            if (allProducts != null && allProducts.products != null)
             {
-                return ProductState.NotPurchased;
+                foreach (ProductData productData in allProducts.products)
+                {
+                    result[productData.ProductName] = productData.ProductState;
+                }
             }
 
-            return result.ProductState;
+            return result;
         }
     }
 }

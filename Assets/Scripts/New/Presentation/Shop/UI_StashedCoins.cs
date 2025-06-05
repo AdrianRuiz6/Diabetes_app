@@ -29,7 +29,6 @@ namespace Master.Presentation.Shop
         {
             _stashedCoinsBtn = GetComponent<Button>();
             _stashedCoinsBtn.onClick.AddListener(OnStashedCoinsClicked);
-            UpdateStashedCoins(DataStorage_Shop.LoadStashedCoins());
         }
 
         private void UpdateStashedCoins(int coins)
@@ -41,8 +40,7 @@ namespace Master.Presentation.Shop
         {
             if (_stashedCoinsObject.activeSelf)
             {
-                EconomyManager.Instance.StashedCoinsToTotalCoins();
-                _stashedCoinsObject.SetActive(false);
+                EconomyManager.StashedCoinsToTotalCoins();
 
                 // Reproducir sonido y sistema de particulas monedas.
                 SoundManager.Instance.PlaySoundEffect("Interaction");

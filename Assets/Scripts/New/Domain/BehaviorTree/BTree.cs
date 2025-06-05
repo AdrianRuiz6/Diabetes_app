@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 using Master.Domain.GameEvents;
-using Master.Domain.Time;
+using Master.Domain.Settings;
 using Master.Domain.PetCare;
+using Master.Domain.Connection;
 
 namespace Master.Domain.BehaviorTree
 
@@ -53,7 +54,7 @@ namespace Master.Domain.BehaviorTree
             {
                 DateTime nextDateTime = _dateTimesQueue.Peek();
 
-                if (_dateTimesQueue.Peek().TimeOfDay == LimitHours.Instance.initialTime)
+                if (_dateTimesQueue.Peek().TimeOfDay == SettingsManager.Instance.initialTime)
                 {
                     try
                     {
@@ -91,9 +92,9 @@ namespace Master.Domain.BehaviorTree
 
         private void EnqueueAttribute(DateTime currentDateTime)
         {
-            bool IsInTime = LimitHours.Instance.IsInRange(currentDateTime.TimeOfDay);
-            bool IsInCurrentDate = currentDateTime.Date == TimeManager.Instance.currentConnectionDateTime.Date;
-            bool IsInLastSessionDate = currentDateTime.Date == TimeManager.Instance.lastDisconnectionDateTime.Date;
+            bool IsInTime = SettingsManager.Instance.IsInRange(currentDateTime.TimeOfDay);
+            bool IsInCurrentDate = currentDateTime.Date == ConnectionManager.Instance.currentConnectionDateTime.Date;
+            bool IsInLastSessionDate = currentDateTime.Date == ConnectionManager.Instance.lastDisconnectionDateTime.Date;
 
             if (IsInLastSessionDate && IsInTime || IsInCurrentDate && IsInTime)
             {

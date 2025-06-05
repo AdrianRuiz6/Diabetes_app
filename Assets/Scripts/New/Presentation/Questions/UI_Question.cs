@@ -114,7 +114,7 @@ namespace Master.Presentation.Questions
             _answer3_TMP.SetText(currentQuestion.answer3);
             _advice_TMP.SetText(currentQuestion.advice);
 
-            Debug.Log("Pregunta número " + QuestionManager.Instance.currentQuestionIndex + ": " + currentQuestion.topic);
+            Debug.Log("Pregunta número " + QuestionManager.Instance._currentQuestionIndex + ": " + currentQuestion.topic);
         }
 
         private void ToggleAdvicePanel()

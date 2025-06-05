@@ -1,35 +1,35 @@
-
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Master.Domain.Score;
 
 namespace Master.Persistence.Score
 {
-    public static class DataStorage_Score
+    public class DataStorage_Score : IScoreRepository
     {
-        public static void SaveCurrentScore(int currentScore)
+        public void SaveCurrentScore(int currentScore)
         {
             PlayerPrefs.SetInt("CurrentScore", currentScore);
             PlayerPrefs.Save();
         }
 
-        public static int LoadCurrentScore()
+        public int LoadCurrentScore()
         {
             return PlayerPrefs.GetInt("CurrentScore", 0);
         }
 
-        public static void SaveHighestScore(int currentScore)
+        public void SaveHighestScore(int currentScore)
         {
             PlayerPrefs.SetInt("HigherScore", currentScore);
             PlayerPrefs.Save();
         }
 
-        public static int LoadHighestScore()
+        public int LoadHighestScore()
         {
             return PlayerPrefs.GetInt("HigherScore", 0);
         }
 
-        public static void SaveScoreInfo(List<ScoreLogData> infoList)
+        public void SaveScoreInfo(List<ScoreLogData> infoList)
         {
             string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
 
@@ -47,7 +47,7 @@ namespace Master.Persistence.Score
             }
         }
 
-        public static List<ScoreLogData> LoadScoreInfo()
+        public List<ScoreLogData> LoadScoreInfo()
         {
             string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
 

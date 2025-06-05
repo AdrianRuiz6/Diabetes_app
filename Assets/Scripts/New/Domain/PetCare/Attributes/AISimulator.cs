@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Master.Persistence;
-using Master.Domain.Time;
+using Master.Domain.Settings;
 using Master.Persistence.Connection;
 
 namespace Master.Domain.PetCare
@@ -57,7 +57,7 @@ namespace Master.Domain.PetCare
             DateTime lastIterationStartTime = DateTime.Now;
             if (DataStorage_Connection.LoadIsFirstUsage())
             {
-                DateTime currentCheckedTime = DateTime.Now.Date.AddHours(LimitHours.Instance.initialTime.Hours);
+                DateTime currentCheckedTime = DateTime.Now.Date.AddHours(SettingsManager.Instance.initialTime.Hours);
                 while (currentCheckedTime <= DateTime.Now)
                 {
                     currentCheckedTime = currentCheckedTime.AddSeconds(AttributeSchedule.Instance.UpdateInterval);
@@ -105,16 +105,16 @@ namespace Master.Domain.PetCare
 
                 // Se guardan las fechas en la lista de fechas y se ajustan al inicio del rango de tiempo si hace falta.
                 DateTime dateTimeToIntroduce = lastIterationStartTime;
-                bool isPreviousDateTimeToIntroduceInRange = LimitHours.Instance.IsInRange(dateTimeToIntroduce.TimeOfDay);
+                bool isPreviousDateTimeToIntroduceInRange = SettingsManager.Instance.IsInRange(dateTimeToIntroduce.TimeOfDay);
                 bool isCurrentDateTimeToIntroduceInRange = false;
                 for (int iterations = 0; iterations < _iterationsTotal; iterations++)
                 {
                     dateTimeToIntroduce = dateTimeToIntroduce.AddSeconds(_timeIterationAI);
-                    isCurrentDateTimeToIntroduceInRange = LimitHours.Instance.IsInRange(dateTimeToIntroduce.TimeOfDay);
+                    isCurrentDateTimeToIntroduceInRange = SettingsManager.Instance.IsInRange(dateTimeToIntroduce.TimeOfDay);
 
                     if (!isPreviousDateTimeToIntroduceInRange && isCurrentDateTimeToIntroduceInRange)
                     {
-                        dateTimeToIntroduce = dateTimeToIntroduce.Date.AddHours(LimitHours.Instance.initialTime.Hours);
+                        dateTimeToIntroduce = dateTimeToIntroduce.Date.AddHours(SettingsManager.Instance.initialTime.Hours);
                     }
                     _dateTimesQueue.Enqueue(dateTimeToIntroduce);
 

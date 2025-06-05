@@ -16,7 +16,7 @@ public class QuestionManager : MonoBehaviour
 
     public Dictionary<string, List<Question>> _allQuestions { get; private set; }
     private List<Question> _iterationQuestions;
-    public int currentQuestionIndex { get; private set; } = 0;
+    private int _currentQuestionIndex = 0;
     public int maxQuestionIndex { get; private set; } = 10;
 
     System.Random random = new System.Random();
@@ -38,9 +38,6 @@ public class QuestionManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        DataStorage_Questions.SaveCurrentQuestionIndex(currentQuestionIndex);
-        DataStorage_Questions.SaveIterationQuestions(_iterationQuestions);
-
         GameEvents_Questions.OnConfirmChangeQuestions -= InitializeQuestions;
     }
 
@@ -85,11 +82,11 @@ public class QuestionManager : MonoBehaviour
         _iterationQuestions = DataStorage_Questions.LoadIterationQuestions();
         if(DataStorage_Questions.LoadCurrentQuestionIndex() - 1 < 0)
         {
-            currentQuestionIndex = 0;
+            _currentQuestionIndex = 0;
         }
         else
         {
-            currentQuestionIndex = DataStorage_Questions.LoadCurrentQuestionIndex() - 1;
+            _currentQuestionIndex = DataStorage_Questions.LoadCurrentQuestionIndex() - 1;
         }
         
         if(_iterationQuestions.Count == 0)
@@ -280,10 +277,10 @@ public class QuestionManager : MonoBehaviour
 
     public Question NextQuestion()
     {
-        if (currentQuestionIndex < maxQuestionIndex)
+        if (_currentQuestionIndex < maxQuestionIndex)
         {
-            Question nextQuestion = _iterationQuestions[currentQuestionIndex];
-            currentQuestionIndex += 1;
+            Question nextQuestion = _iterationQuestions[_currentQuestionIndex];
+            SetCurrentQuestionIndex(_currentQuestionIndex + 1);
             return nextQuestion;
         }
         else
@@ -297,7 +294,7 @@ public class QuestionManager : MonoBehaviour
     {
         UserPerformanceManager.Instance.UpdatePerformance(_iterationQuestions);
         _iterationQuestions = new List<Question>();
-        currentQuestionIndex = 0;
+        SetCurrentQuestionIndex(0);
 
         GameEvents_Questions.OnExecuteQuestionSearch?.Invoke();
     }
@@ -310,14 +307,22 @@ public class QuestionManager : MonoBehaviour
         {
             question.RandomizeOrderAnswer();
         }
+
+        DataStorage_Questions.SaveIterationQuestions(_iterationQuestions);
     }
 
     public string GetCorrectAnswer()
     {
-        if(currentQuestionIndex - 1 == 0)
+        if(_currentQuestionIndex - 1 == 0)
         {
             return _iterationQuestions[0].correctAnswer;
         }
-        return _iterationQuestions[currentQuestionIndex - 1].correctAnswer;
+        return _iterationQuestions[_currentQuestionIndex - 1].correctAnswer;
+    }
+
+    public void SetCurrentQuestionIndex(int newCurrentQuestionIndex)
+    {
+        _currentQuestionIndex = newCurrentQuestionIndex;
+        DataStorage_Questions.SaveCurrentQuestionIndex(currentQuestionIndex);
     }
 }

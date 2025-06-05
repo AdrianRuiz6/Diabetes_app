@@ -3,6 +3,7 @@ using UnityEngine;
 using Master.Presentation.Animations;
 using Master.Persistence;
 using Master.Persistence.Connection;
+using Master.Domain.GameEvents;
 
 namespace Master.Presentation.Tutorial
 {
@@ -11,25 +12,23 @@ namespace Master.Presentation.Tutorial
         [SerializeField] private GameObject _Tutorial_Section;
         private List<GameObject> _pagesList;
 
+        private void Awake()
+        {
+            GameEvents_Tutorial.OnOpenTutorial += OpenTutorial;
+            GameEvents_Tutorial.OnCloseTutorial += CloseTutorial;
+        }
+
+        private void OnDestroy()
+        {
+            GameEvents_Tutorial.OnOpenTutorial -= OpenTutorial;
+            GameEvents_Tutorial.OnCloseTutorial -= CloseTutorial;
+        }
+
         void Start()
         {
             _pagesList = new List<GameObject>();
 
             GetAllPages();
-
-            if (DataStorage_Connection.LoadIsFirstUsage() == true)
-            {
-                OpenTutorial();
-            }
-            else
-            {
-                CloseTutorial();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            DataStorage_Connection.SaveIsFirstUsage();
         }
 
         private void GetAllPages()

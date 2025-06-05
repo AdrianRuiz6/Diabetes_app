@@ -83,14 +83,6 @@ namespace Master.Domain.PetCare
             GameEvents_PetCare.OnModifyGlycemia -= ModifyGlycemia;
             GameEvents_PetCare.OnModifyActivity -= ModifyActivity;
             GameEvents_PetCare.OnModifyHunger -= ModifyHunger;
-
-            Persistence.PetCare.DataStorage_PetCare.SaveGlycemia(glycemiaValue);
-            Persistence.PetCare.DataStorage_PetCare.SaveActivity(activityValue);
-            Persistence.PetCare.DataStorage_PetCare.SaveHunger(hungerValue);
-
-            Persistence.PetCare.DataStorage_PetCare.SaveLastTimeInsulinUsed(lastTimeInsulinUsed);
-            Persistence.PetCare.DataStorage_PetCare.SaveLastTimeExerciseUsed(lastTimeExerciseUsed);
-            Persistence.PetCare.DataStorage_PetCare.SaveLastTimeFoodUsed(lastTimeFoodUsed);
         }
 
         void Start()
@@ -195,6 +187,7 @@ namespace Master.Domain.PetCare
                 if (currentDateTime != null)
                 {
                     Persistence.PetCare.DataStorage_PetCare.SaveGlycemiaLog(currentDateTime, glycemiaValue);
+                    Persistence.PetCare.DataStorage_PetCare.SaveGlycemia(glycemiaValue);
                     GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Glycemia);
 
                     // Distribución de las recompensas
@@ -240,6 +233,7 @@ namespace Master.Domain.PetCare
                 if (currentDateTime != null)
                 {
                     Persistence.PetCare.DataStorage_PetCare.SaveActivityLog(currentDateTime, activityValue);
+                    Persistence.PetCare.DataStorage_PetCare.SaveActivity(activityValue);
                     GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Activity);
 
                     // Distribución de las recompensas
@@ -284,6 +278,7 @@ namespace Master.Domain.PetCare
                 if (currentDateTime != null)
                 {
                     Persistence.PetCare.DataStorage_PetCare.SaveHungerLog(currentDateTime, hungerValue);
+                    Persistence.PetCare.DataStorage_PetCare.SaveHunger(hungerValue);
                     GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Hunger);
 
                     // Distribución de las recompensas
@@ -340,6 +335,7 @@ namespace Master.Domain.PetCare
             }
 
             Persistence.PetCare.DataStorage_PetCare.SaveInsulinLog(DateTime.Now, informationGraph);
+            Persistence.PetCare.DataStorage_PetCare.SaveLastTimeInsulinUsed(lastTimeInsulinUsed);
             GameEvents_PetCareLog.OnUpdatedActionsLog?.Invoke();
 
             StartCoroutine(ActivateCDInsulin(timeCDActions));
@@ -381,6 +377,7 @@ namespace Master.Domain.PetCare
             // Se guarda la información para la gráfica.
             string informationGraph = $"{intensity}.";
             Persistence.PetCare.DataStorage_PetCare.SaveExerciseLog(DateTime.Now, informationGraph);
+            Persistence.PetCare.DataStorage_PetCare.SaveLastTimeExerciseUsed(lastTimeExerciseUsed);
             GameEvents_PetCareLog.OnUpdatedActionsLog?.Invoke();
 
             StartCoroutine(ActivateCDExercise(timeCDActions));
@@ -405,6 +402,7 @@ namespace Master.Domain.PetCare
             // Se guarda la información para la gráfica.
             string informationGraph = $"{ration} raciones de {food}.";
             Persistence.PetCare.DataStorage_PetCare.SaveFoodLog(DateTime.Now, informationGraph);
+            Persistence.PetCare.DataStorage_PetCare.SaveLastTimeFoodUsed(lastTimeFoodUsed);
             GameEvents_PetCareLog.OnUpdatedActionsLog?.Invoke();
 
             StartCoroutine(ActivateCDFood(timeCDActions));

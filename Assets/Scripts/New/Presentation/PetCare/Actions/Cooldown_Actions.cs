@@ -2,7 +2,7 @@ using Master.Domain.GameEvents;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Master.Domain.Time;
+using Master.Domain.Settings;
 using Master.Domain.PetCare;
 
 namespace Master.Presentation.PetCare
@@ -46,11 +46,11 @@ namespace Master.Presentation.PetCare
 
         void Update()
         {
-            if (_isInRange == false && LimitHours.Instance.IsInRange(DateTime.Now.TimeOfDay))
+            if (_isInRange == false && SettingsManager.Instance.IsInRange(DateTime.Now.TimeOfDay))
             {
                 EnableButton();
             }
-            else if (_isInRange == true && LimitHours.Instance.IsInRange(DateTime.Now.TimeOfDay) == false)
+            else if (_isInRange == true && SettingsManager.Instance.IsInRange(DateTime.Now.TimeOfDay) == false)
             {
                 DisableButton();
             }

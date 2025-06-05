@@ -68,10 +68,6 @@ namespace Master.Domain.Questions
                 FixedSizeQueue<string> specificTopicPerformance = GetTopicPerformance(question.topic);
                 specificTopicPerformance.Enqueue(question.resultAnswer);
             }
-        }
-
-        void OnDestroy()
-        {
             DataStorage_Questions.SaveUserPerformance(_userPerformance);
         }
     }

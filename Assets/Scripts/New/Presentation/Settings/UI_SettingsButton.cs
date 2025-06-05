@@ -12,8 +12,9 @@ using Master.Persistence;
 using Master.Persistence.Settings;
 using Master.Persistence.PetCare;
 using Master.Persistence.Questions;
+using Master.Domain.Settings;
 
-namespace Master.Presentation.General
+namespace Master.Presentation.Settings
 {
     public class UI_SettingsButton : MonoBehaviour
     {
@@ -22,10 +23,10 @@ namespace Master.Presentation.General
         [SerializeField] private Button _openSettingsButton;
         [SerializeField] private Button _closeSettingsButton;
 
-        [Header("Volume")]
+        [Header("Sound")]
         [SerializeField] private Slider _sliderSoundEffects;
 
-        [Header("Limit hours")]
+        [Header("Range hours")]
         [SerializeField] private Slider _sliderInitialHour;
         [SerializeField] private TMP_Text _initialHour_TMP;
         [SerializeField] private Slider _sliderFinishHour;
@@ -35,7 +36,7 @@ namespace Master.Presentation.General
         [SerializeField] private Button _closeWarningButton;
         [SerializeField] private Button _confirmWarningButton;
 
-        [Header("Change Quetions")]
+        [Header("Questions change")]
         [SerializeField] private GameObject _errorChangeQuestions_Window;
         [SerializeField] private GameObject _successChangeQuestions_Window;
         [SerializeField] private TMP_Text _errorChangeQuestions_TMP;
@@ -52,39 +53,56 @@ namespace Master.Presentation.General
 
         private void Awake()
         {
+            GameEvents_Settings.OnSoundEffectsInitialized += InitializeSoundEffect;
+
+            GameEvents_Settings.OnInitialTimeInitialized += InititializeInitialHour;
+            GameEvents_Settings.OnFinishTimeInitialized += InitializeFinishHour;
+
             GameEvents_Questions.OnFinalizedCreationQuestions += ShowSuccessChangingQuestionsDB;
         }
 
         private void OnDestroy()
         {
+            GameEvents_Settings.OnSoundEffectsInitialized -= InitializeSoundEffect;
+
+            GameEvents_Settings.OnInitialTimeInitialized -= InititializeInitialHour;
+            GameEvents_Settings.OnFinishTimeInitialized -= InitializeFinishHour;
+
             GameEvents_Questions.OnFinalizedCreationQuestions -= ShowSuccessChangingQuestionsDB;
         }
 
         void Start()
         {
+            // Configuración general.
             _warningWindow_Object.SetActive(false);
             _settingsPanel.SetActive(false);
+            
+            _openSettingsButton.onClick.AddListener(OpenSetting);
+            _closeSettingsButton.onClick.AddListener(CloseSetting);
+            _applySettingsButton.onClick.AddListener(ShowWarningChangeRangeTime);
+            _closeWarningButton.onClick.AddListener(CloseWarningChangeRangeTime);
+            _confirmWarningButton.onClick.AddListener(ConfirmChangeRangeTime);
 
-            // Configuración inicial del volumen.
+            // Configuración inicial del sonido.
             _sliderSoundEffects.wholeNumbers = false;
             _sliderSoundEffects.minValue = 0;
             _sliderSoundEffects.maxValue = 1;
-            _sliderSoundEffects.value = DataStorage_Settings.LoadSoundEffectsVolume(); ;
+            _sliderSoundEffects.value = 0;
             _sliderSoundEffects.onValueChanged.AddListener(ChangeSoundEffectsVolume);
 
             //Configuración inicial de la franja horaria.
             _sliderInitialHour.wholeNumbers = true;
             _sliderInitialHour.minValue = 0;
             _sliderInitialHour.maxValue = 23;
-            _sliderInitialHour.value = DataStorage_Settings.LoadInitialTime().Hours;
-            SetInitialHourTMP(DataStorage_Settings.LoadInitialTime().Hours);
+            _sliderInitialHour.value =0;
+            SetInitialHourTMP(0);
             _sliderInitialHour.onValueChanged.AddListener(ChangeInitialHour);
 
             _sliderFinishHour.wholeNumbers = true;
             _sliderFinishHour.minValue = 0;
             _sliderFinishHour.maxValue = 23;
-            _sliderFinishHour.value = DataStorage_Settings.LoadFinishTime().Hours;
-            SetFinishHourTMP(DataStorage_Settings.LoadFinishTime().Hours);
+            _sliderFinishHour.value = 0;
+            SetFinishHourTMP(0);
             _sliderFinishHour.onValueChanged.AddListener(ChangeFinishHour);
 
             _previousInitialHour = _sliderInitialHour.value;
@@ -98,13 +116,6 @@ namespace Master.Presentation.General
 
             //Configuración inicial Créditos
             CloseCredits();
-
-            // Configuración de los botones.
-            _openSettingsButton.onClick.AddListener(OpenSetting);
-            _closeSettingsButton.onClick.AddListener(CloseSetting);
-            _applySettingsButton.onClick.AddListener(ShowWarningChangeRangeTime);
-            _closeWarningButton.onClick.AddListener(CloseWarningChangeRangeTime);
-            _confirmWarningButton.onClick.AddListener(ConfirmChangeRangeTime);
         }
 
         void Update()
@@ -120,6 +131,7 @@ namespace Master.Presentation.General
             }
         }
 
+        #region Navigation
         private void OpenSetting()
         {
             _settingsPanel.SetActive(true);
@@ -132,10 +144,37 @@ namespace Master.Presentation.General
             CancelChangeRangeTime();
             Animation_PageSliding.Instance.ActivatePageSliding();
         }
+        #endregion
+
+        #region Sound
+        private void InitializeSoundEffect(float value)
+        {
+            _sliderSoundEffects.value = value;
+        }
 
         private void ChangeSoundEffectsVolume(float value)
         {
-            SoundManager.Instance.SetSoundEffectsVolume(value);
+            SettingsManager.SetSoundEffectsVolume(value);
+        }
+        #endregion
+
+        #region Range hours change
+        private void InititializeInitialHour(int hour)
+        {
+            _sliderInitialHour.value = hour;
+            SetInitialHourTMP(hour);
+
+            _previousInitialHour = _sliderInitialHour.value;
+            _currentInitialHour = _sliderInitialHour.value;
+        }
+
+        private void InitializeFinishHour(int hour)
+        {
+            _sliderFinishHour.value = hour;
+            SetFinishHourTMP(hour);
+
+            _previousFinishHour = _sliderFinishHour.value;
+            _currentFinishHour = _sliderFinishHour.value;
         }
 
         private void ChangeInitialHour(float hour)
@@ -186,42 +225,10 @@ namespace Master.Presentation.General
 
         private void ConfirmChangeRangeTime()
         {
-            GameEvents_Settings.OnInitialTimeModified?.Invoke((int)_currentInitialHour);
-            GameEvents_Settings.OnFinishTimeModified?.Invoke((int)_currentFinishHour);
+            SettingsManager.ConfirmChangeRangeTime();
 
             _previousInitialHour = _currentInitialHour;
             _previousFinishHour = _currentFinishHour;
-
-            // Reset score
-            ScoreManager.Instance.ResetScore();
-
-            // Reset attributes
-            AttributeManager.Instance.RestartGlycemia(DateTime.Now);
-            AttributeManager.Instance.RestartActivity(DateTime.Now);
-            AttributeManager.Instance.RestartHunger(DateTime.Now);
-
-            // Reset attributes record
-            DataStorage_PetCare.ResetActivityLog();
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Activity);
-            DataStorage_PetCare.ResetHungerLog();
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Hunger);
-            DataStorage_PetCare.ResetGlycemiaLog();
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Glycemia);
-
-            // Reset actions record
-            DataStorage_PetCare.ResetInsulinLog();
-            DataStorage_PetCare.ResetFoodLog();
-            DataStorage_PetCare.ResetExerciseLog();
-            GameEvents_PetCareLog.OnUpdatedActionsLog?.Invoke();
-
-            // Reset actions CD and effects
-            AttributeManager.Instance.DeactivateInsulinActionCD();
-            AttributeManager.Instance.DeactivateInsulinEffect();
-            AttributeManager.Instance.DeactivateExerciseActionCD();
-            AttributeManager.Instance.DeactivateExerciseEffect();
-            AttributeManager.Instance.DeactivateFoodActionCD();
-            AttributeManager.Instance.DeactivateFoodEffect();
-            GameEvents_PetCare.OnFinishTimerCD?.Invoke();
 
             CloseWarningChangeRangeTime();
         }
@@ -237,17 +244,9 @@ namespace Master.Presentation.General
             _currentInitialHour = _previousInitialHour;
             _currentFinishHour = _previousFinishHour;
         }
+        #endregion
 
-        public void OpenCredits()
-        {
-            _credits_Section.SetActive(true);
-        }
-
-        public void CloseCredits()
-        {
-            _credits_Section.SetActive(false);
-        }
-
+        #region Questions change
         // Se hacen las llamadas necesarias para saber si el archivo del enlace introducido es válido
         public void TryChangingQuestionsDB()
         {
@@ -319,7 +318,20 @@ namespace Master.Presentation.General
             // Se reinicia el rendimiento en las preguntas, la iteración de preguntas y el indice de la pregunta.
             DataStorage_Questions.ResetUserPerformance();
             DataStorage_Questions.ResetIterationQuestions();
-            DataStorage_Questions.ResetCurrentQuestionIndex();
+            DataStorage_Questions.SaveCurrentQuestionIndex(0);
         }
+        #endregion
+
+        #region Credits
+        public void OpenCredits()
+        {
+            _credits_Section.SetActive(true);
+        }
+
+        public void CloseCredits()
+        {
+            _credits_Section.SetActive(false);
+        }
+        #endregion
     }
 }

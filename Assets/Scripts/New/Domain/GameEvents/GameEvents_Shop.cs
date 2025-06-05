@@ -7,10 +7,10 @@ namespace Master.Domain.GameEvents
     {
         public static Action<int> OnTotalCoinsUpdated;
         public static Action<int> OnStashedCoinsUpdated;
+
+        public static Action<string> OnProductEquippedInitialized;
         public static Action<string> OnProductEquipped;
-        public static Action<string> OnProductBought;
-        public static Action<string> OnNotEnoughMoney;
-        public static Action<string> OnEnoughMoney;
+        public static Action<string> OnProductBoughtInitialized;
     }
 }
 

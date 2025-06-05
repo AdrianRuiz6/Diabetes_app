@@ -1,34 +1,42 @@
 using Master.Domain.GameEvents;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using Master.Domain.Shop;
+using Master.Presentation.Sound;
 
 namespace Master.Presentation.Shop
 {
     public class UI_Product : MonoBehaviour
     {
         [SerializeField] private string _productName;
+        [SerializeField] private int _sellingPrice;
+        private Product _product;
+
         [SerializeField] private GameObject _equippedIcon;
         [SerializeField] private GameObject _boughtIcon;
         [SerializeField] private Color _textColorNotEnoughMoney;
         [SerializeField] private GameObject _priceUI;
         [SerializeField] private TextMeshProUGUI _price_text;
 
-        private bool _isBought;
+        private Button _productButton;
 
         private void Awake()
         {
-            GameEvents_Shop.OnProductEquipped += OnProductEquipped;
-            GameEvents_Shop.OnProductBought += OnProductBought;
-            GameEvents_Shop.OnNotEnoughMoney += OnNotEnoughMoney;
-            GameEvents_Shop.OnEnoughMoney += OnEnoughMoney;
+            _product = new Product(_productName, _sellingPrice);
+
+            GameEvents_Shop.OnTotalCoinsUpdated += CheckIsItPurchasable;
+            GameEvents_Shop.OnProductEquippedInitialized += OnThisProductEquipped;
+            GameEvents_Shop.OnProductEquipped += OnOtherProductEquipped;
+            GameEvents_Shop.OnProductBoughtInitialized += InitializeProductBought;
         }
 
         void OnDestroy()
         {
-            GameEvents_Shop.OnProductEquipped -= OnProductEquipped;
-            GameEvents_Shop.OnProductBought -= OnProductBought;
-            GameEvents_Shop.OnNotEnoughMoney -= OnNotEnoughMoney;
-            GameEvents_Shop.OnEnoughMoney -= OnEnoughMoney;
+            GameEvents_Shop.OnTotalCoinsUpdated -= CheckIsItPurchasable;
+            GameEvents_Shop.OnProductEquippedInitialized -= OnThisProductEquipped;
+            GameEvents_Shop.OnProductEquipped -= OnOtherProductEquipped;
+            GameEvents_Shop.OnProductBoughtInitialized -= InitializeProductBought;
         }
 
         void Start()
@@ -37,54 +45,118 @@ namespace Master.Presentation.Shop
             _equippedIcon.SetActive(false);
             _boughtIcon.SetActive(false);
 
-            _isBought = false;
+            // Función cuando se pulsa el botón.
+            _productButton.onClick.AddListener(OnProductSelected);
+
+            CheckIsItPurchasable();
         }
 
-        private void OnProductEquipped(string productName)
+        private void CheckIsItPurchasable(int coins = 0)
         {
-            if (productName == _productName)
+            if (_product.IsItPurchasable())
             {
-                _priceUI.SetActive(false);
-                _boughtIcon.SetActive(false);
-                _isBought = true;
-
-                _equippedIcon.SetActive(true);
+                OnEnoughMoney();
             }
             else
             {
+                OnNotEnoughMoney();
+            }
+        }
+
+        private void OnOtherProductEquipped(string productName)
+        {
+            if (productName != _productName)
+            {
+                _priceUI.SetActive(false);
                 _equippedIcon.SetActive(false);
-                if (_isBought == true)
+                _boughtIcon.SetActive(false);
+                if (_product.productState == ProductState.Purchased)
                 {
-                    OnProductBought(_productName);
+                    _boughtIcon.SetActive(true);
+                    _product.OtherProductEquipped();
+                }
+                else
+                {
+                    _priceUI.SetActive(true);
                 }
             }
         }
 
-        private void OnProductBought(string productName)
+        private void OnThisProductEquipped(string productName = null)
+        {
+            if ((productName == null) || (productName == _productName))
+            {
+                _priceUI.SetActive(true);
+                _equippedIcon.SetActive(false);
+                _boughtIcon.SetActive(false);
+
+                _product.EquipProduct();
+                SoundManager.Instance.PlaySoundEffect("EquipProduct");
+            }
+        }
+
+        private void InitializeProductBought(string productName)
         {
             if (productName == _productName)
             {
                 _priceUI.SetActive(false);
                 _equippedIcon.SetActive(false);
-                _isBought = true;
-
                 _boughtIcon.SetActive(true);
             }
         }
 
-        private void OnNotEnoughMoney(string productName)
+        private void OnProductBought()
         {
-            if (productName == _productName)
-            {
-                _price_text.color = _textColorNotEnoughMoney;
-            }
+            _priceUI.SetActive(false);
+            _equippedIcon.SetActive(false);
+            _boughtIcon.SetActive(true);
+
+            _product.BuyProduct();
+            SoundManager.Instance.PlaySoundEffect("BuyProduct");
         }
 
-        private void OnEnoughMoney(string productName)
+        private void OnProductUnequipped()
         {
-            if (productName == _productName)
+            _priceUI.SetActive(false);
+            _equippedIcon.SetActive(false);
+            _boughtIcon.SetActive(true);
+
+            _product.UnequipProduct();
+            SoundManager.Instance.PlaySoundEffect("Interaction");
+        }
+
+        private void OnEnoughMoney()
+        {
+            _price_text.color = Color.white;
+        }
+
+        private void OnNotEnoughMoney()
+        {
+            _price_text.color = _textColorNotEnoughMoney;
+        }
+
+        void OnProductSelected()
+        {
+            switch (_product.productState)
             {
-                _price_text.color = Color.white;
+                case ProductState.NotPurchased:
+                    if (_product.IsItPurchasable())
+                    {
+                        UI_ConfirmationWindowShop.Instance.ShowConfirmationWindow(transform.Find("Product/Dog").gameObject, _sellingPrice.ToString(), OnProductBought);
+                    }
+                    else
+                    {
+                        SoundManager.Instance.PlaySoundEffect("CannotBuyProduct");
+                    }
+                    break;
+
+                case ProductState.Purchased:
+                    OnThisProductEquipped();
+                    break;
+
+                case ProductState.Equipped:
+                    OnProductUnequipped();
+                    break;
             }
         }
     }
