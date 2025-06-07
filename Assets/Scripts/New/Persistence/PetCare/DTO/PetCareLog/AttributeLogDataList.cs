@@ -7,6 +7,6 @@ namespace Master.Persistence.PetCare
     [System.Serializable]
     public class AttributeLogDataList
     {
-        public List<AttributeLogData> attributeList = new List<AttributeLogData>();
+        public List<AttributeLogData> attributeLogList = new List<AttributeLogData>();
     }
 }

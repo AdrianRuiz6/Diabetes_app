@@ -8,13 +8,11 @@ namespace Master.Persistence.Score
     {
         [SerializeField] private string time;
         [SerializeField] private string info;
-        [System.NonSerialized] public GameObject element;
 
-        public ScoreLogData(DateTime time, string info, GameObject element)
+        public ScoreLogData(DateTime time, string info)
         {
             this.time = time.ToString();
             this.info = info;
-            this.element = element;
         }
 
         public DateTime GetTime()
@@ -25,11 +23,6 @@ namespace Master.Persistence.Score
         public string GetInfo()
         {
             return info;
-        }
-
-        public GameObject GetElement()
-        {
-            return element;
         }
     }
 }

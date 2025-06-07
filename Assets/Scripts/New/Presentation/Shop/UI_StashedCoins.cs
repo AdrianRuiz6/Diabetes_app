@@ -29,6 +29,11 @@ namespace Master.Presentation.Shop
         {
             _stashedCoinsBtn = GetComponent<Button>();
             _stashedCoinsBtn.onClick.AddListener(OnStashedCoinsClicked);
+
+            if(EconomyManager.stashedCoins > 0)
+            {
+                _stashedCoinsObject.SetActive(coins > 0);
+            }
         }
 
         private void UpdateStashedCoins(int coins)

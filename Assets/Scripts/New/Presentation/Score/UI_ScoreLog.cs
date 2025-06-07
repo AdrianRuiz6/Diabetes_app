@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Master.Persistence;
 using Master.Persistence.Score;
 using Master.Domain.GameEvents;
 using Master.Persistence.Connection;
@@ -11,8 +10,9 @@ namespace Master.Presentation.Score
 {
     public class UI_ScoreLog : MonoBehaviour
     {
-        [SerializeField] private GameObject _logElement;
-        private List<ScoreLogData> _infoList;
+        [SerializeField] private GameObject _logElementGameObject;
+
+        private List<GameObject> _elementsList = new List<GameObject>();
 
         public static UI_ScoreLog Instance;
 
@@ -28,95 +28,53 @@ namespace Master.Presentation.Score
                 Destroy(gameObject);
             }
 
-            GameEvents_Score.OnResetScore += ClearElements;
-            GameEvents_Score.OnModifyCurrentScore += AddElement;
+            GameEvents_Score.OnResetScoreLog += ClearElements;
+            GameEvents_Score.OnAddScoreLog += AddElement;
         }
 
         void OnDestroy()
         {
-            DataStorage_Score.SaveScoreInfo(_infoList);
-
-            GameEvents_Score.OnResetScore -= ClearElements;
-            GameEvents_Score.OnModifyCurrentScore -= AddElement;
+            GameEvents_Score.OnResetScoreLog -= ClearElements;
+            GameEvents_Score.OnAddScoreLog -= AddElement;
         }
-
-        //void OnApplicationPause(bool pauseStatus)
-        //{
-        //    if (pauseStatus)
-        //    {
-        //        DataStorage.SaveScoreInfo(_infoList);
-
-        //        GameEventsScore.OnResetScore -= ClearElements;
-        //        GameEventsScore.OnModifyCurrentScore -= AddElement;
-        //    }
-        //}
 
         void Start()
         {
-            _infoList = new List<ScoreLogData>();
-
-            if (DataStorage_Connection.LoadDisconnectionDate().Date == DateTime.Now.Date)
+            if (ScoreLogManager.scoreLogList.Count > 0)
             {
                 InitializeElements();
-            }
-            else
-            {
-                ClearElements();
-            }
-        }
-
-        private void ClearElements()
-        {
-            foreach (ScoreLogData scoreData in _infoList)
-            {
-                Destroy(scoreData.element);
-            }
-
-            _infoList.Clear();
-            DataStorage_Score.SaveScoreInfo(_infoList);
-        }
-
-        public void AddElement(int addedScore, DateTime? time, string activity)
-        {
-            if (time.Value.Date == DateTime.Now.Date)
-            {
-                string sign = (addedScore >= 0) ? "+" : "";
-                string info = $"{sign}{addedScore} por {activity}.";
-
-                GameObject newElement = CreateLogElement(time.Value, info);
-                ScoreLogData newLogData = new ScoreLogData(time.Value, info, newElement);
-
-                // Se inserta el nuevo elemento en la posición correcta dentro de _infoList.
-                int index = _infoList.FindLastIndex(log => log.GetTime() <= time.Value) + 1;
-                if (index == -1)
-                {
-                    _infoList.Add(newLogData);
-                }
-                else
-                {
-                    _infoList.Insert(index, newLogData);
-                }
-
-                // Se inserta el nuevo elemento en la posición correcta en la jerarquía.
-                int siblingIndex = _infoList.Count - index - 1;
-                newElement.transform.SetSiblingIndex(siblingIndex);
-                DataStorage_Score.SaveScoreInfo(_infoList);
             }
         }
 
         private void InitializeElements()
         {
-            foreach (ScoreLogData scoreLog in DataStorage_Score.LoadScoreInfo())
+            foreach (ScoreLog scoreLog in ScoreLogManager.scoreLogList)
             {
-                GameObject newElement = CreateLogElement(scoreLog.GetTime(), scoreLog.GetInfo());
-                ScoreLogData newLogData = new ScoreLogData(scoreLog.GetTime(), scoreLog.GetInfo(), newElement);
-                _infoList.Add(newLogData);
+                int index = ScoreLogManager.scoreLogList.FindLastIndex(log => log.GetTime() <= time.Value) + 1;
+                int siblingIndex = ScoreLogManager.scoreLogList.Count - index - 1;
+
+                AddElement(scoreLog, siblingIndex);
             }
+        }
+
+        private void ClearElements()
+        {
+            foreach(GameObject element in _elementsList)
+            {
+                Destroy(element);
+            }
+        }
+
+        private void AddElement(ScoreLog newScoreLog, int siblingIndex)
+        {
+            GameObject newElement = CreateLogElement(newScoreLog.GetTime(), newScoreLog.GetInfo());
+            newElement.transform.SetSiblingIndex(siblingIndex);
+            _elementsList.Add(newElement);
         }
 
         private GameObject CreateLogElement(DateTime time, string info)
         {
-            GameObject newElement = Instantiate(_logElement);
+            GameObject newElement = Instantiate(_logElementGameObject);
             newElement.transform.SetParent(transform, false);
             newElement.transform.SetSiblingIndex(0);
 

@@ -1,12 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Master.Persistence;
 using Master.Domain.GameEvents;
-using Master.Persistence.Connection;
-using Master.Persistence.Score;
+using Master.Domain.Score;
 
 namespace Master.Presentation.Score
 {
@@ -16,44 +12,28 @@ namespace Master.Presentation.Score
 
         private void Awake()
         {
-            GameEvents_Score.OnResetScore += ModifyOnMidnight;
+            GameEvents_Score.OnResetScore += ResetCurrentScoreTMP;
             GameEvents_Score.OnModifyCurrentScore += ModifyCurrentScoreTMP;
         }
 
         private void OnDestroy()
         {
-            GameEvents_Score.OnResetScore -= ModifyOnMidnight;
+            GameEvents_Score.OnResetScore -= ResetCurrentScoreTMP;
             GameEvents_Score.OnModifyCurrentScore -= ModifyCurrentScoreTMP;
         }
 
         void Start()
         {
             _currentScore_TMP = GetComponent<TMP_Text>();
-
-            if (DataStorage_Connection.LoadDisconnectionDate().Date == DateTime.Now.Date)
-            {
-                _currentScore_TMP.text = DataStorage_Score.LoadCurrentScore().ToString();
-            }
-            else
-            {
-                _currentScore_TMP.text = 0.ToString();
-            }
-
+            ModifyCurrentScoreTMP(ScoreManager.currentScore);
         }
 
-        private void ModifyCurrentScoreTMP(int addedScore, DateTime? time, string info)
+        private void ModifyCurrentScoreTMP(int currentScore)
         {
-            if (int.Parse(_currentScore_TMP.text) + addedScore < 0)
-            {
-                _currentScore_TMP.text = 0.ToString();
-            }
-            else
-            {
-                _currentScore_TMP.text = (int.Parse(_currentScore_TMP.text) + addedScore).ToString();
-            }
+            _currentScore_TMP.text = currentScore.ToString();
         }
 
-        private void ModifyOnMidnight()
+        private void ResetCurrentScoreTMP()
         {
             _currentScore_TMP.text = 0.ToString();
         }

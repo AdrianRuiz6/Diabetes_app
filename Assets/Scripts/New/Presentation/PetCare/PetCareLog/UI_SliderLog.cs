@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Master.Persistence;
 using Master.Domain.GameEvents;
 using Master.Domain.Settings;
-using Master.Persistence.PetCare;
+using Master.Domain.PetCare.Log;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -22,10 +21,6 @@ namespace Master.Presentation.PetCare.Log
         private int _minHour = 0;
         private int _maxHour = 0;
 
-        private List<DateTime> _availableTimes = new List<DateTime>();
-        private Dictionary<DateTime, string> _insulinInfo = new Dictionary<DateTime, string>();
-        private Dictionary<DateTime, string> _exerciseInfo = new Dictionary<DateTime, string>();
-        private Dictionary<DateTime, string> _foodInfo = new Dictionary<DateTime, string>();
         private DateTime _currentDate = DateTime.Now;
 
         private void Awake()
@@ -33,9 +28,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_Settings.OnInitialTimeModified += ModifyInitialHour;
             GameEvents_Settings.OnFinishTimeModified += ModifyFinishHour;
 
-            GameEvents_PetCareLog.OnUpdatedActionsLog += LoadData;
-
-            GameEvents_PetCareLog.OnUpdatedDateLog += UpdateDate;
+            GameEvents_PetCareLog.OnUpdatedActionsLog += UpdateActionInfo;
+            GameEvents_PetCareLog.OnChangedDateFilter += UpdateDate;
         }
 
         private void OnDestroy()
@@ -43,9 +37,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
             GameEvents_Settings.OnFinishTimeModified -= ModifyFinishHour;
 
-            GameEvents_PetCareLog.OnUpdatedActionsLog -= LoadData;
-
-            GameEvents_PetCareLog.OnUpdatedDateLog -= UpdateDate;
+            GameEvents_PetCareLog.OnUpdatedActionsLog -= UpdateActionInfo;
+            GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDate;
         }
 
         void Start()
@@ -54,11 +47,13 @@ namespace Master.Presentation.PetCare.Log
             _slider.wholeNumbers = true;
 
             // Se establece el minimo y máximo de la franja horaria.
-            ModifyInitialHour(SettingsManager.Instance.initialTime.Hours);
-            ModifyFinishHour(SettingsManager.Instance.finishTime.Hours);
+            ModifyInitialHour(SettingsManager.initialTime.Hours);
+            ModifyFinishHour(SettingsManager.finishTime.Hours);
 
             // Iniciar datos fecha actual.
-            UpdateDate(DateTime.Now);
+            _currentDate = DateTime.Now;
+            _slider.SetValueWithoutNotify(0);
+            UpdateAdditionalInfo(0);
 
             _slider.onValueChanged.AddListener(ChangeValue);
         }
@@ -66,10 +61,14 @@ namespace Master.Presentation.PetCare.Log
         private void UpdateDate(DateTime newCurrentDate)
         {
             _currentDate = newCurrentDate;
-            LoadData();
 
             _slider.SetValueWithoutNotify(0);
             UpdateAdditionalInfo(0);
+        }
+
+        private void UpdateActionInfo()
+        {
+            UpdateAdditionalInfo((int)_slider.value);
         }
 
         // Se coloca en el valor disponible más cercano, escribe la fecha en el TMP correspondiente
@@ -88,15 +87,16 @@ namespace Master.Presentation.PetCare.Log
         // Ajusta el Slider al valor de _avalilableTimes de botón más cercano.
         private int FindCloseValueTo(int value)
         {
-            if (_availableTimes.Count <= 0)
+            List<DateTime> availableTimesThisDate = PetCareLogManager.GetActionsAvailableTimesThisDate(_currentDate);
+            if (availableTimesThisDate.Count <= 0)
             {
                 return 0;
             }
 
-            int closeValue = GetSliderValueAccordingTime(_availableTimes[0]);
+            int closeValue = GetSliderValueAccordingTime(availableTimesThisDate[0]);
             int minimumDistance = Mathf.Abs(value - closeValue);
 
-            foreach (DateTime newDate in _availableTimes)
+            foreach (DateTime newDate in availableTimesThisDate)
             {
                 int currentValue = GetSliderValueAccordingTime(newDate);
                 int currentDistance = Mathf.Abs(value - currentValue);
@@ -121,11 +121,11 @@ namespace Master.Presentation.PetCare.Log
             bool isExerciseInfoFound = false;
             bool isFoodInfoFound = false;
 
-            foreach (KeyValuePair<DateTime, String> kvp in _insulinInfo)
+            foreach (ActionLog insulinLog in PetCareLogManager.insulinLogList)
             {
-                if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+                if (currentTimeSlider.Hour == insulinLog.GetDateAndTime().Value.Hour && currentTimeSlider.Minute == insulinLog.GetDateAndTime().Value.Minute)
                 {
-                    _insulinInfo_TMP.text = kvp.Value.ToString();
+                    _insulinInfo_TMP.text = insulinLog.GetInformation();
                     isInsulinInfoFound = true;
                 }
             }
@@ -134,11 +134,11 @@ namespace Master.Presentation.PetCare.Log
                 _insulinInfo_TMP.text = "---";
             }
 
-            foreach (KeyValuePair<DateTime, String> kvp in _exerciseInfo)
+            foreach (ActionLog exerciseLog in PetCareLogManager.exerciseLogList)
             {
-                if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+                if (currentTimeSlider.Hour == exerciseLog.GetDateAndTime().Value.Hour && currentTimeSlider.Minute == exerciseLog.GetDateAndTime().Value.Minute)
                 {
-                    _exerciseInfo_TMP.text = kvp.Value.ToString();
+                    _exerciseInfo_TMP.text = exerciseLog.GetInformation();
                     isExerciseInfoFound = true;
                 }
             }
@@ -147,11 +147,11 @@ namespace Master.Presentation.PetCare.Log
                 _exerciseInfo_TMP.text = "---";
             }
 
-            foreach (KeyValuePair<DateTime, String> kvp in _foodInfo)
+            foreach (ActionLog foodLog in PetCareLogManager.foodLogList)
             {
-                if (currentTimeSlider.Hour == kvp.Key.Hour && currentTimeSlider.Minute == kvp.Key.Minute)
+                if (currentTimeSlider.Hour == foodLog.GetDateAndTime().Value.Hour && currentTimeSlider.Minute == foodLog.GetDateAndTime().Value.Minute)
                 {
-                    _foodInfo_TMP.text = kvp.Value.ToString();
+                    _foodInfo_TMP.text = foodLog.GetInformation();
                     isFoodInfoFound = true;
                 }
             }
@@ -195,40 +195,6 @@ namespace Master.Presentation.PetCare.Log
             DateTime minimumTime = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, _minHour, 0, 0);
             DateTime time = new DateTime(_currentDate.Year, _currentDate.Month, _currentDate.Day, minimumTime.Hour + additionalTime.Hour, additionalTime.Minute, 0);
             return time;
-        }
-
-        // Carga los datos de los botones y llena la lista de availableDates
-        private void LoadData()
-        {
-            _insulinInfo.Clear();
-            _exerciseInfo.Clear();
-            _foodInfo.Clear();
-            _availableTimes.Clear();
-
-            _insulinInfo = DataStorage_PetCare.LoadInsulinLog(_currentDate);
-            foreach (DateTime newDate in _insulinInfo.Keys)
-            {
-                if (!_availableTimes.Contains(newDate))
-                {
-                    _availableTimes.Add(newDate);
-                }
-            }
-            _exerciseInfo = DataStorage_PetCare.LoadExerciseLog(_currentDate);
-            foreach (DateTime newDate in _exerciseInfo.Keys)
-            {
-                if (!_availableTimes.Contains(newDate))
-                {
-                    _availableTimes.Add(newDate);
-                }
-            }
-            _foodInfo = DataStorage_PetCare.LoadFoodLog(_currentDate);
-            foreach (DateTime newDate in _foodInfo.Keys)
-            {
-                if (!_availableTimes.Contains(newDate))
-                {
-                    _availableTimes.Add(newDate);
-                }
-            }
         }
     }
 }

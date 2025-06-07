@@ -25,7 +25,7 @@ namespace Master.Presentation.PetCare.Log
         private void UpdateDate()
         {
             _date_TMP.text = $"{_currentDate.ToString("dd")} / {_currentDate.ToString("MM")} / {_currentDate.Year - 2000}";
-            GameEvents_PetCareLog.OnUpdatedDateLog?.Invoke(_currentDate);
+            GameEvents_PetCareLog.OnChangedDateFilter?.Invoke(_currentDate);
         }
 
         private void PreviousDate()

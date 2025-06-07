@@ -1,55 +1,49 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Master.Persistence;
 using Master.Domain.GameEvents;
 using Master.Persistence.Connection;
 using Master.Persistence.Score;
-using JetBrains.Annotations;
 
 namespace Master.Domain.Score
 {
-    public class ScoreManager : MonoBehaviour
+    public class ScoreManager
     {
-        public static ScoreManager Instance;
+        public int currentScore { private set; get; }
+        public int highestScore { private set; get; }
 
-        [SerializeField] private int _currentScore;
-        [SerializeField] private int _highestScore;
+        private readonly Action<IEnumerator> _coroutineRunner;
+        private DateTime _currentDate;
 
-        void Awake()
+        public ScoreManager(Action<IEnumerator> coroutineRunner)
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else if (Instance != this)
-            {
-                Destroy(gameObject);
-            }
+            _coroutineRunner = coroutineRunner;
+
+            highestScore = DataStorage_Score.LoadHighestScore();
+            currentScore = DataStorage_Score.LoadCurrentScore();
+            _currentDate = DataStorage_Connection.LoadDisconnectionDate().Date;
         }
 
-        private void Start()
+        public void Initialize()
         {
-            _highestScore = DataStorage_Score.LoadHighestScore();
-            _currentScore = DataStorage_Score.LoadCurrentScore();
-
-            if (DataStorage_Connection.LoadDisconnectionDate().Date < DateTime.Now.Date)
+            if (_currentDate < DateTime.Now.Date)
             {
                 CheckHighestScore();
-                SetCurrentScore(0);
             }
 
-            StartCoroutine(CheckScoreAtMidnight());
+            _coroutineRunner?.Invoke(CheckScoreAtMidnight());
         }
 
         private void CheckHighestScore()
         {
-            if (_currentScore > _highestScore)
+            _currentDate = DateTime.Now.Date;
+
+            if (currentScore > highestScore)
             {
-                SetHighestScore(_currentScore);
-                GameEvents_Score.OnModifyHighestScore?.Invoke(_highestScore);
+                SetHighestScore(currentScore);
             }
+
+            ResetScore();
         }
 
         private IEnumerator CheckScoreAtMidnight()
@@ -65,49 +59,54 @@ namespace Master.Domain.Score
                 }
 
                 CheckHighestScore();
-                SetCurrentScore(0);
-                GameEvents_Score.OnResetScore?.Invoke();
+
                 break;
             }
         }
 
-        public void AddScore(int score, DateTime? time, string activity)
+        public void AddScore(int addedScore)
         {
-            SetCurrentScore(_currentScore + score);
-            GameEvents_Score.OnModifyCurrentScore?.Invoke(score, time, activity);
+            SetCurrentScore(currentScore + addedScore);
         }
 
-        public void SubstractScore(int score, DateTime? time, string activity)
+        public void SubstractScore(int substractedScore)
         {
-            if (_currentScore - score < 0)
+            if (currentScore - substractedScore < 0)
             {
                 SetCurrentScore(0);
-                GameEvents_Score.OnModifyCurrentScore?.Invoke(-score, time, activity);
             }
             else
             {
-                SetCurrentScore(_currentScore - score);
-                GameEvents_Score.OnModifyCurrentScore?.Invoke(-score, time, activity);
+                SetCurrentScore(currentScore - substractedScore);
             }
         }
 
         public void ResetScore()
         {
-            GameEvents_Score.OnResetScore?.Invoke();
             SetCurrentScore(0);
+            GameEvents_Score.OnResetScore?.Invoke();
         }
 
         private void SetCurrentScore(int newCurrentScore)
         {
-            _currentScore = newCurrentScore;
-            DataStorage_Score.SaveCurrentScore(_currentScore);
-            
+            if (time != null && _currentDate < time.Value.Date)
+            {
+                CheckHighestScore();
+            }
+            else
+            {
+                int addedScore = newCurrentScore - currentScore;
+                currentScore = newCurrentScore;
+                DataStorage_Score.SaveCurrentScore(currentScore);
+                GameEvents_Score.OnModifyCurrentScore?.Invoke(currentScore);
+            }
         }
 
         private void SetHighestScore(int newHighestScore)
         {
-            _highestScore = newHighestScore;
-            DataStorage_Score.SaveHighestScore(_highestScore);
+            highestScore = newHighestScore;
+            DataStorage_Score.SaveHighestScore(highestScore);
+            GameEvents_Score.OnModifyHighestScore?.Invoke(highestScore);
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Master.Domain.Score
 
         public int LoadHighestScore();
 
-        public void SaveScoreInfo(List<ScoreLogData> infoList);
+        public void SaveScoreLog(List<ScoreLog> scoreLogList);
 
-        public List<ScoreLogData> LoadScoreInfo();
+        public List<ScoreLog> LoadScoreLog();
     }
 }

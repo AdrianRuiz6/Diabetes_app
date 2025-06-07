@@ -15,18 +15,15 @@ namespace Master.Domain.Settings
         public TimeSpan initialTime { get; private set; }
         public TimeSpan finishTime { get; private set; }
 
-        private float _soundEffectsVolume;
+        public float soundEffectsVolume { get; private set; }
 
         public SettingsManager()
         {
             initialTime = DataStorage_Settings.LoadInitialTime();
-            GameEvents_Settings.OnInitialTimeInitialized?.Invoke(initialTime.Hours);
 
             finishTime = DataStorage_Settings.LoadFinishTime();
-            GameEvents_Settings.OnFinishTimeInitialized?.Invoke(finishTime.Hours);
 
-            _soundEffectsVolume = DataStorage_Settings.LoadSoundEffectsVolume();
-            GameEvents_Settings.OnSoundEffectsInitialized?.Invoke(_soundEffectsVolume);
+            soundEffectsVolume = DataStorage_Settings.LoadSoundEffectsVolume();
         }
 
         public void SetInitialHour(int newHour)
@@ -57,9 +54,9 @@ namespace Master.Domain.Settings
 
         private void SetSoundEffectsVolume(float volume)
         {
-            _soundEffectsVolume = volume;
-            GameEvents_Settings.OnSoundEffectsModified?.Invoke(_soundEffectsVolume);
-            DataStorage_Settings.SaveSoundEffectsVolume(_soundEffectsVolume);
+            soundEffectsVolume = volume;
+            GameEvents_Settings.OnSoundEffectsModified?.Invoke(soundEffectsVolume);
+            DataStorage_Settings.SaveSoundEffectsVolume(soundEffectsVolume);
         }
 
         private void ConfirmChangeRangeTime(float currentInitialHour, float currentFinishHour)
@@ -77,11 +74,11 @@ namespace Master.Domain.Settings
 
             // Reset attributes record
             DataStorage_PetCare.ResetActivityLog();
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Activity);
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter?.Invoke(AttributeType.Activity);
             DataStorage_PetCare.ResetHungerLog();
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Hunger);
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter?.Invoke(AttributeType.Hunger);
             DataStorage_PetCare.ResetGlycemiaLog();
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Glycemia);
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter?.Invoke(AttributeType.Glycemia);
 
             // Reset actions record
             DataStorage_PetCare.ResetInsulinLog();

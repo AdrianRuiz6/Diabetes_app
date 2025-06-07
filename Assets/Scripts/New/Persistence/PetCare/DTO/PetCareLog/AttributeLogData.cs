@@ -8,13 +8,23 @@ namespace Master.Persistence.PetCare
     [System.Serializable]
     public class AttributeLogData
     {
-        public string DateAndTime;
-        public int Value;
+        [SerializeField] private string _dateAndTime;
+        [SerializeField] private int _value;
 
         public AttributeLogData(DateTime? dateTime, int value)
         {
-            this.DateAndTime = dateTime.ToString();
-            this.Value = value;
+            this._dateAndTime = dateTime.ToString();
+            this._value = value;
+        }
+
+        public DateTime? GetDateAndTime()
+        {
+            return DateTime.Parse(_dateAndTime);
+        }
+
+        public int GetValue()
+        {
+            return _value;
         }
     }
 }

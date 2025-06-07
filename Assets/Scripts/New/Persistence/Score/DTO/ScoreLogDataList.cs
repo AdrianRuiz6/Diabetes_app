@@ -5,6 +5,6 @@ namespace Master.Persistence.Score
     [System.Serializable]
     public class ScoreLogDataList
     {
-        public List<ScoreLogData> score = new List<ScoreLogData>();
+        public List<ScoreLogData> scoreLogDataList = new List<ScoreLogData>();
     }
 }

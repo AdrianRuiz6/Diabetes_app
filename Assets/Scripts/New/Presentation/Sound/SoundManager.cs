@@ -3,6 +3,7 @@ using UnityEngine;
 using Master.Persistence;
 using Master.Persistence.Settings;
 using Master.Domain.GameEvents;
+using Master.Domain.Settings;
 
 namespace Master.Presentation.Sound
 {
@@ -44,6 +45,7 @@ namespace Master.Presentation.Sound
                 _soundEffectsDictionary[sound.name] = sound.clip;
             }
 
+            _soundEffectsAudioSource.volume = SettingsManager.soundEffectsVolume;
         }
 
         public void PlaySoundEffect(string soundName)

@@ -4,6 +4,7 @@ using Master.Presentation.Animations;
 using Master.Persistence;
 using Master.Persistence.Connection;
 using Master.Domain.GameEvents;
+using Master.Domain.Connection;
 
 namespace Master.Presentation.Tutorial
 {
@@ -27,8 +28,17 @@ namespace Master.Presentation.Tutorial
         void Start()
         {
             _pagesList = new List<GameObject>();
-
             GetAllPages();
+
+            if (ConnectionManager.isFirstUsage == true)
+            {
+                OpenTutorial();
+                ConnectionManager.SetIsFirstUsage(false);
+            }
+            else
+            {
+                CloseTutorial();
+            }
         }
 
         private void GetAllPages()

@@ -7,48 +7,37 @@ namespace Master.Domain.PetCare
     {
         #region Log
 
-        #region ButtonLog
-        public void SaveInsulinLog(DateTime? dateTime, string information);
+        #region ActionsLog
+        public void SaveInsulinLog(List<ActionLog> insulinLogList);
 
-        public Dictionary<DateTime, string> LoadInsulinLog(DateTime? requestedDate);
+        public List<ActionLog> LoadInsulinLog();
 
-        public void SaveFoodLog(DateTime? dateTime, string information);
+        public void SaveFoodLog(List<ActionLog> foodLogList);
 
-        public Dictionary<DateTime, string> LoadFoodLog(DateTime? requestedDate);
+        public List<ActionLog> LoadFoodLog();
 
-        public void SaveExerciseLog(DateTime? dateTime, string information);
+        public void SaveExerciseLog(List<ActionLog> exerciseLogList);
 
-        public Dictionary<DateTime, string> LoadExerciseLog(DateTime? requestedDate);
+        public List<ActionLog> LoadExerciseLog();
 
-        public void ResetInsulinLog();
-
-        public void ResetFoodLog();
-
-        public void ResetExerciseLog();
         #endregion
 
         #region AttributeLog
-        public void SaveGlycemiaLog(DateTime? dateTime, int number);
+        public void SaveGlycemiaLog(List<AttributeLog> glycemiaLogList);
 
-        public void ResetGlycemiaLog();
+        public List<AttributeLog> LoadGlycemiaLog();
 
-        public Dictionary<DateTime, int> LoadGlycemiaLog(DateTime? requestedDate);
+        public void SaveHungerLog(List<AttributeLog> hungerLogList);
 
-        public void SaveHungerLog(DateTime? dateTime, int number);
+        public List<AttributeLog> LoadHungerLog();
 
-        public void ResetHungerLog();
+        public void SaveActivityLog(List<AttributeLog> activityLogList);
 
-        public Dictionary<DateTime, int> LoadHungerLog(DateTime? requestedDate);
-
-        public void SaveActivityLog(DateTime? dateTime, int number);
-
-        public void ResetActivityLog();
-
-        public Dictionary<DateTime, int> LoadActivityLog(DateTime? requestedDate);
+        public List<AttributeLog> LoadActivityLog();
         #endregion
         #endregion
 
-        #region Buttons
+        #region Actions
         public void SaveLastTimeInsulinUsed(DateTime? lastTimeInsulinUsed);
 
         public DateTime? LoadLastTimeInsulinUsed();

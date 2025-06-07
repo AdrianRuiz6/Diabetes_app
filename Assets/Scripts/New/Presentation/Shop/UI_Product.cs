@@ -23,43 +23,54 @@ namespace Master.Presentation.Shop
 
         private void Awake()
         {
-            _product = new Product(_productName, _sellingPrice);
-
             GameEvents_Shop.OnTotalCoinsUpdated += CheckIsItPurchasable;
-            GameEvents_Shop.OnProductEquippedInitialized += OnThisProductEquipped;
             GameEvents_Shop.OnProductEquipped += OnOtherProductEquipped;
-            GameEvents_Shop.OnProductBoughtInitialized += InitializeProductBought;
         }
 
         void OnDestroy()
         {
             GameEvents_Shop.OnTotalCoinsUpdated -= CheckIsItPurchasable;
-            GameEvents_Shop.OnProductEquippedInitialized -= OnThisProductEquipped;
             GameEvents_Shop.OnProductEquipped -= OnOtherProductEquipped;
-            GameEvents_Shop.OnProductBoughtInitialized -= InitializeProductBought;
         }
 
         void Start()
         {
-            _priceUI.SetActive(true);
+            _product = new Product(_productName, _sellingPrice);
+
+            _priceUI.SetActive(false);
             _equippedIcon.SetActive(false);
             _boughtIcon.SetActive(false);
 
+            switch (_product.productState)
+            {
+                case ProductState.NotPurchased:
+                    _priceUI.SetActive(true);
+                    CheckIsItPurchasable();
+                    break;
+                case ProductState.Purchased:
+                    _boughtIcon.SetActive(true);
+                    break;
+                case ProductState.Equipped:
+                    _equippedIcon.SetActive(true);
+                    break;
+            }
+
             // Función cuando se pulsa el botón.
             _productButton.onClick.AddListener(OnProductSelected);
-
-            CheckIsItPurchasable();
         }
 
         private void CheckIsItPurchasable(int coins = 0)
         {
-            if (_product.IsItPurchasable())
+            if (_product.productState == ProductState.NotPurchased)
             {
-                OnEnoughMoney();
-            }
-            else
-            {
-                OnNotEnoughMoney();
+                if (_product.IsItPurchasable())
+                {
+                    OnEnoughMoney();
+                }
+                else
+                {
+                    OnNotEnoughMoney();
+                }
             }
         }
 
@@ -92,16 +103,6 @@ namespace Master.Presentation.Shop
 
                 _product.EquipProduct();
                 SoundManager.Instance.PlaySoundEffect("EquipProduct");
-            }
-        }
-
-        private void InitializeProductBought(string productName)
-        {
-            if (productName == _productName)
-            {
-                _priceUI.SetActive(false);
-                _equippedIcon.SetActive(false);
-                _boughtIcon.SetActive(true);
             }
         }
 

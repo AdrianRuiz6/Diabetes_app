@@ -1,4 +1,5 @@
 using Master.Domain.GameEvents;
+using Master.Domain.Shop;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -19,6 +20,11 @@ namespace Master.Presentation.Shop
         void OnDestroy()
         {
             GameEvents_Shop.OnTotalCoinsUpdated -= OnCoinsUpdated;
+        }
+
+        private void Start()
+        {
+            OnCoinsUpdated(EconomyManager.totalCoins);
         }
 
         private void OnCoinsUpdated(int coins)

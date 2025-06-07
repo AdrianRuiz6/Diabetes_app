@@ -53,21 +53,11 @@ namespace Master.Presentation.Settings
 
         private void Awake()
         {
-            GameEvents_Settings.OnSoundEffectsInitialized += InitializeSoundEffect;
-
-            GameEvents_Settings.OnInitialTimeInitialized += InititializeInitialHour;
-            GameEvents_Settings.OnFinishTimeInitialized += InitializeFinishHour;
-
             GameEvents_Questions.OnFinalizedCreationQuestions += ShowSuccessChangingQuestionsDB;
         }
 
         private void OnDestroy()
         {
-            GameEvents_Settings.OnSoundEffectsInitialized -= InitializeSoundEffect;
-
-            GameEvents_Settings.OnInitialTimeInitialized -= InititializeInitialHour;
-            GameEvents_Settings.OnFinishTimeInitialized -= InitializeFinishHour;
-
             GameEvents_Questions.OnFinalizedCreationQuestions -= ShowSuccessChangingQuestionsDB;
         }
 
@@ -89,6 +79,7 @@ namespace Master.Presentation.Settings
             _sliderSoundEffects.maxValue = 1;
             _sliderSoundEffects.value = 0;
             _sliderSoundEffects.onValueChanged.AddListener(ChangeSoundEffectsVolume);
+            InitializeSoundEffect(SettingsManager.soundEffectsVolume);
 
             //Configuración inicial de la franja horaria.
             _sliderInitialHour.wholeNumbers = true;
@@ -105,10 +96,8 @@ namespace Master.Presentation.Settings
             SetFinishHourTMP(0);
             _sliderFinishHour.onValueChanged.AddListener(ChangeFinishHour);
 
-            _previousInitialHour = _sliderInitialHour.value;
-            _currentInitialHour = _sliderInitialHour.value;
-            _previousFinishHour = _sliderFinishHour.value;
-            _currentFinishHour = _sliderFinishHour.value;
+            InititializeInitialHour(SettingsManager.initialTime.Hours);
+            InitializeFinishHour(SettingsManager.finishTime.Hours);
 
             //Configuración inicial Preguntas
             _successChangeQuestions_Window.SetActive(false);

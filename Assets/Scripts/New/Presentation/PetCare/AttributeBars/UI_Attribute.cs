@@ -8,16 +8,6 @@ using Master.Domain.PetCare;
 
 namespace Master.Presentation.PetCare
 {
-    public enum AttributeType
-    {
-        Glycemia,
-        Activity,
-        Hunger
-    }
-}
-
-namespace Master.Presentation.PetCare
-{
     public class UI_Attribute : MonoBehaviour
     {
         [SerializeField] private AttributeType _attributeType;

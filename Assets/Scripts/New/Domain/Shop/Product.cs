@@ -19,15 +19,6 @@ namespace Master.Domain.Shop
             _sellingPrice = price;
 
             productState = LoadThisProductState();
-
-            if (productState == ProductState.Equipped)
-            {
-                GameEvents_Shop.OnProductEquippedInitialized?.Invoke(_productName);
-            }
-            else if (productState == ProductState.Purchased)
-            {
-                GameEvents_Shop.OnProductBoughtInitialized?.Invoke(_productName);
-            }
         }
 
         public void BuyProduct()
@@ -60,7 +51,7 @@ namespace Master.Domain.Shop
 
         public bool IsItPurchasable()
         {
-            return EconomyManager.GetTotalCoins() >= _sellingPrice;
+            return EconomyManager.totalCoins >= _sellingPrice;
         }
 
         private ProductState LoadThisProductState()

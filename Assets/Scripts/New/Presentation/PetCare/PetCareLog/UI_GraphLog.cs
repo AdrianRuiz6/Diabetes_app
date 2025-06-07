@@ -3,25 +3,14 @@
 // Modificado para ajustarse a las necesidades del proyecto
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Master.Persistence;
 using Master.Domain.GameEvents;
 using Master.Domain.Settings;
-using Master.Persistence.PetCare;
-
-namespace Master.Presentation.PetCare.Log
-{
-    public enum GraphFilter
-    {
-        Glycemia,
-        Activity,
-        Hunger
-    }
-}
+using Master.Domain.PetCare.Log;
+using Master.Domain.PetCare;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -32,10 +21,10 @@ namespace Master.Presentation.PetCare.Log
 
         private int _minHour = 0;
         private int _maxHour = 0;
-        private Dictionary<DateTime, int> _currentInfo = new Dictionary<DateTime, int>();
         private DateTime _currentDate = DateTime.Now;
 
-        private GraphFilter _currentFilter;
+        private List<AttributeLog> _currentAttributeLog = new List<AttributeLog>();
+        private AttributeType _currentFilter;
         private GameObject _graphElements;
         private Color _lineColor;
         private List<GameObject> _x_labels;
@@ -50,9 +39,11 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_Settings.OnInitialTimeModified += ModifyInitialHour;
             GameEvents_Settings.OnFinishTimeModified += ModifyFinishHour;
 
-            GameEvents_PetCareLog.OnUpdatedAttributeLog += SetFilter;
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter += UpdateAttributeFilter;
+            GameEvents_PetCareLog.OnChangedDateFilter += UpdateDateFilter;
 
-            GameEvents_PetCareLog.OnUpdatedDateLog += UpdateDate;
+            GameEvents_PetCareLog.OnUpdatedAttributesLog += UpdateAttributeLog;
+            
         }
 
         private void OnDestroy()
@@ -60,9 +51,10 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
             GameEvents_Settings.OnFinishTimeModified -= ModifyFinishHour;
 
-            GameEvents_PetCareLog.OnUpdatedAttributeLog -= SetFilter;
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter -= UpdateAttributeFilter;
+            GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
 
-            GameEvents_PetCareLog.OnUpdatedDateLog -= UpdateDate;
+            GameEvents_PetCareLog.OnUpdatedAttributesLog -= UpdateAttributeLog;
         }
 
         private void Start()
@@ -74,14 +66,16 @@ namespace Master.Presentation.PetCare.Log
             _graphElements.transform.SetParent(_graphContainer, false);
 
             // Iniciar datos fecha actual.
-            _currentFilter = GraphFilter.Glycemia;
+            _currentFilter = AttributeType.Glycemia;
 
             // Se establece el minimo y máximo de la franja horaria.
-            ModifyInitialHour(SettingsManager.Instance.initialTime.Hours);
-            ModifyFinishHour(SettingsManager.Instance.finishTime.Hours);
+            ModifyInitialHour(SettingsManager.initialTime.Hours);
+            ModifyFinishHour(SettingsManager.finishTime.Hours);
+
+            PlotCurrentGraph();
         }
 
-        private void UpdateDate(DateTime newCurrentDate)
+        private void UpdateDateFilter(DateTime newCurrentDate)
         {
             _currentDate = newCurrentDate;
             if (_graphElements.transform.childCount > 0)
@@ -91,12 +85,10 @@ namespace Master.Presentation.PetCare.Log
                     Destroy(child.gameObject);
                 }
             }
-            LoadData();
-            ShowGraph();
-            PlotDataPoints();
+            PlotCurrentGraph();
         }
 
-        private void SetFilter(GraphFilter attribute)
+        private void UpdateAttributeFilter(AttributeType attribute)
         {
             _currentFilter = attribute;
             if (_graphElements.transform.childCount > 0)
@@ -106,27 +98,39 @@ namespace Master.Presentation.PetCare.Log
                     Destroy(child.gameObject);
                 }
             }
+            PlotCurrentGraph();
+        }
+
+        private void UpdateAttributeLog(AttributeType attributeType)
+        {
+            if(_currentDate.Date == DateTime.Now.Date && _currentFilter == attributeType)
+            {
+                PlotCurrentGraph();
+            }
+        }
+
+        private void PlotCurrentGraph()
+        {
             LoadData();
-            ShowGraph();
-            PlotDataPoints();
+            PlotGraph();
         }
 
         private void LoadData()
         {
-            _currentInfo.Clear();
+            _currentAttributeLog.Clear();
 
             switch (_currentFilter)
             {
-                case GraphFilter.Glycemia:
-                    _currentInfo = DataStorage_PetCare.LoadGlycemiaLog(_currentDate);
+                case AttributeType.Glycemia:
+                    _currentAttributeLog = PetCareLogManager.glycemiaLogList;
                     _lineColor = Color.red;
                     break;
-                case GraphFilter.Activity:
-                    _currentInfo = DataStorage_PetCare.LoadActivityLog(_currentDate);
+                case AttributeType.Activity:
+                    _currentAttributeLog = PetCareLogManager.activityLogList;
                     _lineColor = Color.yellow;
                     break;
-                case GraphFilter.Hunger:
-                    _currentInfo = DataStorage_PetCare.LoadHungerLog(_currentDate);
+                case AttributeType.Hunger:
+                    _currentAttributeLog = PetCareLogManager.hungerLogList;
                     _lineColor = Color.green;
                     break;
             }
@@ -148,7 +152,7 @@ namespace Master.Presentation.PetCare.Log
             return gameObjectCircle;
         }
 
-        private void ShowGraph()
+        private void PlotGraph()
         {
             int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
             int numSeparations = maxHourAux + 1 - _minHour + 1;
@@ -208,7 +212,7 @@ namespace Master.Presentation.PetCare.Log
             }
 
             // Configuración eje vertical
-            float yMaximum = _currentFilter == GraphFilter.Glycemia ? 250f : 100f; // Valor máximo en el eje vertical.
+            float yMaximum = _currentFilter == AttributeType.Glycemia ? 250f : 100f; // Valor máximo en el eje vertical.
             int separatorCount = 10; // Cantidad de valores que se van a representar en el eje.
             for (int i = 0; i <= separatorCount; i++)
             {
@@ -233,13 +237,14 @@ namespace Master.Presentation.PetCare.Log
             }
 
             SetFontSize();
+            PlotDataPoints();
         }
 
         private void PlotDataPoints()
         {
             float graphHeight = _graphContainer.sizeDelta.y;
             float graphWidth = _graphContainer.sizeDelta.x;
-            float yMaximum = _currentFilter == GraphFilter.Glycemia ? 250f : 100f;
+            float yMaximum = _currentFilter == AttributeType.Glycemia ? 250f : 100f;
 
             // Ajustar el rango de horas si cruza la medianoche.
             int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
@@ -247,10 +252,10 @@ namespace Master.Presentation.PetCare.Log
 
             GameObject lastGameObjectCircle = null;
 
-            foreach (var dataPoint in _currentInfo)
+            foreach (AttributeLog dataPoint in _currentAttributeLog)
             {
                 // Hora y minutos del punto actual.
-                DateTime time = dataPoint.Key;
+                DateTime time = dataPoint.GetDateAndTime().Value;
                 int currentHour = time.Hour;
                 int currentMinute = time.Minute;
 
@@ -261,14 +266,14 @@ namespace Master.Presentation.PetCare.Log
                 }
 
                 // Se calcula el tiempo en formato decimal
-                int limitMinutes = (currentHour == SettingsManager.Instance.finishTime.Hours) ? 59 : 60;
+                int limitMinutes = (currentHour == SettingsManager.finishTime.Hours) ? 59 : 60;
                 float currentTimeDecimal = currentHour + (currentMinute / (float)limitMinutes);
 
                 // Se calcula la posición en el eje horizontal basada en el tiempo decimal.
                 float xPosition = ((currentTimeDecimal - _minHour) / (numSeparations - 1)) * graphWidth;
 
                 // Se calcula la posición en el eje vertical basada en el valor.
-                float yPosition = (dataPoint.Value / yMaximum) * graphHeight;
+                float yPosition = (dataPoint.GetValue() / yMaximum) * graphHeight;
 
                 // Se calcula el círculo anterior con el nuevo
                 GameObject currentGameObjectCircle = CreateCircle(new Vector2(xPosition, yPosition));
@@ -310,13 +315,13 @@ namespace Master.Presentation.PetCare.Log
         private void ModifyInitialHour(int hour)
         {
             _minHour = hour;
-            UpdateDate(DateTime.Now);
+            UpdateDateFilter(DateTime.Now);
         }
 
         private void ModifyFinishHour(int hour)
         {
             _maxHour = hour;
-            UpdateDate(DateTime.Now);
+            UpdateDateFilter(DateTime.Now);
         }
 
         private void SetFontSize()

@@ -29,14 +29,14 @@ namespace Master.Persistence.Score
             return PlayerPrefs.GetInt("HigherScore", 0);
         }
 
-        public void SaveScoreInfo(List<ScoreLogData> infoList)
+        public void SaveScoreLog(List<ScoreLog> scoreLogList)
         {
             string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
 
             ScoreLogDataList allScoreElements = new ScoreLogDataList();
-            foreach (ScoreLogData scoreData in infoList)
+            foreach (ScoreLog scoreLog in scoreLogList)
             {
-                allScoreElements.score.Add(scoreData);
+                allScoreElements.scoreLogDataList.Add(new ScoreLogData(scoreLog.GetTime(), scoreLog.GetInfo()));
             }
 
             string json = JsonUtility.ToJson(allScoreElements, true);
@@ -47,12 +47,13 @@ namespace Master.Persistence.Score
             }
         }
 
-        public List<ScoreLogData> LoadScoreInfo()
+        public List<ScoreLog> LoadScoreLog()
         {
             string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
+            List<ScoreLog> result = new List<ScoreLog>();
 
             if (!File.Exists(path))
-                return new List<ScoreLogData>();
+                return result;
 
             string existingJson = null;
 
@@ -62,8 +63,12 @@ namespace Master.Persistence.Score
             }
 
             ScoreLogDataList allScoreElements = JsonUtility.FromJson<ScoreLogDataList>(existingJson);
+            foreach (ScoreLogData scoreLogData in allScoreElements.scoreLogDataList)
+            {
+                result.Add(new ScoreLog(scoreLogData.GetTime(), scoreLogData.GetInfo()));
+            }
 
-            return allScoreElements.score;
+            return result;
         }
     }
 }

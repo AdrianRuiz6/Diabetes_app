@@ -5,60 +5,50 @@ namespace Master.Domain.Shop
 {
     public class EconomyManager
     {
-        private int _totalCoins;
-        private int _stashedCoins;
+        public int totalCoins { get; private set; }
+        public int stashedCoins { get; private set; }
 
         public EconomyManager()
         {
-            _stashedCoins = DataStorage_Shop.LoadStashedCoins();
-            GameEvents_Shop.OnStashedCoinsUpdated?.Invoke(_stashedCoins);
-
-            _totalCoins = DataStorage_Shop.LoadTotalCoins();
-            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(_totalCoins);
-
-            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+            stashedCoins = DataStorage_Shop.LoadStashedCoins();
+            totalCoins = DataStorage_Shop.LoadTotalCoins();
         }
 
         public void AddStashedCoins(int coins)
         {
-            SetStashedCoins(_stashedCoins + coins);
-            GameEvents_Shop.OnStashedCoinsUpdated?.Invoke(_stashedCoins);
+            SetStashedCoins(stashedCoins + coins);
+            GameEvents_Shop.OnStashedCoinsUpdated?.Invoke(stashedCoins);
         }
 
         public void StashedCoinsToTotalCoins()
         {
-            SetTotalCoins(_totalCoins + _stashedCoins);
+            SetTotalCoins(totalCoins + stashedCoins);
             SetStashedCoins(0);
-            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(totalCoins);
         }
 
         public void AddTotalCoins(int coins)
         {
-            SetTotalCoins(_totalCoins + coins);
-            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(_totalCoins);
+            SetTotalCoins(totalCoins + coins);
+            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(totalCoins);
         }
 
         public void SubstractTotalCoins(int coins)
         {
-            SetTotalCoins(_totalCoins - coins);
-            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(_totalCoins);
-        }
-
-        public int GetTotalCoins()
-        {
-            return _totalCoins;
+            SetTotalCoins(totalCoins - coins);
+            GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(totalCoins);
         }
 
         private void SetTotalCoins(int newTotalCoins)
         {
-            _totalCoins = newTotalCoins;
-            DataStorage_Shop.SaveTotalCoins(_totalCoins);
+            totalCoins = newTotalCoins;
+            DataStorage_Shop.SaveTotalCoins(totalCoins);
         }
 
         private void SetStashedCoins(int newStashedCoins)
         {
-            _stashedCoins = newStashedCoins;
-            DataStorage_Shop.SaveStashedCoins(_stashedCoins);
+            stashedCoins = newStashedCoins;
+            DataStorage_Shop.SaveStashedCoins(stashedCoins);
         }
     }
 }

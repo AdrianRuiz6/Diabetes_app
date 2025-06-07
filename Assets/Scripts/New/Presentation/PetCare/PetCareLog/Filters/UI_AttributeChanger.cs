@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.GameEvents;
@@ -14,8 +11,6 @@ namespace Master.Presentation.PetCare.Log
         [SerializeField] private Button _activityButton;
         [SerializeField] private Button _hungerButton;
 
-        private DateTime _currentDate = DateTime.Now.Date;
-
         void Start()
         {
             _glycemiaButton.onClick.AddListener(UpdateGlycemia);
@@ -25,15 +20,15 @@ namespace Master.Presentation.PetCare.Log
 
         private void UpdateGlycemia()
         {
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Glycemia);
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter?.Invoke(AttributeType.Glycemia);
         }
         private void UpdateActivity()
         {
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Activity);
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter?.Invoke(AttributeType.Activity);
         }
         private void UpdateHunger()
         {
-            GameEvents_PetCareLog.OnUpdatedAttributeLog?.Invoke(GraphFilter.Hunger);
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter?.Invoke(AttributeType.Hunger);
         }
     }
 }

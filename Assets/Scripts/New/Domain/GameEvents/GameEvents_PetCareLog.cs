@@ -1,13 +1,14 @@
 using System;
-using Master.Presentation.PetCare.Log;
+using Master.Domain.PetCare;
 
 namespace Master.Domain.GameEvents
 {
     public class GameEvents_PetCareLog
     {
-        public static Action<GraphFilter> OnUpdatedAttributeLog;
-        public static Action OnUpdatedActionsLog;
+        public static Action<DateTime> OnChangedDateFilter;
+        public static Action<AttributeType> OnChangedAttributeTypeFilter;
 
-        public static Action<DateTime> OnUpdatedDateLog;
+        public static Action<AttributeType> OnUpdatedAttributesLog;
+        public static Action OnUpdatedActionsLog;
     }
 }
