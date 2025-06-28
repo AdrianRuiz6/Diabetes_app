@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.PetCare.Log;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -31,11 +32,13 @@ namespace Master.Presentation.PetCare.Log
         private void PreviousDate()
         {
             _petCareLogManager.ModifyDayFilter(-1);
+            UpdateDate();
         }
 
         private void NextDate()
         {
             _petCareLogManager.ModifyDayFilter(+1);
+            UpdateDate();
         }
     }
 }

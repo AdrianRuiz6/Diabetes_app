@@ -4,6 +4,6 @@ namespace Master.Domain.PetCare
 {
     public interface IChatBot
     {
-        Task<string> AskAsync(string input);
+        Task<string> Ask(string input);
     }
 }

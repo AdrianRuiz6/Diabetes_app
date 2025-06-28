@@ -10,10 +10,10 @@ namespace Master.Domain.BehaviorTree
         public NodeSelector() : base() { }
         public NodeSelector(List<Node> children): base(children) { }
 
-        public override NodeState Evaluate(DateTime currentTime)
+        public override NodeState Evaluate(AttributeUpdateIntervalInfo intervalInfo)
         {
             foreach (Node child in children)
-                switch (child.Evaluate(currentTime))
+                switch (child.Evaluate(intervalInfo))
                 {
                     case NodeState.FAILURE:
                         continue;

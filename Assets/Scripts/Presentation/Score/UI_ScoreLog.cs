@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Master.Persistence.Score;
 using Master.Domain.GameEvents;
 using Master.Domain.Score;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Score
 {
@@ -40,14 +40,12 @@ namespace Master.Presentation.Score
 
         private void InitializeElements()
         {
-            for (int siblingIndex = 0; siblingIndex < _scoreLogManager.scoreLogList.Count; siblingIndex++)
+            for (int index = 0; index < _scoreLogManager.scoreLogList.Count; index++)
             {
-                ScoreLog scoreLog = _scoreLogManager.scoreLogList[siblingIndex];
-                AddElement(scoreLog, siblingIndex);
+                ScoreLog scoreLog = _scoreLogManager.scoreLogList[index];
+                AddElement(scoreLog, 0);
             }
         }
-
-
 
         private void ClearElements()
         {

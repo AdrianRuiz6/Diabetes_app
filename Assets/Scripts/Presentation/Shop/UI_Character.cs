@@ -1,6 +1,9 @@
 using Master.Domain.GameEvents;
 using UnityEngine.UI;
 using UnityEngine;
+using Master.Domain.Shop;
+using System.Collections.Generic;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Shop
 {
@@ -18,6 +21,8 @@ namespace Master.Presentation.Shop
         [SerializeField] private Sprite _lightPinkColor;
         [SerializeField] private Sprite _greenColor;
 
+        private IEconomyManager _economyManager;
+
         private void Awake()
         {
             GameEvents_Shop.OnProductEquipped += OnProductEquiped;
@@ -30,9 +35,23 @@ namespace Master.Presentation.Shop
 
         private void Start()
         {
+            _economyManager = ServiceLocator.Instance.GetService<IEconomyManager>();
+
             // Inicialización de Imagen del personaje.
             _characterImage = GetComponent<Image>();
             _characterImage.sprite = _baseColor;
+
+            Dictionary<string, ProductState> allProducts = _economyManager.LoadAllProducts();
+            if (allProducts != null && allProducts.Count > 0)
+            {
+                foreach (var product in allProducts)
+                {
+                    if (product.Value == ProductState.Equipped)
+                    {
+                        OnProductEquiped(product.Key);
+                    }
+                }
+            }
         }
 
         private void OnProductEquiped(string productName)

@@ -27,7 +27,7 @@ public class Question
         this.resultAnswer = " ";
     }
 
-    public void answerQuestion(string answer)
+    public void AnswerQuestion(string answer)
     {
         if (string.Equals(answer, correctAnswer))
         {
@@ -39,7 +39,7 @@ public class Question
         }
     }
 
-    public bool isCorrect()
+    public bool IsCorrect()
     {
         if (resultAnswer == "S")
             return true;

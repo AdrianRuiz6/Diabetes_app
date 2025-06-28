@@ -4,6 +4,7 @@ namespace Master.Domain.Shop
     public interface IProduct
     {
         public ProductState productState { get; }
+        public bool isBought { get;}
         public void BuyProduct();
 
         public void EquipProduct();

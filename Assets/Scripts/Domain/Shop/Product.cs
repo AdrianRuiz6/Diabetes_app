@@ -1,5 +1,4 @@
 using Master.Domain.GameEvents;
-using Master.Persistence.Shop;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -13,6 +12,7 @@ namespace Master.Domain.Shop
         private string _productName;
         private int _sellingPrice;
         public ProductState productState { get; private set; }
+        public bool isBought { get; private set; }
 
         public Product(string name, int price, IEconomyManager economyManager)
         {
@@ -22,6 +22,15 @@ namespace Master.Domain.Shop
             _sellingPrice = price;
 
             productState = LoadThisProductState();
+
+            if(productState == ProductState.Equipped || productState == ProductState.Purchased)
+            {
+                isBought = true;
+            }
+            else
+            {
+                isBought = false;
+            }
         }
 
         public void BuyProduct()
@@ -32,6 +41,7 @@ namespace Master.Domain.Shop
                 productState = ProductState.Purchased;
                 SaveThisProduct();
                 _economyManager.SubstractTotalCoins(_sellingPrice);
+                isBought = true;
             }
             finally
             {

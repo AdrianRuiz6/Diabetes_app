@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Master.Domain.Shop;
 using Master.Presentation.Sound;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Shop
 {
@@ -43,6 +44,7 @@ namespace Master.Presentation.Shop
             _priceUI.SetActive(false);
             _equippedIcon.SetActive(false);
             _boughtIcon.SetActive(false);
+            _price_text.text = _sellingPrice.ToString();
 
             switch (_product.productState)
             {
@@ -63,7 +65,7 @@ namespace Master.Presentation.Shop
             _productButton.onClick.AddListener(OnProductSelected);
         }
 
-        private void CheckIsItPurchasable(int coins = 0)
+        private void CheckIsItPurchasable()
         {
             if (_product.productState == ProductState.NotPurchased)
             {
@@ -85,7 +87,8 @@ namespace Master.Presentation.Shop
                 _priceUI.SetActive(false);
                 _equippedIcon.SetActive(false);
                 _boughtIcon.SetActive(false);
-                if (_product.productState == ProductState.Purchased)
+
+                if (_product.isBought)
                 {
                     _boughtIcon.SetActive(true);
                     _product.OtherProductEquipped();
@@ -97,17 +100,15 @@ namespace Master.Presentation.Shop
             }
         }
 
-        private void OnThisProductEquipped(string productName = null)
-        {
-            if ((productName == null) || (productName == _productName))
-            {
-                _priceUI.SetActive(true);
-                _equippedIcon.SetActive(false);
-                _boughtIcon.SetActive(false);
 
-                _product.EquipProduct();
-                SoundManager.Instance.PlaySoundEffect("EquipProduct");
-            }
+        private void OnThisProductEquipped()
+        {
+            _priceUI.SetActive(false);
+            _equippedIcon.SetActive(true);
+            _boughtIcon.SetActive(false);
+
+            _product.EquipProduct();
+            SoundManager.Instance.PlaySoundEffect("EquipProduct");
         }
 
         private void OnProductBought()

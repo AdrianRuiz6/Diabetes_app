@@ -1,4 +1,5 @@
 using Master.Domain.PetCare;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare
 {
@@ -9,6 +10,7 @@ namespace Master.Presentation.PetCare
         private void Start()
         {
             _petCareManager = ServiceLocator.Instance.GetService<IPetCareManager>();
+            base.Start();
         }
 
         public override void UpdatedValueSlider(float value)

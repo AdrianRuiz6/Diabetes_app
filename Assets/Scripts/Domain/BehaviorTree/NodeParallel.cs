@@ -11,13 +11,13 @@ namespace Master.Domain.BehaviorTree
         public NodeParallel() : base() { }
         public NodeParallel(List<Node> children) : base(children) { }
 
-        public override NodeState Evaluate(DateTime currentTime)
+        public override NodeState Evaluate(AttributeUpdateIntervalInfo intervalInfo)
         {
             bool hasSuccess = false;
             bool anyChildIsRunning = false;
             foreach (Node child in children)
             {
-                switch (child.Evaluate(currentTime))
+                switch (child.Evaluate(intervalInfo))
                 {
                     case NodeState.FAILURE:
                         break;

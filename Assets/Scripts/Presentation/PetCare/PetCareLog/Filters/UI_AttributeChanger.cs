@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.PetCare.Log;
 using Master.Domain.PetCare;
-using Master.Domain.Score;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -29,7 +29,7 @@ namespace Master.Presentation.PetCare.Log
         }
         private void UpdateActivity()
         {
-            _petCareLogManager.SetAttributeFilter(AttributeType.Activity);
+            _petCareLogManager.SetAttributeFilter(AttributeType.Energy);
         }
         private void UpdateHunger()
         {

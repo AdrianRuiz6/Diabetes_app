@@ -1,6 +1,5 @@
 using Master.Domain.Connection;
-using Master.Domain.Settings;
-using Master.Persistence.Connection;
+using Master.Infrastructure;
 using System;
 using TMPro;
 using UnityEngine;

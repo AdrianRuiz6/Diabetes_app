@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.Settings;
 using Master.Domain.PetCare;
-using Unity.VisualScripting;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare
 {
@@ -18,16 +18,16 @@ namespace Master.Presentation.PetCare
         private bool _isInCD;
         private bool _isInRange;
 
-        private float _time;
         private float _maxTime;
         private float _fillAmount;
 
         private IPetCareManager _petCareManager;
         private ISettingsManager _settingsManager;
 
+        private DateTime _cooldownEndTime;
         private void Awake()
         {
-            GameEvents_PetCare.OnStartTimerCD += StartTimerCD;
+            GameEvents_PetCare.OnStartTimerCD += StartCD;
             GameEvents_PetCare.OnFinishTimerCD += FinishCD;
             GameEvents_Settings.OnInitialTimeModified += CheckEnabled;
             GameEvents_Settings.OnFinishTimeModified += CheckEnabled;
@@ -35,7 +35,7 @@ namespace Master.Presentation.PetCare
 
         void OnDestroy()
         {
-            GameEvents_PetCare.OnStartTimerCD -= StartTimerCD;
+            GameEvents_PetCare.OnStartTimerCD -= StartCD;
             GameEvents_PetCare.OnFinishTimerCD -= FinishCD;
             GameEvents_Settings.OnInitialTimeModified -= CheckEnabled;
             GameEvents_Settings.OnFinishTimeModified -= CheckEnabled;
@@ -48,72 +48,69 @@ namespace Master.Presentation.PetCare
 
             _button = GetComponent<Button>();
 
+            _maxTime = _petCareManager.timeCDActions;
+
             _isInCD = false;
             _backgroundImageCD.enabled = false;
             _iconImageCD.enabled = false;
+            _isInRange = true;
 
             CheckEnabled();
-
-            switch (_actionType)
-            {
-                case ActionType.Insulin:
-                    if(_petCareManager.isInsulinActionInCD)
-                        StartTimerCD(_actionType, _petCareManager.currentTimeCDInsulin);
-                    break;
-                case ActionType.Food:
-                    if (_petCareManager.isFoodActionInCD)
-                        StartTimerCD(_actionType, _petCareManager.currentTimeCDFood);
-                    break;
-                case ActionType.Exercise:
-                    if (_petCareManager.isExerciseActionInCD)
-                        StartTimerCD(_actionType, _petCareManager.currentTimeCDExercise);
-                    break;
-            }
+            StartCD(_actionType);
         }
 
         void Update()
         {
-            if (_isInRange)
+            CheckEnabled();
+
+            if (_isInCD)
             {
-                if (_time > 0)
+                float remainingSeconds = Mathf.Max(0f, (float)(_cooldownEndTime - DateTime.Now).TotalSeconds);
+
+                if (remainingSeconds <= 0)
                 {
-                    _time -= Time.deltaTime;
-
-                    // Visualilzación radial del CoolDown.
-                    _fillAmount = _time / _maxTime;
-                    _fillAmount = Mathf.Clamp01(_fillAmount);
-
+                    FinishCD(_actionType);
+                }
+                else
+                {
+                    _fillAmount = Mathf.Clamp01(remainingSeconds / _maxTime);
                     _backgroundImageCD.fillAmount = _fillAmount;
                     _iconImageCD.fillAmount = _fillAmount;
                 }
 
-                if (_time <= 0)
-                {
-                    FinishCD(_actionType);
-                }
-
-                if (_isInCD)
-                {
-                    _button.interactable = false;
-                }
-                else
-                {
-                    _button.interactable = true;
-                }
+                _button.interactable = false;
+            }
+            else
+            {
+                _button.interactable = true;
             }
         }
 
-        private void StartTimerCD(ActionType requestedType, float timeCD)
+        private void StartCD(ActionType actionType)
         {
-            if (requestedType == _actionType)
+            if (_actionType == actionType)
             {
-                Debug.Log($"-test- timeCD = {timeCD}; externalID = {requestedType}; gameObject = {gameObject.name}; Hora = {DateTime.Now.TimeOfDay}");
-                _isInCD = true;
-                _time = timeCD;
-                _maxTime = _petCareManager.timeCDActions;
-
-                _backgroundImageCD.enabled = true;
-                _iconImageCD.enabled = true;
+                switch (_actionType)
+                {
+                    case ActionType.Insulin:
+                        _isInCD = true;
+                        _backgroundImageCD.enabled = true;
+                        _iconImageCD.enabled = true;
+                        _cooldownEndTime = _petCareManager.insulinCooldownEndTime;
+                        break;
+                    case ActionType.Food:
+                        _isInCD = true;
+                        _backgroundImageCD.enabled = true;
+                        _iconImageCD.enabled = true;
+                        _cooldownEndTime = _petCareManager.foodCooldownEndTime;
+                        break;
+                    case ActionType.Exercise:
+                        _isInCD = true;
+                        _backgroundImageCD.enabled = true;
+                        _iconImageCD.enabled = true;
+                        _cooldownEndTime = _petCareManager.exerciseCooldownEndTime;
+                        break;
+                }
             }
         }
 
@@ -121,7 +118,6 @@ namespace Master.Presentation.PetCare
         {
             if (requestedType == _actionType)
             {
-                _time = 0;
                 _isInCD = false;
                 _backgroundImageCD.enabled = false;
                 _iconImageCD.enabled = false;
@@ -133,11 +129,16 @@ namespace Master.Presentation.PetCare
         {
             if (_settingsManager.IsInRange(DateTime.Now.TimeOfDay))
             {
-                EnableButton();
+                if (!_isInRange)
+                {
+                    EnableButton();
+                    _isInRange = true;
+                }
             }
             else
             {
                 DisableButton();
+                _isInRange = false;
             }
         }
 
@@ -156,7 +157,6 @@ namespace Master.Presentation.PetCare
         {
             _isInRange = true;
             _button.interactable = true;
-            _time = 0;
 
             _backgroundImageCD.enabled = false;
             _iconImageCD.enabled = false;

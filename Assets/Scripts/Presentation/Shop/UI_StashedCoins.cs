@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Presentation.Animations;
 using Master.Presentation.Sound;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Shop
 {
@@ -32,12 +33,12 @@ namespace Master.Presentation.Shop
             _stashedCoinsBtn = GetComponent<Button>();
             _stashedCoinsBtn.onClick.AddListener(OnStashedCoinsClicked);
 
-            _stashedCoinsObject.SetActive(_economyManager.stashedCoins > 0);
+            UpdateStashedCoins();
         }
 
-        private void UpdateStashedCoins(int coins)
+        private void UpdateStashedCoins()
         {
-            _stashedCoinsObject.SetActive(coins > 0);
+            _stashedCoinsObject.SetActive(_economyManager.stashedCoins > 0);
         }
 
         public void OnStashedCoinsClicked()
@@ -50,6 +51,7 @@ namespace Master.Presentation.Shop
                 SoundManager.Instance.PlaySoundEffect("Interaction");
                 Vector3 localMousePosition = transform.InverseTransformPoint(Input.mousePosition);
                 AnimationManager.Instance.PlayAnimation(_winCoinsPrefab, new Vector3(localMousePosition.x - 6, localMousePosition.y, localMousePosition.z), new Vector3(2.5f, 5f, 1), transform.gameObject);
+                _stashedCoinsObject.SetActive(false);
             }
         }
     }

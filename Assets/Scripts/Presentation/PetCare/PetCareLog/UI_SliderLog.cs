@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.GameEvents;
 using Master.Domain.Settings;
+using Master.Infrastructure;
 using Master.Domain.PetCare.Log;
 
 namespace Master.Presentation.PetCare.Log
@@ -30,7 +31,9 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_Settings.OnFinishTimeModified += ModifyFinishHour;
 
             GameEvents_PetCareLog.OnUpdatedActionsLog += UpdateActionInfo;
-            GameEvents_PetCareLog.OnChangedDateFilter += UpdateDate;
+            GameEvents_PetCareLog.OnChangedDateFilter += UpdateDateFilter;
+
+            GameEvents_PetCareLog.OnResetSlider += UpdateDateFilter;
         }
 
         private void OnDestroy()
@@ -39,7 +42,9 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_Settings.OnFinishTimeModified -= ModifyFinishHour;
 
             GameEvents_PetCareLog.OnUpdatedActionsLog -= UpdateActionInfo;
-            GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDate;
+            GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
+
+            GameEvents_PetCareLog.OnResetSlider -= UpdateDateFilter;
         }
 
         void Start()
@@ -61,7 +66,7 @@ namespace Master.Presentation.PetCare.Log
             _slider.onValueChanged.AddListener(ChangeValue);
         }
 
-        private void UpdateDate()
+        private void UpdateDateFilter()
         {
             _slider.SetValueWithoutNotify(0);
             UpdateAdditionalInfo(0);

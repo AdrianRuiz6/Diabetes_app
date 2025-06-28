@@ -1,4 +1,4 @@
-using Master.Persistence.Score;
+using Master.Domain.Score;
 using System;
 
 namespace Master.Domain.GameEvents

@@ -1,8 +1,7 @@
-using System;
 using TMPro;
 using UnityEngine;
 using Master.Domain.GameEvents;
-using Master.Domain.Score;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Score
 {

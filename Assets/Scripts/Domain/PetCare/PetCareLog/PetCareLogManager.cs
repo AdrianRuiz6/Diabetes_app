@@ -1,5 +1,4 @@
 using Master.Domain.GameEvents;
-using Master.Persistence.PetCare;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace Master.Domain.PetCare.Log
     {
         private Mutex _mutex = new Mutex();
         public List<AttributeLog> glycemiaLogList { get; private set; }
-        public List<AttributeLog> activityLogList { get; private set; }
+        public List<AttributeLog> energyLogList { get; private set; }
         public List<AttributeLog> hungerLogList { get; private set; }
 
         public List<ActionLog> insulinLogList { get; private set; }
@@ -34,15 +33,55 @@ namespace Master.Domain.PetCare.Log
             exerciseLogList = _petCareRepository.LoadExerciseLog();
 
             glycemiaLogList = _petCareRepository.LoadGlycemiaLog();
-            activityLogList = _petCareRepository.LoadActivityLog();
+            energyLogList = _petCareRepository.LoadEnergyLog();
             hungerLogList = _petCareRepository.LoadHungerLog();
+
+            UpdateActionsAvailableTimes();
+        }
+
+        public List<AttributeLog> GetThisDateAttributeLog()
+        {
+            List<AttributeLog> result = new List<AttributeLog>();
+
+            switch (currentAttributeFilter)
+            {
+                case AttributeType.Glycemia:
+                    foreach (var attribute in glycemiaLogList)
+                    {
+                        if(attribute.GetDateAndTime().Value.Date == currentDateFilter.Date)
+                        {
+                            result.Add(attribute);
+                        }
+                    }
+                    break;
+                case AttributeType.Energy:
+                    foreach (var attribute in energyLogList)
+                    {
+                        if (attribute.GetDateAndTime().Value.Date == currentDateFilter.Date)
+                        {
+                            result.Add(attribute);
+                        }
+                    }
+                    break;
+                case AttributeType.Hunger:
+                    foreach (var attribute in hungerLogList)
+                    {
+                        if (attribute.GetDateAndTime().Value.Date == currentDateFilter.Date)
+                        {
+                            result.Add(attribute);
+                        }
+                    }
+                    break;
+            }
+
+            return result;
         }
 
         public void ModifyDayFilter(int amountDaysAdded)
         {
             if (currentDateFilter.AddDays(amountDaysAdded) <= DateTime.Now.Date)
             {
-                currentDateFilter.AddDays(amountDaysAdded);
+                currentDateFilter = currentDateFilter.AddDays(amountDaysAdded);
                 GameEvents_PetCareLog.OnChangedDateFilter?.Invoke();
             }
         }
@@ -53,7 +92,7 @@ namespace Master.Domain.PetCare.Log
             GameEvents_PetCareLog.OnChangedAttributeTypeFilter?.Invoke();
         }
 
-        public void AddAttributeLog(AttributeType attributeType, AttributeLog actionLog)
+        public void AddAttributeLog(AttributeType attributeType, AttributeLog attributeLog)
         {
             _mutex.WaitOne();
             try
@@ -61,13 +100,13 @@ namespace Master.Domain.PetCare.Log
                 switch (attributeType)
                 {
                     case AttributeType.Glycemia:
-                        glycemiaLogList.Add(actionLog);
+                        glycemiaLogList.Add(attributeLog);
                         break;
                     case AttributeType.Hunger:
-                        hungerLogList.Add(actionLog);
+                        hungerLogList.Add(attributeLog);
                         break;
-                    case AttributeType.Activity:
-                        activityLogList.Add(actionLog);
+                    case AttributeType.Energy:
+                        energyLogList.Add(attributeLog);
                         break;
                 }
 
@@ -79,7 +118,7 @@ namespace Master.Domain.PetCare.Log
             }
         }
 
-        public void AddActionLog(ActionType actionType, ActionLog attributeLog)
+        public void AddActionLog(ActionType actionType, ActionLog actionLog)
         {
             _mutex.WaitOne();
             try
@@ -87,13 +126,13 @@ namespace Master.Domain.PetCare.Log
                 switch (actionType)
                 {
                     case ActionType.Insulin:
-                        insulinLogList.Add(attributeLog);
+                        insulinLogList.Add(actionLog);
                         break;
                     case ActionType.Food:
-                        foodLogList.Add(attributeLog);
+                        foodLogList.Add(actionLog);
                         break;
                     case ActionType.Exercise:
-                        exerciseLogList.Add(attributeLog);
+                        exerciseLogList.Add(actionLog);
                         break;
                 }
 
@@ -121,8 +160,8 @@ namespace Master.Domain.PetCare.Log
                     case AttributeType.Hunger:
                         attributesToClear = hungerLogList;
                         break;
-                    case AttributeType.Activity:
-                        attributesToClear = activityLogList;
+                    case AttributeType.Energy:
+                        attributesToClear = energyLogList;
                         break;
                 }
 
@@ -138,6 +177,8 @@ namespace Master.Domain.PetCare.Log
                 attributesToClear.AddRange(newAttributesList);
 
                 SaveAttributeLog(attributeType);
+
+                GameEvents_PetCareLog.OnResetGraph?.Invoke();
             }
             finally
             {
@@ -178,6 +219,8 @@ namespace Master.Domain.PetCare.Log
                 actionsToClear.AddRange(newActionsList);
 
                 SaveActionLog(actionType);
+
+                GameEvents_PetCareLog.OnUpdatedActionsLog();
             }
             finally
             {
@@ -195,8 +238,8 @@ namespace Master.Domain.PetCare.Log
                 case AttributeType.Hunger:
                     _petCareRepository.SaveHungerLog(hungerLogList);
                     break;
-                case AttributeType.Activity:
-                    _petCareRepository.SaveActivityLog(activityLogList);
+                case AttributeType.Energy:
+                    _petCareRepository.SaveEnergyLog(energyLogList);
                     break;
             }
 

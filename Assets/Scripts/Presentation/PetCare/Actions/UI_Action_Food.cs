@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Presentation.Animations;
 using Master.Domain.PetCare;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare
 {
@@ -71,8 +72,15 @@ namespace Master.Presentation.PetCare
 
             _resultBot = await _petCareManager.GetInformationFromFoodName(input);
             _feedBackTMP.text = _resultBot;
-            if (_resultBot != "No has escrito una comida, prueba otra vez.")
+            if (_resultBot == "No has escrito una comida, prueba otra vez." || _resultBot == "Lo siento, ahora mismo no puedo pensar en una respuesta :/")
+            {
+                DeactivateSendButton();
+            }
+            else
+            {
                 ActivateSendButton();
+            }
+                
         }
 
         public void SendInformation()
@@ -86,6 +94,7 @@ namespace Master.Presentation.PetCare
 
             // Se desactiva el panel.
             _submenuPanel.SetActive(false);
+            Animation_PageSliding.Instance.ActivatePageSliding();
         }
     }
 }

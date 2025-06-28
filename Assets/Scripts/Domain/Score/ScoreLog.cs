@@ -1,7 +1,6 @@
 using System;
-using UnityEngine;
 
-namespace Master.Persistence.Score
+namespace Master.Domain.Score
 {
     public class ScoreLog
     {

@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using UnityEngine;
 using Master.Domain.GameEvents;
-using Master.Persistence.Connection;
-using Master.Persistence.Score;
 using System.Threading;
 using Master.Domain.Connection;
 using System.Threading.Tasks;
@@ -14,6 +10,7 @@ namespace Master.Domain.Score
     {
         IScoreRepository _scoreRepository;
         IConnectionManager _connectionManager;
+        IScoreLogManager _scoreLogManager;
 
         private Mutex _mutex = new Mutex();
         public int currentScore { private set; get; }
@@ -21,16 +18,18 @@ namespace Master.Domain.Score
 
         private DateTime _currentDate;
 
-        public ScoreManager(IScoreRepository scoreRepository, IConnectionManager connectionManager)
+        public ScoreManager(IScoreRepository scoreRepository, IConnectionManager connectionManager, IScoreLogManager scoreLogManager)
         {
             _scoreRepository = scoreRepository;
             _connectionManager = connectionManager;
+            _scoreLogManager = scoreLogManager;
 
             highestScore = _scoreRepository.LoadHighestScore();
             currentScore = _scoreRepository.LoadCurrentScore();
             _currentDate = _connectionManager.lastDisconnectionDateTime.Date;
 
             _ = CheckScoreAtMidnightAsync();
+            _scoreLogManager = scoreLogManager;
         }
 
         private void CheckHighestScore(DateTime newDateTime)
@@ -59,12 +58,13 @@ namespace Master.Domain.Score
             }
         }
 
-        public void AddScore(int addedScore, DateTime? time)
+        public void AddScore(int addedScore, DateTime? time, string activity)
         {
             _mutex.WaitOne();
             try
             {
                 SetCurrentScore(currentScore + addedScore, time);
+                _scoreLogManager.AddScoreLogElement(addedScore, time, activity);
             }
             finally
             {
@@ -72,7 +72,7 @@ namespace Master.Domain.Score
             }
         }
 
-        public void SubstractScore(int substractedScore, DateTime? time)
+        public void SubstractScore(int substractedScore, DateTime? time, string activity)
         {
             _mutex.WaitOne();
             try
@@ -85,6 +85,7 @@ namespace Master.Domain.Score
                 {
                     SetCurrentScore(currentScore - substractedScore, time);
                 }
+                _scoreLogManager.AddScoreLogElement(-substractedScore, time, activity);
             }
             finally
             {
@@ -99,8 +100,6 @@ namespace Master.Domain.Score
             {
                 currentScore = 0;
                 _scoreRepository.SaveCurrentScore(currentScore);
-                GameEvents_Score.OnModifyCurrentScore?.Invoke(currentScore);
-
                 GameEvents_Score.OnResetScore?.Invoke();
             }
             finally

@@ -17,7 +17,7 @@ namespace Master.Presentation.PetCare
 
         [SerializeField] private GameObject _submenuPanel;
 
-        void Start()
+        protected virtual void Start()
         {
             _slider.onValueChanged.AddListener(UpdatedValueSlider);
 

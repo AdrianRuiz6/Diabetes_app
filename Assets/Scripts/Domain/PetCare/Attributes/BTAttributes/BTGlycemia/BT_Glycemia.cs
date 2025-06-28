@@ -14,76 +14,83 @@ namespace Master.Domain.PetCare
 
         protected override Node SetUpTree()
         {
-            #region CryticalGlucemia
-            Node checkCriticalGlycemia = new Node_CheckCriticalGlycemia(_petCareManager);
-            Node applyCriticalGlycemia = new NodeGlycemia_ApplyCriticalGlycemia(_petCareManager);
-
-            Node cryticalGlycemia = new NodeSequenceLeftRight(
-                new List<Node>
-                           {
-                            checkCriticalGlycemia,
-                            applyCriticalGlycemia
-                           }
-                );
-            #endregion
             #region LongTermButtons
-            Node checkInsulineActive = new Node_CheckInsulinActive(_petCareManager);
-            Node applyInsulineActive = new NodeGlycemia_ApplyInsulinActive(_petCareManager);
             Node checkExerciseActive = new Node_CheckExerciseActive(_petCareManager);
             Node applyExerciseActive = new NodeGlycemia_ApplyExerciseActive(_petCareManager);
             Node checkFoodActive = new Node_CheckFoodActive(_petCareManager);
             Node applyFoodActive = new NodeGlycemia_ApplyFoodActive(_petCareManager);
+            Node checkInsulinActivealGlycemia = new Node_CheckInsulinActive(_petCareManager);
+            Node applyInsulinActive = new NodeGlycemia_ApplyInsulinActive(_petCareManager);
 
-            Node longTermInsulineButton = new NodeSequenceLeftRight(
+            Node longTermInsulineAction = new NodeSequenceLeftRight(
                 new List<Node>
                            {
-                            checkInsulineActive,
-                            applyInsulineActive
+                            checkInsulinActivealGlycemia,
+                            applyInsulinActive
                            }
                 );
-            Node longTermExerciseButton = new NodeSequenceLeftRight(
+            Node longTermExerciseAction = new NodeSequenceLeftRight(
                 new List<Node>
                            {
                             checkExerciseActive,
                             applyExerciseActive
                            }
                 );
-            Node longTermFoodButton = new NodeSequenceLeftRight(
+            Node longTermFoodAction = new NodeSequenceLeftRight(
                 new List<Node>
                            {
                             checkFoodActive,
                             applyFoodActive
                            }
                 );
-            Node longTermButtons = new NodeParallel(
+
+            Node longTermActions = new NodeParallel(
                 new List<Node>
                            {
-                            longTermInsulineButton,
-                            longTermExerciseButton,
-                            longTermFoodButton
+                            longTermInsulineAction,
+                            longTermExerciseAction,
+                            longTermFoodAction
                            }
                 );
             #endregion
             #region OtherAttributesEffects
-            Node checkLowActivity = new Node_CheckLowActivity(_petCareManager);
-            Node applyLowActivity = new NodeGlycemia_ApplyLowActivity(_petCareManager);
+            Node checkIntermediateHighHunger = new Node_CheckIntermediateHighEnergy(_petCareManager);
+            Node applyIntermediateHighHunger = new NodeGlycemia_ApplyIntermediateHighEnergy(_petCareManager);
+            Node checkBadHighHunger = new Node_CheckBadHighEnergy(_petCareManager);
+            Node applyBadHighHunger = new NodeGlycemia_ApplyBadHighEnergy(_petCareManager);
 
-            Node lowActivity = new NodeSequenceLeftRight(
+            Node intermediateHighHunger = new NodeSequenceLeftRight(
                 new List<Node>
                            {
-                            checkLowActivity,
-                            applyLowActivity
+                            checkIntermediateHighHunger,
+                            applyIntermediateHighHunger
                            }
                 );
+            Node badHighHunger = new NodeSequenceLeftRight(
+                new List<Node>
+                           {
+                            checkBadHighHunger,
+                            applyBadHighHunger
+                           }
+                );
+
+            Node highHunger = new NodeSequenceLeftRight(
+                new List<Node>
+                           {
+                            intermediateHighHunger,
+                            badHighHunger
+                           }
+                );
+
             Node otherAttributesEffects = new NodeParallel(
                 new List<Node>
                            {
-                            lowActivity
+                            highHunger
                            }
                 );
             #endregion
             #region DefaultGlycemia
-            Node defaultGlycemia = new Node_DefaultGlycemia(_petCareManager);
+            Node defaultGlycemia = new Node_ApplyDefaultGlycemia(_petCareManager);
             #endregion
 
             #region Root
@@ -92,8 +99,7 @@ namespace Master.Domain.PetCare
                         (
                            new List<Node>
                            {
-                            cryticalGlycemia,
-                            longTermButtons,
+                            longTermActions,
                             otherAttributesEffects,
                             defaultGlycemia
                            }

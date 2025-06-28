@@ -2,6 +2,7 @@ using Master.Domain.GameEvents;
 using Master.Domain.Shop;
 using TMPro;
 using UnityEngine;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Shop
 {
@@ -25,12 +26,12 @@ namespace Master.Presentation.Shop
         {
             _economyManager = ServiceLocator.Instance.GetService<IEconomyManager>();
 
-            OnCoinsUpdated(_economyManager.totalCoins);
+            OnCoinsUpdated();
         }
 
-        private void OnCoinsUpdated(int coins)
+        private void OnCoinsUpdated()
         {
-            _coinsAmountText.text = coins.ToString();
+            _coinsAmountText.text = _economyManager.totalCoins.ToString();
         }
     }
 }

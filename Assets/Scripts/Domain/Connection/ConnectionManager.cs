@@ -1,5 +1,4 @@
 using System;
-using Master.Persistence.Connection;
 
 namespace Master.Domain.Connection
 {

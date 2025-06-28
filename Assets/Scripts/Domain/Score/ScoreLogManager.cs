@@ -1,11 +1,8 @@
 using Master.Domain.GameEvents;
-using Master.Persistence.Score;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Master.Domain.Score
 {
@@ -21,9 +18,12 @@ namespace Master.Domain.Score
 
             scoreLogList = new List<ScoreLog>();
             List<ScoreLog> scoreLogListAux = _scoreRepository.LoadScoreLog();
-            if (scoreLogListAux.Count > 0 && scoreLogListAux[0].GetTime() == DateTime.Now.Date)
+            if (scoreLogListAux.Count > 0 && scoreLogListAux[0].GetTime().Date == DateTime.Now.Date)
             {
-                scoreLogList = scoreLogListAux;
+                for (int i = 0; i < scoreLogListAux.Count; i++)
+                {
+                    scoreLogList.Add(scoreLogListAux[i]);
+                }
             }
 
             _ = CheckScoreAtMidnightAsync();
@@ -55,21 +55,12 @@ namespace Master.Domain.Score
 
                     ScoreLog newScoreLog = new ScoreLog(time.Value, info);
 
-                    // Se inserta el nuevo elemento en la posición correcta dentro de scoreLogList.
-                    int index = scoreLogList.FindLastIndex(log => log.GetTime() <= time.Value) + 1;
-                    if (index == -1)
-                    {
-                        scoreLogList.Add(newScoreLog);
-                    }
-                    else
-                    {
-                        scoreLogList.Insert(index, newScoreLog);
-                    }
-
-                    int siblingIndex = scoreLogList.Count - index - 1;
+                    // Se inserta el nuevo elemento.
+                    scoreLogList.Add(newScoreLog);
+                    UnityEngine.Debug.Log($"Nuevo log: {newScoreLog.GetInfo()}");
 
                     SaveScoreLog();
-                    GameEvents_Score.OnAddScoreLog?.Invoke(newScoreLog, siblingIndex);
+                    GameEvents_Score.OnAddScoreLog?.Invoke(newScoreLog, 0);
                 }
             }
             finally
@@ -80,17 +71,9 @@ namespace Master.Domain.Score
 
         public void ClearScoreLogElements()
         {
-            _mutex.WaitOne();
-            try
-            {
-                scoreLogList.Clear();
-                SaveScoreLog();
-                GameEvents_Score.OnResetScoreLog?.Invoke();
-            }
-            finally
-            {
-                _mutex.ReleaseMutex();
-            }
+            scoreLogList.Clear();
+            SaveScoreLog();
+            GameEvents_Score.OnResetScoreLog?.Invoke();
         }
 
         private void SaveScoreLog()

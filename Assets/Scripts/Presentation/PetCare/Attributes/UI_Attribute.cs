@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.PetCare;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare
 {
@@ -34,8 +35,8 @@ namespace Master.Presentation.PetCare
                 case AttributeType.Glycemia:
                     GameEvents_PetCare.OnModifyGlycemiaUI += UpdateVisualBar;
                     break;
-                case AttributeType.Activity:
-                    GameEvents_PetCare.OnModifyActivityUI += UpdateVisualBar;
+                case AttributeType.Energy:
+                    GameEvents_PetCare.OnModifyEnergyUI += UpdateVisualBar;
                     break;
                 case AttributeType.Hunger:
                     GameEvents_PetCare.OnModifyHungerUI += UpdateVisualBar;
@@ -50,8 +51,8 @@ namespace Master.Presentation.PetCare
                 case AttributeType.Glycemia:
                     GameEvents_PetCare.OnModifyGlycemiaUI -= UpdateVisualBar;
                     break;
-                case AttributeType.Activity:
-                    GameEvents_PetCare.OnModifyActivityUI -= UpdateVisualBar;
+                case AttributeType.Energy:
+                    GameEvents_PetCare.OnModifyEnergyUI -= UpdateVisualBar;
                     break;
                 case AttributeType.Hunger:
                     GameEvents_PetCare.OnModifyHungerUI -= UpdateVisualBar;
@@ -76,11 +77,11 @@ namespace Master.Presentation.PetCare
                     _maxValue = _petCareManager.maxGlycemiaValue;
                     _unit = "mg/dL";
                     break;
-                case AttributeType.Activity:
-                    _currentValue = _petCareManager.activityValue;
-                    _attributeStates = _petCareManager.activityRangeStates;
-                    _minValue = _petCareManager.minActivityValue;
-                    _maxValue = _petCareManager.maxActivityValue;
+                case AttributeType.Energy:
+                    _currentValue = _petCareManager.energyValue;
+                    _attributeStates = _petCareManager.energyRangeStates;
+                    _minValue = _petCareManager.minEnergyValue;
+                    _maxValue = _petCareManager.maxEnergyValue;
                     _unit = "%";
                     break;
                 case AttributeType.Hunger:
@@ -103,14 +104,13 @@ namespace Master.Presentation.PetCare
             _slider.onValueChanged.AddListener(ChangeValue);
         }
 
-        private void ChangeValue(float arg0)
+        private void ChangeValue(float value)
         {
             _slider.SetValueWithoutNotify(_currentValue);
         }
 
         private void InitializeVisualBar()
         {
-            _currentValue = Mathf.Clamp(_slider.value, _minValue, _maxValue);
             _slider.SetValueWithoutNotify(_currentValue);
             _value_TXT.text = $"{_slider.value} {_unit}";
 
@@ -122,11 +122,11 @@ namespace Master.Presentation.PetCare
                     {
                         _sliderBackground.color = _colorGood;
                     }
-                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow && state.rangeValue == AttributeRangeValue.IntermediateHigh)
+                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow || state.rangeValue == AttributeRangeValue.IntermediateHigh)
                     {
                         _sliderBackground.color = _colorIntermediate;
                     }
-                    else if (state.rangeValue == AttributeRangeValue.BadLow && state.rangeValue == AttributeRangeValue.BadHigh)
+                    else if (state.rangeValue == AttributeRangeValue.BadLow || state.rangeValue == AttributeRangeValue.BadHigh)
                     {
                         _sliderBackground.color = _colorBad;
                     }
@@ -149,11 +149,11 @@ namespace Master.Presentation.PetCare
                     {
                         _sliderBackground.color = _colorGood;
                     }
-                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow && state.rangeValue == AttributeRangeValue.IntermediateHigh)
+                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow || state.rangeValue == AttributeRangeValue.IntermediateHigh)
                     {
                         _sliderBackground.color = _colorIntermediate;
                     }
-                    else if (state.rangeValue == AttributeRangeValue.BadLow && state.rangeValue == AttributeRangeValue.BadHigh)
+                    else if (state.rangeValue == AttributeRangeValue.BadLow || state.rangeValue == AttributeRangeValue.BadHigh)
                     {
                         _sliderBackground.color = _colorBad;
                     }

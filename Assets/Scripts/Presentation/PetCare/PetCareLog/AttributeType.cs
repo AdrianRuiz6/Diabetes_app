@@ -3,7 +3,7 @@ namespace Master.Domain.PetCare
     public enum AttributeType
     {
         Glycemia,
-        Activity,
+        Energy,
         Hunger
     }
 }

@@ -12,9 +12,9 @@ namespace Master.Domain.PetCare
             _petCareManager = petCareManager;
         }
 
-        public override NodeState Evaluate(DateTime currentDateTime)
+        public override NodeState Evaluate(AttributeUpdateIntervalInfo intervalInfo)
         {
-            _petCareManager.ModifyGlycemia(5, currentDateTime);
+            _petCareManager.ModifyGlycemia(5);
             return NodeState.SUCCESS;
         }
     }

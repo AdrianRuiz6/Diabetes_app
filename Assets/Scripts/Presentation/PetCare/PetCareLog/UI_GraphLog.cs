@@ -11,6 +11,7 @@ using Master.Domain.GameEvents;
 using Master.Domain.Settings;
 using Master.Domain.PetCare.Log;
 using Master.Domain.PetCare;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -44,7 +45,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnChangedDateFilter += UpdateDateFilter;
 
             GameEvents_PetCareLog.OnUpdatedAttributesLog += UpdateAttributeLog;
-            
+
+            GameEvents_PetCareLog.OnResetGraph += ResetGraphContainer;
         }
 
         private void OnDestroy()
@@ -56,6 +58,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
 
             GameEvents_PetCareLog.OnUpdatedAttributesLog -= UpdateAttributeLog;
+
+            GameEvents_PetCareLog.OnResetGraph -= ResetGraphContainer;
         }
 
         private void Start()
@@ -70,13 +74,13 @@ namespace Master.Presentation.PetCare.Log
             _graphElements.transform.SetParent(_graphContainer, false);
 
             // Se establece el minimo y máximo de la franja horaria.
-            ModifyInitialHour(_settingsManager.initialTime.Hours);
-            ModifyFinishHour(_settingsManager.finishTime.Hours);
+            _minHour = _settingsManager.initialTime.Hours;
+            _maxHour = _settingsManager.finishTime.Hours;
 
             PlotCurrentGraph();
         }
 
-        private void UpdateDateFilter()
+        private void ResetGraphContainer()
         {
             if (_graphElements.transform.childCount > 0)
             {
@@ -85,24 +89,23 @@ namespace Master.Presentation.PetCare.Log
                     Destroy(child.gameObject);
                 }
             }
+        }
+
+        private void UpdateDateFilter()
+        {
+            ResetGraphContainer();
             PlotCurrentGraph();
         }
 
         private void UpdateAttributeFilter()
         {
-            if (_graphElements.transform.childCount > 0)
-            {
-                foreach (Transform child in _graphElements.transform)
-                {
-                    Destroy(child.gameObject);
-                }
-            }
+            ResetGraphContainer();
             PlotCurrentGraph();
         }
 
         private void UpdateAttributeLog(AttributeType attributeType)
         {
-            if(_petCareLogManager.currentDateFilter.Date == DateTime.Now.Date && _petCareLogManager.currentAttributeFilter == attributeType)
+            if (_petCareLogManager.currentDateFilter.Date == DateTime.Now.Date && _petCareLogManager.currentAttributeFilter == attributeType)
             {
                 PlotCurrentGraph();
             }
@@ -116,20 +119,18 @@ namespace Master.Presentation.PetCare.Log
 
         private void LoadData()
         {
-            _currentAttributeLog.Clear();
-
             switch (_petCareLogManager.currentAttributeFilter)
             {
                 case AttributeType.Glycemia:
-                    _currentAttributeLog = _petCareLogManager.glycemiaLogList;
+                    _currentAttributeLog = _petCareLogManager.GetThisDateAttributeLog();
                     _lineColor = Color.red;
                     break;
-                case AttributeType.Activity:
-                    _currentAttributeLog = _petCareLogManager.activityLogList;
+                case AttributeType.Energy:
+                    _currentAttributeLog = _petCareLogManager.GetThisDateAttributeLog();
                     _lineColor = Color.yellow;
                     break;
                 case AttributeType.Hunger:
-                    _currentAttributeLog = _petCareLogManager.hungerLogList;
+                    _currentAttributeLog = _petCareLogManager.GetThisDateAttributeLog();
                     _lineColor = Color.green;
                     break;
             }

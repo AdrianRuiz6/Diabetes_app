@@ -21,14 +21,14 @@ namespace Master.Domain.PetCare
             Node checkFoodActive = new Node_CheckFoodActive(_petCareManager);
             Node applyFoodActive = new NodeHunger_ApplyExerciseActive(_petCareManager);
 
-            Node longTermExerciseButton = new NodeSequenceLeftRight(
+            Node longTermExerciseAction = new NodeSequenceLeftRight(
                 new List<Node>
                            {
                             checkExerciseActive,
                             applyExerciseActive
                            }
                 );
-            Node longTermFoodButton = new NodeSequenceLeftRight(
+            Node longTermFoodAction = new NodeSequenceLeftRight(
                 new List<Node>
                            {
                             checkFoodActive,
@@ -38,41 +38,75 @@ namespace Master.Domain.PetCare
             Node longTermButtons = new NodeParallel(
                 new List<Node>
                            {
-                            longTermExerciseButton,
-                            longTermFoodButton
+                            longTermExerciseAction,
+                            longTermFoodAction
                            }
                 );
             #endregion
             #region OtherAttributesEffects
-            Node checkLowGlycemia = new Node_CheckLowGlycemia(_petCareManager);
-            Node applyLowGlycemia = new NodeHunger_ApplyLowGlycemia(_petCareManager);
-            Node checkHighGlycemia = new Node_CheckHighGlycemia(_petCareManager);
-            Node applyHighGlycemia = new NodeHunger_ApplyHighGlycemia(_petCareManager);
+            Node checkIntermediateLowEnergy = new Node_CheckIntermediateLowEnergy(_petCareManager);
+            Node checkBadLowEnergy = new Node_CheckBadLowEnergy(_petCareManager);
+            Node applyIntermediateLowEnergy = new NodeHunger_ApplyIntermediateLowEnergy(_petCareManager);
+            Node applyBadLowEnergy = new NodeHunger_ApplyBadLowEnergy(_petCareManager);
+            Node checkIntermediateLowGlycemia = new Node_CheckIntermediateLowGlycemia(_petCareManager);
+            Node checkBadLowGlycemia = new Node_CheckBadLowGlycemia(_petCareManager);
+            Node applyIntermediateLowGlycemia = new NodeHunger_ApplyIntermediateLowGlycemia(_petCareManager);
+            Node applyBadLowGlycemia = new NodeHunger_ApplyBadLowGlycemia(_petCareManager);
 
-            Node lowGlycemia = new NodeSequenceLeftRight(
+            Node intermediateLowEnergy = new NodeSequenceLeftRight(
                 new List<Node>
                            {
-                            checkLowGlycemia,
-                            applyLowGlycemia
+                            checkIntermediateLowEnergy,
+                            applyIntermediateLowEnergy
                            }
                 );
-            Node highGlycemia = new NodeSequenceLeftRight(
+            Node badLowEnergy = new NodeSequenceLeftRight(
                 new List<Node>
                            {
-                            checkHighGlycemia,
-                            applyHighGlycemia
+                            checkBadLowEnergy,
+                            applyBadLowEnergy
                            }
                 );
+            Node intermediateLowGlycemia = new NodeSequenceLeftRight(
+                new List<Node>
+                           {
+                            checkIntermediateLowGlycemia,
+                            applyIntermediateLowGlycemia
+                           }
+                );
+            Node badLowGlycemia = new NodeSequenceLeftRight(
+                new List<Node>
+                           {
+                            checkBadLowGlycemia,
+                            applyBadLowGlycemia
+                           }
+                );
+
+            Node lowEnergy = new NodeSelector(
+                new List<Node>
+                           {
+                            intermediateLowEnergy,
+                            badLowEnergy
+                           }
+                );
+            Node lowGlycemia = new NodeSelector(
+                new List<Node>
+                           {
+                            intermediateLowGlycemia,
+                            badLowGlycemia
+                           }
+                );
+
             Node otherAttributesEffects = new NodeParallel(
                 new List<Node>
                            {
                             lowGlycemia,
-                            highGlycemia
+                            lowEnergy
                            }
                 );
             #endregion
             #region DefaultGlycemia
-            Node defaultHunger = new Node_DefaultHunger(_petCareManager);
+            Node defaultHunger = new Node_ApplyDefaultHunger(_petCareManager);
             #endregion
 
             #region Root

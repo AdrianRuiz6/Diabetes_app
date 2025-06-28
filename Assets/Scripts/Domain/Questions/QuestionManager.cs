@@ -5,9 +5,8 @@ using System;
 
 using Master.Auxiliar;
 using Master.Domain.GameEvents;
-using Master.Persistence.Questions;
-using Master.Persistence.Connection;
 using Master.Domain.Connection;
+using Master.Domain.Shop;
 
 namespace Master.Domain.Questions
 {
@@ -16,10 +15,12 @@ namespace Master.Domain.Questions
         IQuestionRepository _questionRepository;
         IUserPerformanceManager _userPerformanceManager;
         IConnectionManager _connectionManager;
+        IEconomyManager _economyManager;
+        IScoreManager _scoreManager;
 
         public Dictionary<string, List<Question>> allQuestions { private set; get; }
         private List<Question> _iterationQuestions;
-        public int currentQuestionIndex { private set; get; } = 0;
+        public int currentQuestionIndex { private set; get; }
         private int _maxQuestionIndex = 10;
         public float maxTimerSeconds { private set; get; } = 30f;
 
@@ -27,11 +28,13 @@ namespace Master.Domain.Questions
 
         System.Random random = new System.Random();
 
-        public QuestionManager(IQuestionRepository questionRepository, IUserPerformanceManager userPerformanceManager, IConnectionManager connectionManager)
+        public QuestionManager(IQuestionRepository questionRepository, IUserPerformanceManager userPerformanceManager, IConnectionManager connectionManager, IEconomyManager economyManager, IScoreManager scoreManager)
         {
             _questionRepository = questionRepository;
             _userPerformanceManager = userPerformanceManager;
             _connectionManager = connectionManager;
+            _economyManager = economyManager;
+            _scoreManager = scoreManager;
 
             isFSMExecuting = false;
         }
@@ -43,12 +46,14 @@ namespace Master.Domain.Questions
             allQuestions = new Dictionary<string, List<Question>>();
             List<string> allTopics = new List<string>();
             List<Question> allQuestionsList = new List<Question>();
-            UtilityFunctions.CopyList(_questionRepository.LoadQuestions(), allQuestionsList);
-
-            if (allQuestionsList == null || allQuestionsList.Count == 0)
+            List<Question> auxList = _questionRepository.LoadQuestions();
+            
+            if (auxList == null || auxList.Count == 0)
             {
                 return false;
             }
+
+            UtilityFunctions.CopyList(auxList, allQuestionsList);
 
             foreach (Question question in allQuestionsList)
             {
@@ -80,7 +85,14 @@ namespace Master.Domain.Questions
             }
             else
             {
-                FinishQuestionSearch();
+                if(currentQuestionIndex == _maxQuestionIndex)
+                {
+                    StartQuestionSearch();
+                }
+                else
+                {
+                    FinishQuestionSearch();
+                }
             }
 
             if (isChangingQuestions == false)
@@ -111,7 +123,6 @@ namespace Master.Domain.Questions
         public void FinishTimerQuestions()
         {
             GameEvents_Questions.OnActivateQuestionPanelUI.Invoke();
-            GameEvents_Questions.OnPrepareFirstQuestionUI.Invoke();
         }
 
         public void InitializeTimerQuestions()
@@ -198,7 +209,6 @@ namespace Master.Domain.Questions
 
             return proportions;
         }
-        #endregion
 
         public Dictionary<string, int> AdjustQuestionCount(Dictionary<string, float> appearanceProportions)
         {
@@ -314,42 +324,63 @@ namespace Master.Domain.Questions
 
             _questionRepository.SaveIterationQuestions(_iterationQuestions);
         }
+        #endregion
 
-        public Question NextQuestion()
+        private void SetCurrentQuestionIndex(int newCurrentQuestionIndex)
         {
-            if (currentQuestionIndex + 1 < _maxQuestionIndex)
-            {
-                currentQuestionIndex++;
-                SetCurrentQuestionIndex(currentQuestionIndex);
+            currentQuestionIndex = newCurrentQuestionIndex;
+            _questionRepository.SaveCurrentQuestionIndex(currentQuestionIndex);
+        }
 
+        private void RestartQuestionIndex()
+        {
+            currentQuestionIndex = 0;
+            _questionRepository.SaveCurrentQuestionIndex(0);
+        }
+
+        public void SaveTimeLeftQuestionTimer(float time)
+        {
+            _questionRepository.SaveTimeLeftQuestionTimer(time);
+        }
+
+        public Question GetNextQuestion()
+        {
+            if (currentQuestionIndex < _maxQuestionIndex && currentQuestionIndex >= 0)
+            {
                 return _iterationQuestions[currentQuestionIndex];
             }
             else
             {
-                SearchNewQuestions();
+                _iterationQuestions = new List<Question>();
+                RestartQuestionIndex();
+                StartQuestionSearch();
                 return null;
             }
         }
 
-        private void SearchNewQuestions()
+        public void Answer(string answerText)
         {
-            _userPerformanceManager.UpdatePerformance(_iterationQuestions);
-            _iterationQuestions = new List<Question>();
+            // Actualizar rendimiento
+            _iterationQuestions[currentQuestionIndex].AnswerQuestion(answerText);
+            if (currentQuestionIndex >= 0)
+            {
+                List<Question> currentAnswer = new List<Question> { _iterationQuestions[currentQuestionIndex] };
+                _userPerformanceManager.UpdatePerformance(currentAnswer);
+            }
 
-            SetCurrentQuestionIndex(0);
+            // Proporcionar recompensas
+            if (_iterationQuestions[currentQuestionIndex].IsCorrect())
+            {
+                _economyManager.AddTotalCoins(2);
+                _scoreManager.AddScore(10, DateTime.Now, "respuesta correcta");
+            }
+            else
+            {
+                _scoreManager.SubstractScore(-5, DateTime.Now, "respuesta incorrecta");
+            }
 
-            StartQuestionSearch();
-        }
-
-        public string GetCorrectAnswer()
-        {
-            return _iterationQuestions[0].correctAnswer;
-        }
-
-        public void SetCurrentQuestionIndex(int newCurrentQuestionIndex)
-        {
-            currentQuestionIndex = newCurrentQuestionIndex;
-            _questionRepository.SaveCurrentQuestionIndex(currentQuestionIndex);
+            // Avanzar el índice de preguntas o generar nuevas
+            SetCurrentQuestionIndex(currentQuestionIndex + 1);
         }
     }
 }

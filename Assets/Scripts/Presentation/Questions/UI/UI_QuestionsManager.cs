@@ -2,6 +2,7 @@ using UnityEngine;
 using Master.Domain.GameEvents;
 using System.Collections;
 using Master.Domain.Questions;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Questions
 {

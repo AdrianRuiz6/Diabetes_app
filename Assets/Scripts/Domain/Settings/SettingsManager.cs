@@ -1,11 +1,9 @@
 using System;
 using Master.Domain.GameEvents;
-using Master.Persistence.Settings;
 using Master.Domain.PetCare;
-using Master.Domain.Score;
 using Master.Domain.PetCare.Log;
-using Master.Persistence.Questions;
 using Master.Domain.Questions;
+using Master.Domain.Score;
 
 namespace Master.Domain.Settings
 {
@@ -17,6 +15,7 @@ namespace Master.Domain.Settings
         private IQuestionRepository _questionRepository;
         private IQuestionManager _questionManager;
         private IScoreManager _scoreManager;
+        private IScoreLogManager _scoreLogManager;
 
         public TimeSpan initialTime { get; private set; }
         public TimeSpan finishTime { get; private set; }
@@ -34,12 +33,13 @@ namespace Master.Domain.Settings
             soundEffectsVolume = _settingsRepository.LoadSoundEffectsVolume();
         }
 
-        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager)
+        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager, IScoreLogManager scoreLogManager)
         {
             _petCareManager = petCareManager;
             _petCareLogManager = petCareLogManager;
             _questionManager = questionManager;
             _scoreManager = scoreManager;
+            _scoreLogManager = scoreLogManager;
         }
 
         public void SetInitialHour(int newHour)
@@ -82,21 +82,22 @@ namespace Master.Domain.Settings
 
             // Reset score
             _scoreManager.ResetScore();
-
-            // Reset attributes
-            _petCareManager.RestartGlycemia(DateTime.Now);
-            _petCareManager.RestartActivity(DateTime.Now);
-            _petCareManager.RestartHunger(DateTime.Now);
+            _scoreLogManager.ClearScoreLogElements();
 
             // Reset attributes record
-            _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Glycemia);
-            _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Activity);
+            _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Energy);
             _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Hunger);
+            _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Glycemia);
 
             // Reset actions record
             _petCareLogManager.ClearThisDateActionLog(ActionType.Insulin);
             _petCareLogManager.ClearThisDateActionLog(ActionType.Food);
             _petCareLogManager.ClearThisDateActionLog(ActionType.Exercise);
+
+            // Reset attributes
+            _petCareManager.RestartGlycemia(DateTime.Now);
+            _petCareManager.RestartEnergy(DateTime.Now);
+            _petCareManager.RestartHunger(DateTime.Now);
 
             // Reset actions CD and effects
             _petCareManager.DeactivateInsulinActionCD();

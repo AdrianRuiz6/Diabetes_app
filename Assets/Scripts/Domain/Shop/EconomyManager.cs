@@ -1,5 +1,4 @@
 using Master.Domain.GameEvents;
-using Master.Persistence.Shop;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -26,7 +25,7 @@ namespace Master.Domain.Shop
             try
             {
                 SetStashedCoins(stashedCoins + coins);
-                GameEvents_Shop.OnStashedCoinsUpdated?.Invoke(stashedCoins);
+                GameEvents_Shop.OnStashedCoinsUpdated?.Invoke();
             }
             finally
             {
@@ -41,7 +40,7 @@ namespace Master.Domain.Shop
             {
                 SetTotalCoins(totalCoins + stashedCoins);
                 SetStashedCoins(0);
-                GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(totalCoins);
+                GameEvents_Shop.OnTotalCoinsUpdated?.Invoke();
             }
             finally
             {
@@ -55,7 +54,7 @@ namespace Master.Domain.Shop
             try
             {
                 SetTotalCoins(totalCoins + coins);
-                GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(totalCoins);
+                GameEvents_Shop.OnTotalCoinsUpdated?.Invoke();
             }
             finally
             {
@@ -69,7 +68,7 @@ namespace Master.Domain.Shop
             try
             {
                 SetTotalCoins(totalCoins - coins);
-                GameEvents_Shop.OnTotalCoinsUpdated?.Invoke(totalCoins);
+                GameEvents_Shop.OnTotalCoinsUpdated?.Invoke();
             }
             finally
             {

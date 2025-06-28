@@ -31,7 +31,7 @@ namespace Master.Domain.BehaviorTree
             }
         }
 
-        public virtual NodeState Evaluate(DateTime currentDateTime) => NodeState.FAILURE;
+        public virtual NodeState Evaluate(AttributeUpdateIntervalInfo intervalInfo) => NodeState.FAILURE;
 
 
 

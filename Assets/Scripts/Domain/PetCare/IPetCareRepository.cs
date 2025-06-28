@@ -31,28 +31,40 @@ namespace Master.Domain.PetCare
 
         public List<AttributeLog> LoadHungerLog();
 
-        public void SaveActivityLog(List<AttributeLog> activityLogList);
+        public void SaveEnergyLog(List<AttributeLog> energyLogList);
 
-        public List<AttributeLog> LoadActivityLog();
+        public List<AttributeLog> LoadEnergyLog();
         #endregion
         #endregion
 
         #region Actions
-        public void SaveLastTimeInsulinUsed(DateTime? lastTimeInsulinUsed);
+        public void SaveInsulinCooldownEndTime(DateTime insulinCooldownEndTime);
 
-        public DateTime? LoadLastTimeInsulinUsed();
+        public DateTime LoadInsulinCooldownEndTime();
 
-        public void SaveLastTimeExerciseUsed(DateTime? lastTimeExerciseUsed);
+        public void SaveInsulinEffectsEndTime(DateTime insulinEffectsEndTime);
 
-        public DateTime? LoadLastTimeExerciseUsed();
+        public DateTime LoadInsulinEffectsEndTime();
 
-        public void SaveLastTimeFoodUsed(DateTime? lastTimeFoodUsed);
+        public void SaveExerciseCooldownEndTime(DateTime exerciseCooldownEndTime);
 
-        public DateTime? LoadLastTimeFoodUsed();
+        public DateTime LoadExerciseCooldownEndTime();
+
+        public void SaveExerciseEffectsEndTime(DateTime exerciseEffectsEndTime);
+
+        public DateTime LoadExerciseEffectsEndTime();
+
+        public void SaveFoodCooldownEndTime(DateTime foodCooldownEndTime);
+
+        public DateTime LoadFoodCooldownEndTime();
+
+        public void SaveFoodEffectsEndTime(DateTime foodEffectsEndTime);
+
+        public DateTime LoadFoodEffectsEndTime();
         #endregion
 
         #region Attributes
-        public void SaveLastIterationStartTime(DateTime startTimeInterval);
+        public void SaveNextIterationStartTime(DateTime startTimeInterval);
 
         public DateTime LoadLastIterationStartTime();
 
@@ -60,9 +72,9 @@ namespace Master.Domain.PetCare
 
         public int LoadGlycemia();
 
-        public void SaveActivity(int activityValue);
+        public void SaveEnergy(int EnergyValue);
 
-        public int LoadActivity();
+        public int LoadEnergy();
 
         public void SaveHunger(int hungerValue);
 

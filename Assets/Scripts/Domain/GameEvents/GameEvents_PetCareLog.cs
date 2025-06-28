@@ -10,5 +10,8 @@ namespace Master.Domain.GameEvents
 
         public static Action<AttributeType> OnUpdatedAttributesLog;
         public static Action OnUpdatedActionsLog;
+
+        public static Action OnResetGraph;
+        public static Action OnResetSlider;
     }
 }

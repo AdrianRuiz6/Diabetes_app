@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using Master.Domain.Settings;
 using Master.Domain.PetCare;
 using Master.Domain.Connection;
+using UnityEngine;
+using Master.Domain.GameEvents;
 
 namespace Master.Domain.BehaviorTree
 {
     public enum TreeType
     {
         Glycemia,
-        Activity,
+        Energy,
         Hunger
     }
 
     public abstract class BTree
     {
         private Node _root;
-        private Queue<DateTime> _dateTimesQueue = new Queue<DateTime>();
+        private Queue<AttributeUpdateIntervalInfo> _intervalInfoQueue = new Queue<AttributeUpdateIntervalInfo>();
 
         protected TreeType _treeType;
         protected IPetCareManager _petCareManager;
@@ -32,53 +34,94 @@ namespace Master.Domain.BehaviorTree
             _root = SetUpTree();
         }
 
-        public void EnqueueAttribute(DateTime currentDateTime)
+        public void EnqueueAttribute(AttributeUpdateIntervalInfo intervalInfo)
         {
-            bool IsInTime = _settingsManager.IsInRange(currentDateTime.TimeOfDay);
-            bool IsInCurrentDate = currentDateTime.Date == _connectionManager.currentConnectionDateTime.Date;
-            bool IsInLastSessionDate = currentDateTime.Date == _connectionManager.lastDisconnectionDateTime.Date;
+            bool IsInTime = _settingsManager.IsInRange(intervalInfo.dateTime.TimeOfDay);
+            bool IsInCurrentDate = intervalInfo.dateTime.Date == _connectionManager.currentConnectionDateTime.Date;
+            bool IsInLastSessionDate = intervalInfo.dateTime.Date == _connectionManager.lastDisconnectionDateTime.Date;
 
             if (IsInLastSessionDate && IsInTime || IsInCurrentDate && IsInTime)
             {
-                _dateTimesQueue.Enqueue(currentDateTime);
+                _intervalInfoQueue.Enqueue(intervalInfo);
             }
         }
 
         public void Run()
         {
-            while (_dateTimesQueue.Count > 0)
+            while (_intervalInfoQueue.Count > 0)
             {
-                DateTime nextDateTime = _dateTimesQueue.Peek();
+                AttributeUpdateIntervalInfo currentIntervalInfo = _intervalInfoQueue.Peek();
 
-                if (_dateTimesQueue.Peek().TimeOfDay == _settingsManager.initialTime)
+                if (_intervalInfoQueue.Peek().dateTime.TimeOfDay == _settingsManager.initialTime)
                 {
-                    switch (_treeType)
-                    {
-                        case TreeType.Glycemia:
-                            _petCareManager.RestartGlycemia(nextDateTime);
-                            break;
-                        case TreeType.Activity:
-                            _petCareManager.RestartActivity(nextDateTime);
-                            break;
-                        case TreeType.Hunger:
-                            _petCareManager.RestartHunger(nextDateTime);
-                            break;
-                    }
+                    RestartAttribute(currentIntervalInfo.dateTime);
                 }
                 else
                 {
-                    NodeState result = _root.Evaluate(nextDateTime);
+                    StartStash();
+
+                    NodeState result = _root.Evaluate(currentIntervalInfo);
 
                     while (result == NodeState.RUNNING)
                     {
-                        result = _root.Evaluate(nextDateTime);
+                        result = _root.Evaluate(currentIntervalInfo);
                     }
                 }
 
-                _dateTimesQueue.Dequeue();
+                ApplyStash(currentIntervalInfo.dateTime);
+                GameEvents_PetCare.OnFinishedExecutionAttributesBTree?.Invoke();
+                _intervalInfoQueue.Dequeue();
             }
         }
 
         protected abstract Node SetUpTree();
+
+        private void RestartAttribute(DateTime time)
+        {
+            switch (_treeType)
+            {
+                case TreeType.Glycemia:
+                    _petCareManager.RestartGlycemia(time);
+                    break;
+                case TreeType.Energy:
+                    _petCareManager.RestartEnergy(time);
+                    break;
+                case TreeType.Hunger:
+                    _petCareManager.RestartHunger(time);
+                    break;
+            }
+        }
+
+        private void StartStash()
+        {
+            switch (_treeType)
+            {
+                case TreeType.Glycemia:
+                    _petCareManager.StartStashGlycemia();
+                    break;
+                case TreeType.Energy:
+                    _petCareManager.StartStashEnergy();
+                    break;
+                case TreeType.Hunger:
+                    _petCareManager.StartStashHunger();
+                    break;
+            }
+        }
+
+        private void ApplyStash(DateTime time)
+        {
+            switch (_treeType)
+            {
+                case TreeType.Glycemia:
+                    _petCareManager.ApplyStashedGlycemia(time);
+                    break;
+                case TreeType.Energy:
+                    _petCareManager.ApplyStashedEnergy(time);
+                    break;
+                case TreeType.Hunger:
+                    _petCareManager.ApplyStashedHunger(time);
+                    break;
+            }
+        }
     }
 }

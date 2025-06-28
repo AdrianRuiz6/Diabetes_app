@@ -16,9 +16,9 @@ namespace Master.Domain.BehaviorTree
                 _index = -1;
         }
 
-        public override NodeState Evaluate(DateTime currentTime)
+        public override NodeState Evaluate(AttributeUpdateIntervalInfo intervalInfo)
         {
-            switch (children[_index].Evaluate(currentTime))
+            switch (children[_index].Evaluate(intervalInfo))
                 {
                     case NodeState.FAILURE:
                         state = NodeState.FAILURE;

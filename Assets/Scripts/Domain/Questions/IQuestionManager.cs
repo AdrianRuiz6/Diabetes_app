@@ -27,10 +27,10 @@ namespace Master.Domain.Questions
 
         public void RandomizeOrderQuestions();
 
-        public Question NextQuestion();
+        public Question GetNextQuestion();
 
-        public string GetCorrectAnswer();
+        public void SaveTimeLeftQuestionTimer(float time);
 
-        public void SetCurrentQuestionIndex(int newCurrentQuestionIndex);
+        public void Answer(string answerText);
     }
 }

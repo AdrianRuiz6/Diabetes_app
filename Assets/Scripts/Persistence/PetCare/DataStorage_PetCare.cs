@@ -35,15 +35,15 @@ namespace Master.Persistence.PetCare
             return LoadAttributeLog(path);
         }
 
-        public void SaveActivityLog(List<AttributeLog> activityLogList)
+        public void SaveEnergyLog(List<AttributeLog> energyLogList)
         {
-            string path = $"{Application.persistentDataPath}/ActivityLogData.txt";
-            SaveAttributeLog(path, activityLogList);
+            string path = $"{Application.persistentDataPath}/EnergyLogData.txt";
+            SaveAttributeLog(path, energyLogList);
         }
 
-        public List<AttributeLog> LoadActivityLog()
+        public List<AttributeLog> LoadEnergyLog()
         {
-            string path = $"{Application.persistentDataPath}/ActivityLogData.txt";
+            string path = $"{Application.persistentDataPath}/EnergyLogData.txt";
             return LoadAttributeLog(path);
         }
 
@@ -166,60 +166,111 @@ namespace Master.Persistence.PetCare
         #endregion
 
         #region Actions
-        public void SaveLastTimeInsulinUsed(DateTime? lastTimeInsulinUsed)
+        public void SaveInsulinCooldownEndTime(DateTime insulinCooldownEndTime)
         {
-            PlayerPrefs.SetString("LastTimeInsulinUsed", lastTimeInsulinUsed.ToString());
+            PlayerPrefs.SetString("InsulinCooldownEndTime", insulinCooldownEndTime.ToString());
             PlayerPrefs.Save();
         }
 
-        public DateTime? LoadLastTimeInsulinUsed()
+        public DateTime LoadInsulinCooldownEndTime()
         {
-            String timeSaved = PlayerPrefs.GetString("LastTimeInsulinUsed", string.Empty);
+            String timeSaved = PlayerPrefs.GetString("InsulinCooldownEndTime", string.Empty);
             if (timeSaved != string.Empty)
             {
                 return DateTime.Parse(timeSaved);
             }
 
-            return null;
+            return DateTime.Now.AddSeconds(-1);
         }
 
-        public void SaveLastTimeExerciseUsed(DateTime? lastTimeExerciseUsed)
+        public void SaveInsulinEffectsEndTime(DateTime insulinEffectsEndTime)
         {
-            PlayerPrefs.SetString("LastTimeExerciseUsed", lastTimeExerciseUsed.ToString());
+            PlayerPrefs.SetString("InsulinEffectsEndTime", insulinEffectsEndTime.ToString());
             PlayerPrefs.Save();
         }
 
-        public DateTime? LoadLastTimeExerciseUsed()
+        public DateTime LoadInsulinEffectsEndTime()
         {
-            String timeSaved = PlayerPrefs.GetString("LastTimeExerciseUsed", string.Empty);
+            String timeSaved = PlayerPrefs.GetString("InsulinEffectsEndTime", string.Empty);
             if (timeSaved != string.Empty)
             {
                 return DateTime.Parse(timeSaved);
             }
 
-            return null;
+            return DateTime.Now.AddSeconds(-1);
         }
 
-        public void SaveLastTimeFoodUsed(DateTime? lastTimeFoodUsed)
+        public void SaveExerciseCooldownEndTime(DateTime exerciseCooldownEndTime)
         {
-            PlayerPrefs.SetString("LastTimeFoodUsed", lastTimeFoodUsed.ToString());
+            PlayerPrefs.SetString("ExerciseCooldownEndTime", exerciseCooldownEndTime.ToString());
             PlayerPrefs.Save();
         }
 
-        public DateTime? LoadLastTimeFoodUsed()
+        public DateTime LoadExerciseCooldownEndTime()
         {
-            String timeSaved = PlayerPrefs.GetString("LastTimeFoodUsed", string.Empty);
+            String timeSaved = PlayerPrefs.GetString("ExerciseCooldownEndTime", string.Empty);
             if (timeSaved != string.Empty)
             {
                 return DateTime.Parse(timeSaved);
             }
 
-            return null;
+            return DateTime.Now.AddSeconds(-1);
+        }
+
+        public void SaveExerciseEffectsEndTime(DateTime exerciseEffectsEndTime)
+        {
+            PlayerPrefs.SetString("ExerciseEffectsEndTime", exerciseEffectsEndTime.ToString());
+            PlayerPrefs.Save();
+        }
+
+        public DateTime LoadExerciseEffectsEndTime()
+        {
+            String timeSaved = PlayerPrefs.GetString("ExerciseEffectsEndTime", string.Empty);
+            if (timeSaved != string.Empty)
+            {
+                return DateTime.Parse(timeSaved);
+            }
+
+            return DateTime.Now.AddSeconds(-1);
+        }
+
+        public void SaveFoodCooldownEndTime(DateTime foodCooldownEndTime)
+        {
+            PlayerPrefs.SetString("FoodCooldownEndTime", foodCooldownEndTime.ToString());
+            PlayerPrefs.Save();
+        }
+
+        public DateTime LoadFoodCooldownEndTime()
+        {
+            String timeSaved = PlayerPrefs.GetString("FoodCooldownEndTime", string.Empty);
+            if (timeSaved != string.Empty)
+            {
+                return DateTime.Parse(timeSaved);
+            }
+
+            return DateTime.Now.AddSeconds(-1);
+        }
+
+        public void SaveFoodEffectsEndTime(DateTime foodEffectsEndTime)
+        {
+            PlayerPrefs.SetString("FoodEffectsEndTime", foodEffectsEndTime.ToString());
+            PlayerPrefs.Save();
+        }
+
+        public DateTime LoadFoodEffectsEndTime()
+        {
+            String timeSaved = PlayerPrefs.GetString("FoodEffectsEndTime", string.Empty);
+            if (timeSaved != string.Empty)
+            {
+                return DateTime.Parse(timeSaved);
+            }
+
+            return DateTime.Now.AddSeconds(-1);
         }
         #endregion
 
         #region Attributes
-        public void SaveLastIterationStartTime(DateTime startTimeInterval)
+        public void SaveNextIterationStartTime(DateTime startTimeInterval)
         {
             PlayerPrefs.SetString("LastIntervalStartTime", startTimeInterval.ToString());
             PlayerPrefs.Save();
@@ -241,15 +292,15 @@ namespace Master.Persistence.PetCare
             return PlayerPrefs.GetInt("Glycemia", 120);
         }
 
-        public void SaveActivity(int activityValue)
+        public void SaveEnergy(int energyValue)
         {
-            PlayerPrefs.SetInt("Activity", activityValue);
+            PlayerPrefs.SetInt("Energy", energyValue);
             PlayerPrefs.Save();
         }
 
-        public int LoadActivity()
+        public int LoadEnergy()
         {
-            return PlayerPrefs.GetInt("Activity", 50);
+            return PlayerPrefs.GetInt("Energy", 50);
         }
 
         public void SaveHunger(int hungerValue)

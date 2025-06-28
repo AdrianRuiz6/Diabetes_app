@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.GameEvents;
 using Master.Domain.Questions;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Questions
 {
@@ -29,6 +30,7 @@ namespace Master.Presentation.Questions
         {
             // Events
             GameEvents_Questions.OnPrepareTimerUI -= StartTimer;
+            _questionManager.SaveTimeLeftQuestionTimer(_timer);
         }
 
         private void Start()

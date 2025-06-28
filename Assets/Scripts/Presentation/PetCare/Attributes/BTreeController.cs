@@ -5,6 +5,7 @@ using Master.Domain.PetCare;
 using Master.Domain.Settings;
 using System;
 using UnityEngine;
+using Master.Infrastructure;
 
 namespace Master.Presentation.PetCare
 {
@@ -35,8 +36,8 @@ namespace Master.Presentation.PetCare
 
             switch (_treeType)
             {
-                case TreeType.Activity:
-                    _bTree = new BT_Activity(_petCareManager, _settingsManager, _connectionManager);
+                case TreeType.Energy:
+                    _bTree = new BT_Energy(_petCareManager, _settingsManager, _connectionManager);
                     break;
                 case TreeType.Glycemia:
                     _bTree = new BT_Glycemia(_petCareManager, _settingsManager, _connectionManager);
@@ -52,9 +53,10 @@ namespace Master.Presentation.PetCare
             _bTree.Run();
         }
 
-        private void OnAttributeExecution(DateTime currentDateTime)
+        private void OnAttributeExecution(AttributeUpdateIntervalInfo intervalInfo)
         {
-            _bTree.EnqueueAttribute(currentDateTime);
+            Debug.Log($"[BTreeController - {_treeType}] Recibido intervalo {intervalInfo.dateTime}");
+            _bTree.EnqueueAttribute(intervalInfo);
         }
     }
 }

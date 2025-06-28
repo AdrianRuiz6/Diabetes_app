@@ -8,12 +8,16 @@ namespace Master.Domain.PetCare
     {
         // Simulation
         public float updateIntervalBTree { get; }
-        public DateTime lastIterationBTreeStartTime { get; }
+        public DateTime nextIterationStartTime { get; }
 
         // Last time actions used
-        public DateTime? lastTimeInsulinUsed { get; }
-        public DateTime? lastTimeExerciseUsed { get; }
-        public DateTime? lastTimeFoodUsed { get; }
+        public DateTime insulinCooldownEndTime { get; }
+        public DateTime foodCooldownEndTime { get; }
+        public DateTime exerciseCooldownEndTime { get; }
+
+        public DateTime insulinEffectsEndTime { get; }
+        public DateTime foodEffectsEndTime { get; }
+        public DateTime exerciseEffectsEndTime { get; }
 
         // Actions in CD?
         public bool isInsulinActionInCD { get; set; }
@@ -22,23 +26,23 @@ namespace Master.Domain.PetCare
 
         // Attributes Ranges
         public List<AttributeState> glycemiaRangeStates { get; }
-        public List<AttributeState> activityRangeStates { get; }
+        public List<AttributeState> energyRangeStates { get; }
         public List<AttributeState> hungerRangeStates { get; }
 
         // Minimum and maximum attributes values
         public int minGlycemiaValue { get; }
-        public int minActivityValue { get; }
+        public int minEnergyValue { get; }
         public int minHungerValue { get; }
         public int maxGlycemiaValue { get; }
-        public int maxActivityValue { get; }
+        public int maxEnergyValue { get; }
         public int maxHungerValue { get; }
         public int initialGlycemiaValue { get; }
-        public int initialActivityValue { get; }
+        public int initialEnergyValue { get; }
         public int initialHungerValue { get; }
 
         // Attributes values
         public int glycemiaValue { get; }
-        public int activityValue { get; }
+        public int energyValue { get; }
         public int hungerValue { get; }
 
         // Actions effects active?
@@ -48,9 +52,6 @@ namespace Master.Domain.PetCare
 
         // Actions settings
         public float timeCDActions { get; }
-        public float currentTimeCDInsulin { get; }
-        public float currentTimeCDFood { get; }
-        public float currentTimeCDExercise { get; }
 
         public float timeEffectActions { get; }
 
@@ -58,20 +59,32 @@ namespace Master.Domain.PetCare
 
         public void RestartGlycemia(DateTime? currentDateTime);
 
-        public void RestartActivity(DateTime? currentDateTime);
+        public void RestartEnergy(DateTime? currentDateTime);
         public void RestartHunger(DateTime? currentDateTime);
+
+        public void StartStashGlycemia();
+
+        public void ApplyStashedGlycemia(DateTime? currentDateTime);
 
         public void ModifyGlycemia(int value, DateTime? currentDateTime = null, bool isCalledByAction = false);
 
-        public void ModifyActivity(int value, DateTime? currentDateTime = null, bool isCalledByAction = false);
+        public void StartStashEnergy();
+
+        public void ApplyStashedEnergy(DateTime? currentDateTime);
+
+        public void ModifyEnergy(int value, DateTime? currentDateTime = null, bool isCalledByAction = false);
+
+        public void StartStashHunger();
+
+        public void ApplyStashedHunger(DateTime? currentDateTime);
 
         public void ModifyHunger(int value, DateTime? currentDateTime = null, bool isCalledByAction = false);
 
-        public bool IsGlycemiaInRange(AttributeRangeValue attributeStateRequested);
+        public bool IsGlycemiaInRange(AttributeRangeValue attributeStateRequested, int currentGlycemiaValue);
 
-        public bool IsActivityInRange(AttributeRangeValue attributeStateRequested);
+        public bool IsEnergyInRange(AttributeRangeValue attributeStateRequested, int currentEnergyValue);
 
-        public bool IsHungerInRange(AttributeRangeValue attributeStateRequested);
+        public bool IsHungerInRange(AttributeRangeValue attributeStateRequested, int currentHungerValue);
 
         public void ActivateInsulinAction(int value);
 
@@ -95,6 +108,6 @@ namespace Master.Domain.PetCare
 
         public float ExtractRationsFromText(string text);
 
-        public void SetLastIterationStartTime(DateTime newLastIterationTime);
+        public void SetNextIterationStartTime(DateTime newNextIterationStartTime);
     }
 }

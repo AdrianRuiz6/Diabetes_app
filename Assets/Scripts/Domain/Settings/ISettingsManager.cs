@@ -3,6 +3,7 @@ using Master.Domain.PetCare.Log;
 using Master.Domain.PetCare;
 using System;
 using Master.Domain.Questions;
+using Master.Domain.Score;
 
 namespace Master.Domain.Settings
 {
@@ -13,7 +14,7 @@ namespace Master.Domain.Settings
 
         public float soundEffectsVolume { get; }
 
-        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager);
+        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager, IScoreLogManager scoreLogManager);
 
         public void SetInitialHour(int newHour);
 

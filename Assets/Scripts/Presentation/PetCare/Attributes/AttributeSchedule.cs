@@ -1,7 +1,9 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using Master.Domain.PetCare;
+using Master.Infrastructure;
+using Master.Domain.GameEvents;
+using System.Collections;
 
 namespace Master.Presentation.PetCare
 {
@@ -10,26 +12,61 @@ namespace Master.Presentation.PetCare
         IAISimulatorManager _aiSimulatorManager;
         IPetCareManager _petCareManager;
 
+        private DateTime _nextExecutionTime;
+        private DateTime _previousExecutionTime;
+        private float _interval;
+        private bool isUpdating = false;
+
+        private void Awake()
+        {
+            GameEvents_PetCare.OnFinishedExecutionAttributesBTree += FinishSimulationAttribute;
+        }
+
+        private void OnDestroy()
+        {
+            GameEvents_PetCare.OnFinishedExecutionAttributesBTree -= FinishSimulationAttribute;
+        }
+
         private void Start()
         {
             _aiSimulatorManager = ServiceLocator.Instance.GetService<IAISimulatorManager>();
             _petCareManager = ServiceLocator.Instance.GetService<IPetCareManager>();
 
-            _aiSimulatorManager.Simulate();
-            StartCoroutine(TimerAttributes(_aiSimulatorManager.initialTimerSeconds));
+            _interval = _petCareManager.updateIntervalBTree;
+
+            // Simulacion inicial y inicio del timer
+            _aiSimulatorManager.StartSimulation();
+            StartCoroutine(WaitForSimulationToEnd());
         }
 
-        private IEnumerator TimerAttributes(float timeFirstIteration)
+        private void Update()
         {
-            yield return new WaitForSeconds(timeFirstIteration);
-            _petCareManager.ExecuteAttributesBTree();
-
-            while (true)
+            if (isUpdating == true && DateTime.Now >= _nextExecutionTime)
             {
-                _petCareManager.SetLastIterationStartTime(DateTime.Now);
-                yield return new WaitForSeconds(_petCareManager.updateIntervalBTree);
                 _petCareManager.ExecuteAttributesBTree();
+                ScheduleNextBTreeCall();
             }
+        }
+
+        private IEnumerator WaitForSimulationToEnd()
+        {
+            yield return new WaitUntil(() => _aiSimulatorManager.iterationsTotal == 0);
+
+            _nextExecutionTime = _aiSimulatorManager.currentIterationFinishTime;
+            isUpdating = true;
+
+        }
+
+        private void ScheduleNextBTreeCall()
+        {
+            _previousExecutionTime = _nextExecutionTime;
+            _nextExecutionTime = _previousExecutionTime.AddSeconds(_interval);
+            _petCareManager.SetNextIterationStartTime(_nextExecutionTime);
+        }
+
+        private void FinishSimulationAttribute()
+        {
+            _aiSimulatorManager.FinishSimulationAttribute();
         }
     }
 }

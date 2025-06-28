@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Master.Presentation.Animations;
 using Master.Domain.Connection;
+using Master.Infrastructure;
 
 namespace Master.Presentation.Tutorial
 {
@@ -19,6 +20,11 @@ namespace Master.Presentation.Tutorial
             _pagesList = new List<GameObject>();
             GetAllPages();
 
+            CheckToOpenTutorial();
+        }
+
+        private void CheckToOpenTutorial()
+        {
             if (_connectionManager.isFirstUsage == true)
             {
                 OpenTutorial();
@@ -41,7 +47,7 @@ namespace Master.Presentation.Tutorial
 
         public void OpenTutorial()
         {
-            Animation_PageSliding.Instance.MoveToInitialPage();
+            Animation_PageSliding.Instance.DeactivatePageSliding();
             _Tutorial_Section.SetActive(true);
 
             foreach (GameObject page in _pagesList)
@@ -54,6 +60,7 @@ namespace Master.Presentation.Tutorial
         public void CloseTutorial()
         {
             _Tutorial_Section.SetActive(false);
+            Animation_PageSliding.Instance.ActivatePageSliding();
 
             foreach (GameObject page in _pagesList)
             {
