@@ -21,10 +21,27 @@ namespace Master.Presentation.Shop
             GameEvents_Shop.OnStashedCoinsUpdated += UpdateStashedCoins;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             GameEvents_Shop.OnStashedCoinsUpdated -= UpdateStashedCoins;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Shop.OnStashedCoinsUpdated -= UpdateStashedCoins;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Shop.OnStashedCoinsUpdated -= UpdateStashedCoins;
+        }
+#endif
 
         void Start()
         {

@@ -1,5 +1,4 @@
 using Master.Domain.BehaviorTree;
-using System;
 
 namespace Master.Domain.PetCare
 {

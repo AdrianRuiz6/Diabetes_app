@@ -22,11 +22,30 @@ namespace Master.Presentation.Score
             GameEvents_Score.OnAddScoreLog += AddElement;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             GameEvents_Score.OnResetScoreLog -= ClearElements;
             GameEvents_Score.OnAddScoreLog -= AddElement;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Score.OnResetScoreLog -= ClearElements;
+                GameEvents_Score.OnAddScoreLog -= AddElement;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Score.OnResetScoreLog -= ClearElements;
+            GameEvents_Score.OnAddScoreLog -= AddElement;
+        }
+#endif
 
         void Start()
         {

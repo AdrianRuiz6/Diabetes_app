@@ -18,7 +18,7 @@ namespace Master.Infrastructure
     [DefaultExecutionOrder(-1000)]
     public class GameBootStrapper : MonoBehaviour
     {
-        private IConnectionManager  _connectionManager;
+        private IConnectionManager _connectionManager;
         private IConnectionRepository _connectionRepository;
 
         private ISettingsManager _settingsManager;
@@ -44,8 +44,19 @@ namespace Master.Infrastructure
 
         private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+#if UNITY_STANDALONE_WIN
+            int screenHeight = Screen.currentResolution.height;
+            int screenWidth = Mathf.RoundToInt(screenHeight * 9f / 16f);
+            Screen.SetResolution(screenWidth, screenHeight, true);
+#endif
 
+#if UNITY_STANDALONE_LINUX
+            int screenHeight = 864;
+            int screenWidth = Mathf.RoundToInt(screenHeight * 9f / 16f);
+            Screen.SetResolution(screenWidth, screenHeight, false);
+#endif
+
+            DontDestroyOnLoad(gameObject);
             InitializeServices();
         }
 

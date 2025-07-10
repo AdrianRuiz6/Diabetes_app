@@ -17,10 +17,27 @@ namespace Master.Presentation.Shop
             _coinsAmountText = GetComponent<TMP_Text>();
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             GameEvents_Shop.OnTotalCoinsUpdated -= OnCoinsUpdated;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Shop.OnTotalCoinsUpdated -= OnCoinsUpdated;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Shop.OnTotalCoinsUpdated -= OnCoinsUpdated;
+        }
+#endif
 
         private void Start()
         {

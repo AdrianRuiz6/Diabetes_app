@@ -17,11 +17,30 @@ namespace Master.Presentation.Score
             GameEvents_Score.OnModifyCurrentScore += ModifyCurrentScoreTMP;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Score.OnResetScore -= ResetCurrentScoreTMP;
             GameEvents_Score.OnModifyCurrentScore -= ModifyCurrentScoreTMP;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Score.OnResetScore -= ResetCurrentScoreTMP;
+                GameEvents_Score.OnModifyCurrentScore -= ModifyCurrentScoreTMP;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Score.OnResetScore -= ResetCurrentScoreTMP;
+            GameEvents_Score.OnModifyCurrentScore -= ModifyCurrentScoreTMP;
+        }
+#endif
 
         void Start()
         {

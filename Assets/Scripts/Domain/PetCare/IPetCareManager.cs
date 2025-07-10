@@ -108,6 +108,8 @@ namespace Master.Domain.PetCare
 
         public float ExtractRationsFromText(string text);
 
+        public void ScheduleNextBTCall();
+
         public void SetNextIterationStartTime(DateTime newNextIterationStartTime);
     }
 }

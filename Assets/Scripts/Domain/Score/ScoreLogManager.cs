@@ -57,7 +57,6 @@ namespace Master.Domain.Score
 
                     // Se inserta el nuevo elemento.
                     scoreLogList.Add(newScoreLog);
-                    UnityEngine.Debug.Log($"Nuevo log: {newScoreLog.GetInfo()}");
 
                     SaveScoreLog();
                     GameEvents_Score.OnAddScoreLog?.Invoke(newScoreLog, 0);

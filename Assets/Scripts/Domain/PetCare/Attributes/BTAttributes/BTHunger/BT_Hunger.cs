@@ -19,7 +19,7 @@ namespace Master.Domain.PetCare
             Node checkExerciseActive = new Node_CheckExerciseActive(_petCareManager);
             Node applyExerciseActive = new NodeHunger_ApplyExerciseActive(_petCareManager);
             Node checkFoodActive = new Node_CheckFoodActive(_petCareManager);
-            Node applyFoodActive = new NodeHunger_ApplyExerciseActive(_petCareManager);
+            Node applyFoodActive = new NodeHunger_ApplyFoodActive(_petCareManager);
 
             Node longTermExerciseAction = new NodeSequenceLeftRight(
                 new List<Node>

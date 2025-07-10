@@ -41,9 +41,26 @@ namespace Master.Presentation.Connection
             clockText.text = time.ToString("HH:mm");
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             _connectionManager.SetDisconnectionDate(DateTime.Now);
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                _connectionManager.SetDisconnectionDate(DateTime.Now);
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            _connectionManager.SetDisconnectionDate(DateTime.Now);
+        }
+#endif
     }
 }

@@ -1,7 +1,5 @@
-using Master.Domain.GameEvents;
 using System.Collections.Generic;
 using System;
-using System.Threading;
 
 namespace Master.Domain.PetCare.Log
 {

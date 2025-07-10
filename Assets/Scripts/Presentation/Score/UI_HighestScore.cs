@@ -16,10 +16,27 @@ namespace Master.Presentation.Score
             GameEvents_Score.OnModifyHighestScore += ModifyHighestScoreTMP;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Score.OnModifyHighestScore -= ModifyHighestScoreTMP;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Score.OnModifyHighestScore -= ModifyHighestScoreTMP;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Score.OnModifyHighestScore -= ModifyHighestScoreTMP;
+        }
+#endif
 
         void Start()
         {

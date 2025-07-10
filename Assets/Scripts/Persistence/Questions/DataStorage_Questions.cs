@@ -34,7 +34,7 @@ namespace Master.Persistence.Questions
 
         public void SaveUserPerformance(Dictionary<string, FixedSizeQueue<string>> userPerformance)
         {
-            string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "UserPerformanceData.txt");
 
             UserPerformanceDataList dataList = new UserPerformanceDataList();
 
@@ -55,7 +55,7 @@ namespace Master.Persistence.Questions
 
         public Dictionary<string, FixedSizeQueue<string>> LoadUserPerformance()
         {
-            string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "UserPerformanceData.txt");
             Dictionary<string, FixedSizeQueue<string>> userPerformance = new Dictionary<string, FixedSizeQueue<string>>();
 
             if (!File.Exists(path))
@@ -83,7 +83,7 @@ namespace Master.Persistence.Questions
 
         public void ResetUserPerformance()
         {
-            string path = $"{Application.persistentDataPath}/UserPerformanceData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "UserPerformanceData.txt");
 
             if (File.Exists(path))
             {
@@ -93,12 +93,12 @@ namespace Master.Persistence.Questions
 
         public void SaveIterationQuestions(List<Question> iterationQuestions)
         {
-            string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
+            string path = Path.Combine(Application.persistentDataPath, "IterationQuestions.txt");
 
             IterationQuestionsDataList newIterationQuestions = new IterationQuestionsDataList();
             foreach (Question question in iterationQuestions)
             {
-                newIterationQuestions.questions.Add(question);
+                newIterationQuestions.questions.Add(new IterationQuestionData(question.topic, question.question, question.answer1, question.answer2, question.answer3, question.correctAnswer, question.explanation, question.resultAnswer));
             }
 
             string json = JsonUtility.ToJson(newIterationQuestions, true);
@@ -111,7 +111,7 @@ namespace Master.Persistence.Questions
 
         public List<Question> LoadIterationQuestions()
         {
-            string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
+            string path = Path.Combine(Application.persistentDataPath, "IterationQuestions.txt");
             if (!File.Exists(path))
                 return new List<Question>();
 
@@ -122,40 +122,37 @@ namespace Master.Persistence.Questions
                 existingJson = streamReader.ReadToEnd();
             }
 
-            IterationQuestionsDataList currentIterationQuestions = JsonUtility.FromJson<IterationQuestionsDataList>(existingJson);
+            IterationQuestionsDataList currentIterationQuestionsDataList = JsonUtility.FromJson<IterationQuestionsDataList>(existingJson);
+            List<Question> currentIterationQuestions = new List<Question>();
 
-            return currentIterationQuestions.questions;
+            foreach (var data in currentIterationQuestionsDataList.questions)
+            {
+                currentIterationQuestions.Add(new Question(data.topic, data.question, data.answer1, data.answer2, data.answer3, data.correctAnswer, data.explanation, data.resultAnswer));
+            }
+            return currentIterationQuestions;
         }
-
         public void ResetIterationQuestions()
         {
-            string path = $"{Application.persistentDataPath}/IterationQuestions.txt";
-
-            if (File.Exists(path))
+            string path = Path.Combine(Application.persistentDataPath, "IterationQuestions.txt");
             {
                 File.Delete(path);
             }
         }
-
         public List<Question> LoadQuestions()
         {
             string url = LoadURLQuestions();
-            string fileCSV = System.IO.Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
-
+            string fileTSV = Path.Combine(Application.persistentDataPath, "tempQuestions.tsv");
             List<Question> questions = new List<Question>();
-
             try
             {
                 using (WebClient webClient = new WebClient())
                 {
-                    webClient.DownloadFile(url, fileCSV);
+                    webClient.DownloadFile(url, fileTSV);
                 }
-
-                using (StreamReader reader = new StreamReader(fileCSV))
+                using (StreamReader reader = new StreamReader(fileTSV))
                 {
                     string currentLine;
                     bool isHeader = true;
-
                     while ((currentLine = reader.ReadLine()) != null)
                     {
                         if (isHeader)
@@ -163,17 +160,15 @@ namespace Master.Persistence.Questions
                             isHeader = false;
                             continue;
                         }
-
                         string[] values = currentLine.Split('\t');
-
                         Question question = new Question(
-                            values[0], // Topic
+                        values[0], // Topic
                             values[1], // Question
                             values[2], // Answer1
                             values[3], // Answer2
                             values[4], // Answer3
                             values[5], // Correct Answer
-                            values[6]  // Advice
+                            values[6]  // Explanation
                         );
 
                         questions.Add(question);
@@ -188,9 +183,9 @@ namespace Master.Persistence.Questions
             }
             finally
             {
-                if (File.Exists(fileCSV))
+                if (File.Exists(fileTSV))
                 {
-                    File.Delete(fileCSV);
+                    File.Delete(fileTSV);
                 }
             }
         }
@@ -198,7 +193,7 @@ namespace Master.Persistence.Questions
         public int SaveURLQuestions(string url)
         {
             // Comprobar errores
-            string fileCSV = System.IO.Path.Combine(Application.persistentDataPath, "tempQuestions.csv");
+            string fileTSV = Path.Combine(Application.persistentDataPath, "tempQuestions.tsv");
 
             try
             {
@@ -216,12 +211,12 @@ namespace Master.Persistence.Questions
                     return -1;
                 }
 
-                // Intentar descargar el archivo CSV desde la URL
+                // Intentar descargar el archivo TSV desde la URL
                 using (WebClient webClient = new WebClient())
                 {
                     try
                     {
-                        webClient.DownloadFile(url, fileCSV);
+                        webClient.DownloadFile(url, fileTSV);
                     }
                     catch (WebException webEx)
                     {
@@ -232,7 +227,7 @@ namespace Master.Persistence.Questions
                 }
 
                 // Leer y procesar el archivo
-                using (StreamReader reader = new StreamReader(fileCSV))
+                using (StreamReader reader = new StreamReader(fileTSV))
                 {
                     string currentLine;
                     bool isHeader = true;
@@ -264,9 +259,9 @@ namespace Master.Persistence.Questions
             }
             finally
             {
-                if (File.Exists(fileCSV))
+                if (File.Exists(fileTSV))
                 {
-                    File.Delete(fileCSV);
+                    File.Delete(fileTSV);
                 }
             }
 

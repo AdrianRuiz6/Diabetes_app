@@ -28,10 +28,27 @@ namespace Master.Presentation.Shop
             GameEvents_Shop.OnProductEquipped += OnProductEquiped;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             GameEvents_Shop.OnProductEquipped -= OnProductEquiped;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Shop.OnProductEquipped -= OnProductEquiped;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Shop.OnProductEquipped -= OnProductEquiped;
+        }
+#endif
 
         private void Start()
         {

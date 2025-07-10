@@ -41,5 +41,10 @@ namespace Master.Infrastructure
 
             return (T)service;
         }
+
+        public void ClearServices()
+        {
+            _services.Clear();
+        }
     }
 }

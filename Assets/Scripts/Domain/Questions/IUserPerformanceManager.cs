@@ -1,5 +1,4 @@
 using Master.Auxiliar;
-using Master.Persistence.Questions;
 using System.Collections.Generic;
 
 namespace Master.Domain.Questions

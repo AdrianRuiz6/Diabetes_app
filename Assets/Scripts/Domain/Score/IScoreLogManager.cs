@@ -1,6 +1,3 @@
-using Master.Domain.GameEvents;
-using Master.Persistence.Score;
-using System.Threading;
 using System;
 using System.Collections.Generic;
 

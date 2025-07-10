@@ -49,6 +49,7 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnResetGraph += ResetGraphContainer;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
@@ -61,6 +62,38 @@ namespace Master.Presentation.PetCare.Log
 
             GameEvents_PetCareLog.OnResetGraph -= ResetGraphContainer;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
+                GameEvents_Settings.OnFinishTimeModified -= ModifyFinishHour;
+
+                GameEvents_PetCareLog.OnChangedAttributeTypeFilter -= UpdateAttributeFilter;
+                GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
+
+                GameEvents_PetCareLog.OnUpdatedAttributesLog -= UpdateAttributeLog;
+
+                GameEvents_PetCareLog.OnResetGraph -= ResetGraphContainer;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
+            GameEvents_Settings.OnFinishTimeModified -= ModifyFinishHour;
+
+            GameEvents_PetCareLog.OnChangedAttributeTypeFilter -= UpdateAttributeFilter;
+            GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
+
+            GameEvents_PetCareLog.OnUpdatedAttributesLog -= UpdateAttributeLog;
+
+            GameEvents_PetCareLog.OnResetGraph -= ResetGraphContainer;
+        }
+#endif
 
         private void Start()
         {

@@ -31,7 +31,7 @@ namespace Master.Persistence.Score
 
         public void SaveScoreLog(List<ScoreLog> scoreLogList)
         {
-            string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
+            string path = Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
 
             ScoreLogDataList allScoreElements = new ScoreLogDataList();
             foreach (ScoreLog scoreLog in scoreLogList)
@@ -49,7 +49,7 @@ namespace Master.Persistence.Score
 
         public List<ScoreLog> LoadScoreLog()
         {
-            string path = System.IO.Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
+            string path = Path.Combine(Application.persistentDataPath, "ScoreLogData.txt");
             List<ScoreLog> result = new List<ScoreLog>();
 
             if (!File.Exists(path))

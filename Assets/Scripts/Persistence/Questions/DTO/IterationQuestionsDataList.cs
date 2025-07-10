@@ -7,6 +7,6 @@ namespace Master.Persistence.Questions
     [System.Serializable]
     public class IterationQuestionsDataList
     {
-        public List<Question> questions = new List<Question>();
+        public List<IterationQuestionData> questions = new List<IterationQuestionData>();
     }
 }

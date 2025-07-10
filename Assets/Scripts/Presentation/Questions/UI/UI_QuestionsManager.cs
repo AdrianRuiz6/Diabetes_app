@@ -12,7 +12,6 @@ namespace Master.Presentation.Questions
         [SerializeField] private GameObject _questionPanel;
         [SerializeField] private GameObject _loadingPanel;
 
-        private bool _isLoadingQuestions;
         private enum PanelType { Timer, Question }
 
         private IQuestionManager _questionManager;
@@ -26,6 +25,7 @@ namespace Master.Presentation.Questions
             GameEvents_Questions.OnDeactivateLoadingPanelUI += FinishLoadingQuestions;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             GameEvents_Questions.OnActivateQuestionPanelUI -= ActivateQuestionPanel;
@@ -34,6 +34,30 @@ namespace Master.Presentation.Questions
             GameEvents_Questions.OnActivateLoadingPanelUI -= StartLoadingQuestions;
             GameEvents_Questions.OnDeactivateLoadingPanelUI -= FinishLoadingQuestions;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Questions.OnActivateQuestionPanelUI -= ActivateQuestionPanel;
+                GameEvents_Questions.OnActivateTimerPanelUI -= ActivateTimerPanel;
+
+                GameEvents_Questions.OnActivateLoadingPanelUI -= StartLoadingQuestions;
+                GameEvents_Questions.OnDeactivateLoadingPanelUI -= FinishLoadingQuestions;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Questions.OnActivateQuestionPanelUI -= ActivateQuestionPanel;
+            GameEvents_Questions.OnActivateTimerPanelUI -= ActivateTimerPanel;
+
+            GameEvents_Questions.OnActivateLoadingPanelUI -= StartLoadingQuestions;
+            GameEvents_Questions.OnDeactivateLoadingPanelUI -= FinishLoadingQuestions;
+        }
+#endif
 
         private void Start()
         {

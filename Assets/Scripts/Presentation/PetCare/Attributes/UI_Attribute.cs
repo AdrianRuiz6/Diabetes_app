@@ -44,6 +44,7 @@ namespace Master.Presentation.PetCare
             }
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             switch (_attributeType)
@@ -59,6 +60,44 @@ namespace Master.Presentation.PetCare
                     break;
             }
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                switch (_attributeType)
+                {
+                    case AttributeType.Glycemia:
+                        GameEvents_PetCare.OnModifyGlycemiaUI -= UpdateVisualBar;
+                        break;
+                    case AttributeType.Energy:
+                        GameEvents_PetCare.OnModifyEnergyUI -= UpdateVisualBar;
+                        break;
+                    case AttributeType.Hunger:
+                        GameEvents_PetCare.OnModifyHungerUI -= UpdateVisualBar;
+                        break;
+                }
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            switch (_attributeType)
+            {
+                case AttributeType.Glycemia:
+                    GameEvents_PetCare.OnModifyGlycemiaUI -= UpdateVisualBar;
+                    break;
+                case AttributeType.Energy:
+                    GameEvents_PetCare.OnModifyEnergyUI -= UpdateVisualBar;
+                    break;
+                case AttributeType.Hunger:
+                    GameEvents_PetCare.OnModifyHungerUI -= UpdateVisualBar;
+                    break;
+            }
+        }
+#endif
 
         void Start()
         {

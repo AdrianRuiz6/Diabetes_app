@@ -52,6 +52,7 @@ namespace Master.Presentation.Questions
             GameEvents_Questions.OnFinishQuestionSearch += PrepareNextQuestion;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             // Buttons
@@ -66,6 +67,42 @@ namespace Master.Presentation.Questions
             // Events
             GameEvents_Questions.OnFinishQuestionSearch -= PrepareNextQuestion;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                // Buttons
+                _answer1_Btn.onClick.RemoveAllListeners();
+                _answer2_Btn.onClick.RemoveAllListeners();
+                _answer3_Btn.onClick.RemoveAllListeners();
+
+                _openAdvice_Btn.onClick.RemoveAllListeners();
+                _closeAdvice_Btn.onClick.RemoveAllListeners();
+                _nextQuestion_Btn.onClick.RemoveAllListeners();
+
+                // Events
+                GameEvents_Questions.OnFinishQuestionSearch -= PrepareNextQuestion;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            // Buttons
+            _answer1_Btn.onClick.RemoveAllListeners();
+            _answer2_Btn.onClick.RemoveAllListeners();
+            _answer3_Btn.onClick.RemoveAllListeners();
+
+            _openAdvice_Btn.onClick.RemoveAllListeners();
+            _closeAdvice_Btn.onClick.RemoveAllListeners();
+            _nextQuestion_Btn.onClick.RemoveAllListeners();
+
+            // Events
+            GameEvents_Questions.OnFinishQuestionSearch -= PrepareNextQuestion;
+        }
+#endif
 
         void Start()
         {
@@ -111,7 +148,7 @@ namespace Master.Presentation.Questions
             _answer1_TMP.SetText(_currentQuestion.answer1);
             _answer2_TMP.SetText(_currentQuestion.answer2);
             _answer3_TMP.SetText(_currentQuestion.answer3);
-            _advice_TMP.SetText(_currentQuestion.advice);
+            _advice_TMP.SetText(_currentQuestion.explanation);
 
             Debug.Log("Pregunta número " + _questionManager.currentQuestionIndex + ": " + _currentQuestion.topic);
         }

@@ -1,5 +1,5 @@
-using Master.Domain.PetCare;
 using System;
+using Master.Domain.PetCare;
 
 namespace Master.Domain.GameEvents
 {

@@ -53,10 +53,27 @@ namespace Master.Presentation.Settings
             GameEvents_Questions.OnFinishQuestionSearch += ShowSuccessChangingQuestionsDB;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Questions.OnFinishQuestionSearch -= ShowSuccessChangingQuestionsDB;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Questions.OnFinishQuestionSearch -= ShowSuccessChangingQuestionsDB;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Questions.OnFinishQuestionSearch -= ShowSuccessChangingQuestionsDB;
+        }
+#endif
 
         void Start()
         {
@@ -150,6 +167,12 @@ namespace Master.Presentation.Settings
             _previousPanelActive = _currentPanelActive;
             _currentPanelActive = false;
         }
+
+        public void CloseGame()
+        {
+            Application.Quit();
+        }
+
         #endregion
 
         #region Sound

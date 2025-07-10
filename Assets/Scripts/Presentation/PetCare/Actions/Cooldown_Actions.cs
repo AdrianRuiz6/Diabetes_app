@@ -33,6 +33,7 @@ namespace Master.Presentation.PetCare
             GameEvents_Settings.OnFinishTimeModified += CheckEnabled;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             GameEvents_PetCare.OnStartTimerCD -= StartCD;
@@ -40,6 +41,28 @@ namespace Master.Presentation.PetCare
             GameEvents_Settings.OnInitialTimeModified -= CheckEnabled;
             GameEvents_Settings.OnFinishTimeModified -= CheckEnabled;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_PetCare.OnStartTimerCD -= StartCD;
+                GameEvents_PetCare.OnFinishTimerCD -= FinishCD;
+                GameEvents_Settings.OnInitialTimeModified -= CheckEnabled;
+                GameEvents_Settings.OnFinishTimeModified -= CheckEnabled;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_PetCare.OnStartTimerCD -= StartCD;
+            GameEvents_PetCare.OnFinishTimerCD -= FinishCD;
+            GameEvents_Settings.OnInitialTimeModified -= CheckEnabled;
+            GameEvents_Settings.OnFinishTimeModified -= CheckEnabled;
+        }
+#endif
 
         void Start()
         {

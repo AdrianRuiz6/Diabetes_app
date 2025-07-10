@@ -32,10 +32,28 @@ namespace Master.Presentation.Sound
             GameEvents_Settings.OnSoundEffectsModified += SetSoundEffectsVolume;
         }
 
+
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Settings.OnSoundEffectsModified -= SetSoundEffectsVolume;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Settings.OnSoundEffectsModified -= SetSoundEffectsVolume;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Settings.OnSoundEffectsModified -= SetSoundEffectsVolume;
+        }
+#endif
 
         private void Start()
         {

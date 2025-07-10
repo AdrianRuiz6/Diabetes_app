@@ -1,4 +1,3 @@
-using Master.Persistence.Score;
 using System.Collections.Generic;
 
 namespace Master.Domain.Score

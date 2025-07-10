@@ -4,19 +4,20 @@ using UnityEngine;
 using Master.Domain.Settings;
 using Master.Domain.Connection;
 using Master.Domain.GameEvents;
+using Master.Domain.BehaviorTree;
 
 namespace Master.Domain.PetCare
 {
     public class AISimulatorManager : IAISimulatorManager
     {
         public int iterationsTotal { get; private set; }
-        public DateTime currentIterationFinishTime { get; private set; }
+        private DateTime _currentIterationFinishTime;
 
         private int _iterationsEffectsInsulin;
         private int _iterationsEffectsExercise;
         private int _iterationsEffectsFood;
 
-        private float _timeIterationAI;
+        private float _timeIterationBT;
 
         private Queue<DateTime> _dateTimesQueue = new Queue<DateTime>();
 
@@ -33,101 +34,115 @@ namespace Master.Domain.PetCare
             _connectionManager = connectionManager;
             _settingsManager = settingsManager;
 
-            _timeIterationAI = _petCareManager.updateIntervalBTree;
+            _timeIterationBT = _petCareManager.updateIntervalBTree;
             CalculateIterations();
         }
 
         public void StartSimulation()
         {
-            if(iterationsTotal > 0)
+            if (iterationsTotal > 0)
             {
                 SimulateIteration();
             }
             else{
                 _isSimulating = false;
+                _petCareManager.SetNextIterationStartTime(_currentIterationFinishTime);
             }
         }
 
         private void CalculateIterations()
         {
+            DateTime now = DateTime.Now;
+
             // 1. Se calcula la hora final de la ultima iteracion
             DateTime lastIterationFinishTime;
 
             if (_connectionManager.isFirstUsage)
             {
-                DateTime rangeStartTime = DateTime.Now.Date.AddHours(_settingsManager.initialTime.Hours);
-                double secondsSinceStart = (DateTime.Now - rangeStartTime).TotalSeconds;
+                DateTime rangeStartTime = now.Date.AddHours(_settingsManager.initialTime.Hours);
+                double secondsSinceStart = (now - rangeStartTime).TotalSeconds;
 
-                long alignedSeconds = (long)(secondsSinceStart / _timeIterationAI) * (long)_timeIterationAI;
-                lastIterationFinishTime = rangeStartTime.AddSeconds(alignedSeconds + _timeIterationAI);
+                long alignedSeconds = (long)(secondsSinceStart / _timeIterationBT) * (long)_timeIterationBT;
+                lastIterationFinishTime = rangeStartTime.AddSeconds(alignedSeconds + _timeIterationBT);
             }
             else
             {
                 lastIterationFinishTime = _petCareManager.nextIterationStartTime;
             }
 
-            // 2. Se calculan cuántas iteraciones hay que simular
-            float secondsPassedSinceLastIteration = (float)(DateTime.Now - lastIterationFinishTime.AddSeconds(-_timeIterationAI)).TotalSeconds;
-            iterationsTotal = Mathf.FloorToInt(secondsPassedSinceLastIteration / _timeIterationAI);
+            // 2. Se generan y calculan las iteraciones a simular y las iteraciones activas de las acciones
+            iterationsTotal = 0;
+            _iterationsEffectsInsulin = 0;
+            _iterationsEffectsExercise = 0;
+            _iterationsEffectsFood = 0;
 
-            // 3. Se generan las horas de las iteraciones a simular
             DateTime dateTimeToIntroduce = lastIterationFinishTime;
-            for (int i = 0; i < iterationsTotal; i++)
+
+            while (dateTimeToIntroduce < now)
             {
-                _dateTimesQueue.Enqueue(dateTimeToIntroduce);
-                dateTimeToIntroduce = dateTimeToIntroduce.AddSeconds(_timeIterationAI);
+                TimeSpan time = dateTimeToIntroduce.TimeOfDay;
+                DateTime date = dateTimeToIntroduce.Date;
+
+                bool isInTime = _settingsManager.IsInRange(time);
+                bool isInCurrentDate = date == _connectionManager.currentConnectionDateTime.Date;
+                bool isInLastSessionDate = date == _connectionManager.lastDisconnectionDateTime.Date;
+
+                if ((isInLastSessionDate && isInTime) || (isInCurrentDate && isInTime))
+                {
+                    _dateTimesQueue.Enqueue(dateTimeToIntroduce);
+                    iterationsTotal++;
+                    EvaluateEffectIterations(dateTimeToIntroduce);
+                }
+
+                dateTimeToIntroduce = dateTimeToIntroduce.AddSeconds(_timeIterationBT);
             }
 
-            // 4. Se actualiza el tiempo de la proxima simulacino en tiempo real
-            currentIterationFinishTime = dateTimeToIntroduce;
-
-            // 5. Se calculan las iteraciones en las que los efectos de las acciones están habilitados
-            if (_connectionManager.isFirstUsage)
-            {
-                _iterationsEffectsInsulin = 0;
-                _iterationsEffectsExercise = 0;
-                _iterationsEffectsFood = 0;
-            }
-            else
-            {
-                CalculateEffectIterations(_petCareManager.insulinEffectsEndTime, ref _iterationsEffectsInsulin);
-                CalculateEffectIterations(_petCareManager.exerciseEffectsEndTime, ref _iterationsEffectsExercise);
-                CalculateEffectIterations(_petCareManager.foodEffectsEndTime, ref _iterationsEffectsFood);
-            }
+            // 3. Se actualiza el tiempo de la proxima actualización en tiempo real
+            _currentIterationFinishTime = dateTimeToIntroduce;
         }
 
-        private void CalculateEffectIterations(DateTime endTime, ref int iterations)
+        private void EvaluateEffectIterations(DateTime currentTime)
         {
-            DateTime? lastTimeDisconnected = _connectionManager.lastDisconnectionDateTime;
-            if (endTime > lastTimeDisconnected)
+            if (_connectionManager.isFirstUsage)
+                return;
+
+            if (_petCareManager.insulinEffectsEndTime > currentTime)
             {
-                float remainingTimeEffectsActive = (float)(endTime - lastTimeDisconnected).Value.TotalSeconds;
-                iterations = (int)(remainingTimeEffectsActive / _timeIterationAI);
+                _iterationsEffectsInsulin++;
+            }
+
+            if(_petCareManager.exerciseEffectsEndTime > currentTime)
+            {
+                _iterationsEffectsExercise++;
+            }
+
+            if (_petCareManager.foodEffectsEndTime > currentTime)
+            {
+                _iterationsEffectsFood++;
             }
         }
 
         private void SimulateIteration()
         {
-            bool isEffectsInsulinActive = false;
+            bool isInsulinEffectActive = false;
             bool isExerciseEffectActive = false;
             bool isFoodEffectActive = false;
 
             if (_iterationsEffectsInsulin > 0)
             {
-                isEffectsInsulinActive = true;
+                isInsulinEffectActive = true;
+                _iterationsEffectsInsulin--;
             }
             if (_iterationsEffectsExercise > 0)
             {
                 isExerciseEffectActive = true;
+                _iterationsEffectsExercise--;
             }
             if (_iterationsEffectsFood > 0)
             {
                 isFoodEffectActive = true;
+                _iterationsEffectsFood--;
             }
-
-            _iterationsEffectsInsulin--;
-            _iterationsEffectsExercise--;
-            _iterationsEffectsFood--;
 
             AttributeUpdateIntervalInfo currentIntervalInfo = new AttributeUpdateIntervalInfo
                 (
@@ -135,7 +150,7 @@ namespace Master.Domain.PetCare
                     _petCareManager.glycemiaValue,
                     _petCareManager.energyValue,
                     _petCareManager.hungerValue,
-                    isEffectsInsulinActive,
+                    isInsulinEffectActive,
                     isExerciseEffectActive,
                     isFoodEffectActive
                 );
@@ -158,7 +173,7 @@ namespace Master.Domain.PetCare
                 if(iterationsTotal == 0)
                 {
                     _isSimulating = false;
-                    _petCareManager.SetNextIterationStartTime(currentIterationFinishTime);
+                    _petCareManager.SetNextIterationStartTime(_currentIterationFinishTime);
                 }
                 else
                 {

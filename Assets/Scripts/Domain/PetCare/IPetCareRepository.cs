@@ -66,7 +66,7 @@ namespace Master.Domain.PetCare
         #region Attributes
         public void SaveNextIterationStartTime(DateTime startTimeInterval);
 
-        public DateTime LoadLastIterationStartTime();
+        public DateTime LoadNextIterationStartTime();
 
         public void SaveGlycemia(int glycemiaValue);
 

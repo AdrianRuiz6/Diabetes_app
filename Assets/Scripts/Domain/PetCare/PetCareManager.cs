@@ -8,7 +8,7 @@ using Master.Domain.Shop;
 using Master.Domain.PetCare.Log;
 using Master.Auxiliar;
 using Master.Domain.Connection;
-using JetBrains.Annotations;
+using System.Diagnostics;
 
 namespace Master.Domain.PetCare
 {
@@ -21,7 +21,7 @@ namespace Master.Domain.PetCare
         private IScoreManager _scoreManager;
         private IEconomyManager _economyManager;
 
-        // Simulation
+        // Update and Simulation
         public float updateIntervalBTree { get; private set; }
         public DateTime nextIterationStartTime { get; private set; }
 
@@ -85,7 +85,7 @@ namespace Master.Domain.PetCare
             _scoreManager = scoreManager;
             _economyManager = economyManager;
 
-            updateIntervalBTree = 300; // TODO: 5 minutos 300
+            updateIntervalBTree = 300; // 5 minutos 300
 
             minGlycemiaValue = 20;
             minEnergyValue = 0;
@@ -97,10 +97,10 @@ namespace Master.Domain.PetCare
             initialEnergyValue = 50;
             initialHungerValue = 50;
 
-            nextIterationStartTime = _petCareRepository.LoadLastIterationStartTime();
+            nextIterationStartTime = _petCareRepository.LoadNextIterationStartTime();
 
-            timeCDActions = 3600; // TODO: 60 minutos 3600
-            timeEffectActions = 1800; // TODO: 30 minutos 1800
+            timeCDActions = 3600; // 60 minutos 3600
+            timeEffectActions = 1800; // 30 minutos 1800
 
             glycemiaValue = _petCareRepository.LoadGlycemia();
             energyValue = _petCareRepository.LoadEnergy();
@@ -129,25 +129,25 @@ namespace Master.Domain.PetCare
         private void InitializeAttributesRangeStates()
         {
             glycemiaRangeStates = new List<AttributeState>();
-            glycemiaRangeStates.Add(new AttributeState(211, 250, AttributeRangeValue.BadHigh));     // 211 - 250
-            glycemiaRangeStates.Add(new AttributeState(151, 210, AttributeRangeValue.IntermediateHigh));   // 151 - 210
-            glycemiaRangeStates.Add(new AttributeState(90, 150, AttributeRangeValue.Good));                // 90 - 150
-            glycemiaRangeStates.Add(new AttributeState(61, 89, AttributeRangeValue.IntermediateLow));      // 61 - 89
-            glycemiaRangeStates.Add(new AttributeState(20, 60, AttributeRangeValue.BadLow));           // 20 - 60
+            glycemiaRangeStates.Add(new AttributeState(211, 250, AttributeRangeValue.BadHigh));
+            glycemiaRangeStates.Add(new AttributeState(151, 210, AttributeRangeValue.IntermediateHigh));
+            glycemiaRangeStates.Add(new AttributeState(90, 150, AttributeRangeValue.Good));
+            glycemiaRangeStates.Add(new AttributeState(61, 89, AttributeRangeValue.IntermediateLow));
+            glycemiaRangeStates.Add(new AttributeState(20, 60, AttributeRangeValue.BadLow));
 
             energyRangeStates = new List<AttributeState>();
-            energyRangeStates.Add(new AttributeState(81, 100, AttributeRangeValue.BadHigh));      // 81 - 100
-            energyRangeStates.Add(new AttributeState(61, 80, AttributeRangeValue.IntermediateHigh));     // 61 - 80
-            energyRangeStates.Add(new AttributeState(40, 60, AttributeRangeValue.Good));                 // 40 - 60
-            energyRangeStates.Add(new AttributeState(20, 39, AttributeRangeValue.IntermediateLow));      // 20 - 39
-            energyRangeStates.Add(new AttributeState(0, 19, AttributeRangeValue.BadLow));            // 0 - 19
+            energyRangeStates.Add(new AttributeState(86, 100, AttributeRangeValue.BadHigh));
+            energyRangeStates.Add(new AttributeState(71, 85, AttributeRangeValue.IntermediateHigh));
+            energyRangeStates.Add(new AttributeState(30, 70, AttributeRangeValue.Good));
+            energyRangeStates.Add(new AttributeState(15, 29, AttributeRangeValue.IntermediateLow));
+            energyRangeStates.Add(new AttributeState(0, 14, AttributeRangeValue.BadLow));
 
             hungerRangeStates = new List<AttributeState>();
-            hungerRangeStates.Add(new AttributeState(81, 100, AttributeRangeValue.BadHigh));        // 81 - 100
-            hungerRangeStates.Add(new AttributeState(61, 80, AttributeRangeValue.IntermediateHigh));       // 61 - 80
-            hungerRangeStates.Add(new AttributeState(40, 60, AttributeRangeValue.Good));                   // 40 - 60
-            hungerRangeStates.Add(new AttributeState(20, 39, AttributeRangeValue.IntermediateLow));        // 20 - 39
-            hungerRangeStates.Add(new AttributeState(0, 19, AttributeRangeValue.BadLow));              // 0 - 19
+            hungerRangeStates.Add(new AttributeState(86, 100, AttributeRangeValue.BadHigh));
+            hungerRangeStates.Add(new AttributeState(71, 85, AttributeRangeValue.IntermediateHigh));
+            hungerRangeStates.Add(new AttributeState(30, 70, AttributeRangeValue.Good));
+            hungerRangeStates.Add(new AttributeState(15, 29, AttributeRangeValue.IntermediateLow));
+            hungerRangeStates.Add(new AttributeState(0, 14, AttributeRangeValue.BadLow));
         }
 
         private void InitializeActions()
@@ -160,6 +160,7 @@ namespace Master.Domain.PetCare
 
             // Insulin
             insulinCooldownEndTime = _petCareRepository.LoadInsulinCooldownEndTime();
+            _petCareRepository.SaveInsulinCooldownEndTime(now.AddSeconds(-1));
             if (now < insulinCooldownEndTime)
             {
                 float currentCDInsulin = (float)(insulinCooldownEndTime - now).TotalSeconds;
@@ -172,9 +173,14 @@ namespace Master.Domain.PetCare
                 float currentTimeEffectsInsulin = (float)(insulinEffectsEndTime - now).TotalSeconds;
                 _ = ActivateInsulinEffect(currentTimeEffectsInsulin);
             }
+            else
+            {
+                _petCareRepository.SaveInsulinEffectsEndTime(now.AddSeconds(-1));
+            }
 
-            // Exercise
-            exerciseCooldownEndTime = _petCareRepository.LoadExerciseCooldownEndTime();
+                // Exercise
+                exerciseCooldownEndTime = _petCareRepository.LoadExerciseCooldownEndTime();
+            _petCareRepository.SaveExerciseCooldownEndTime(now.AddSeconds(-1));
             if (now < exerciseCooldownEndTime)
             {
                 float currentCDExercise = (float)(exerciseCooldownEndTime - now).TotalSeconds;
@@ -185,11 +191,16 @@ namespace Master.Domain.PetCare
             if (now < exerciseEffectsEndTime)
             {
                 float currentTimeEffectsExercise = (float)(exerciseEffectsEndTime - now).TotalSeconds;
-                _ = ActivateInsulinEffect(currentTimeEffectsExercise);
+                _ = ActivateExerciseEffect(currentTimeEffectsExercise);
+            }
+            else
+            {
+                _petCareRepository.SaveExerciseEffectsEndTime(now.AddSeconds(-1));
             }
 
             // Food
             foodCooldownEndTime = _petCareRepository.LoadFoodCooldownEndTime();
+            _petCareRepository.SaveFoodCooldownEndTime(now.AddSeconds(-1));
             if (now < foodCooldownEndTime)
             {
                 float currentCDFood = (float)(foodCooldownEndTime - now).TotalSeconds;
@@ -200,7 +211,11 @@ namespace Master.Domain.PetCare
             if (now < foodEffectsEndTime)
             {
                 float currentTimeEffectsFood = (float)(foodEffectsEndTime - now).TotalSeconds;
-                _ = ActivateInsulinEffect(currentTimeEffectsFood);
+                _ = ActivateFoodEffect(currentTimeEffectsFood);
+            }
+            else
+            {
+                _petCareRepository.SaveFoodEffectsEndTime(now.AddSeconds(-1));
             }
         }
 
@@ -232,6 +247,9 @@ namespace Master.Domain.PetCare
 
         public void StartStashGlycemia()
         {
+            if (_isStashedGlycemiaActive)
+                return;
+
             _isStashedGlycemiaActive = true;
             _stashedGlycemiaValue = 0;
         }
@@ -240,6 +258,7 @@ namespace Master.Domain.PetCare
         {
             _isStashedGlycemiaActive = false;
 
+            UnityEngine.Debug.Log($"Glycemia total = {_stashedGlycemiaValue}");
             ModifyGlycemia(_stashedGlycemiaValue, currentDateTime);
         }
 
@@ -305,6 +324,9 @@ namespace Master.Domain.PetCare
 
         public void StartStashEnergy()
         {
+            if (_isStashedEnergyActive)
+                return;
+
             _isStashedEnergyActive = true;
             _stashedEnergyValue = 0;
         }
@@ -313,6 +335,7 @@ namespace Master.Domain.PetCare
         {
             _isStashedEnergyActive = false;
 
+            UnityEngine.Debug.Log($"Energy total = {_stashedEnergyValue}");
             ModifyEnergy(_stashedEnergyValue, currentDateTime);
         }
 
@@ -378,6 +401,9 @@ namespace Master.Domain.PetCare
 
         public void StartStashHunger()
         {
+            if (_isStashedHungerActive)
+                return;
+
             _isStashedHungerActive = true;
             _stashedHungerValue = 0;
         }
@@ -386,6 +412,7 @@ namespace Master.Domain.PetCare
         {
             _isStashedHungerActive = false;
 
+            UnityEngine.Debug.Log($"Hunger total = {_stashedHungerValue}");
             ModifyHunger(_stashedHungerValue, currentDateTime);
         }
 
@@ -546,19 +573,19 @@ namespace Master.Domain.PetCare
             switch (intensity)
             {
                 case "Intensidad baja":
-                    ModifyGlycemia(-15, DateTime.Now, true);
+                    ModifyGlycemia(-30, DateTime.Now, true);
                     ModifyEnergy(-15, DateTime.Now, true);
                     ModifyHunger(10, DateTime.Now, true);
                     break;
                 case "Intensidad media":
-                    ModifyGlycemia(-30, DateTime.Now, true);
-                    ModifyEnergy(-25, DateTime.Now, true);
-                    ModifyHunger(20, DateTime.Now, true);
+                    ModifyGlycemia(-60, DateTime.Now, true);
+                    ModifyEnergy(-35, DateTime.Now, true);
+                    ModifyHunger(15, DateTime.Now, true);
                     break;
                 case "Intensidad alta":
-                    ModifyGlycemia(-45, DateTime.Now, true);
-                    ModifyEnergy(-35, DateTime.Now, true);
-                    ModifyHunger(30, DateTime.Now, true);
+                    ModifyGlycemia(-90, DateTime.Now, true);
+                    ModifyEnergy(-50, DateTime.Now, true);
+                    ModifyHunger(20, DateTime.Now, true);
                     break;
             }
 
@@ -605,20 +632,20 @@ namespace Master.Domain.PetCare
             float affectedGlycemia = ration * 34;
             ModifyGlycemia((int)affectedGlycemia, DateTime.Now, true);
 
-            if (ration > 0 && ration < 2)
+            if (ration > 0 && ration <= 2)
             {
-                ModifyHunger(-15, DateTime.Now, true);
+                ModifyHunger(-20, DateTime.Now, true);
                 ModifyEnergy(10, DateTime.Now, true);
             }
-            else if (ration > 2 && ration < 5)
+            else if (ration > 2 && ration <= 4.5)
             {
-                ModifyHunger(-25, DateTime.Now, true);
-                ModifyEnergy(20, DateTime.Now, true);
+                ModifyHunger(-40, DateTime.Now, true);
+                ModifyEnergy(15, DateTime.Now, true);
             }
-            else if (ration > 5)
+            else if (ration > 4.5)
             {
-                ModifyHunger(-35, DateTime.Now, true);
-                ModifyEnergy(30, DateTime.Now, true);
+                ModifyHunger(-60, DateTime.Now, true);
+                ModifyEnergy(20, DateTime.Now, true);
             }
 
             // Se guarda la información para la gráfica.
@@ -668,7 +695,7 @@ namespace Master.Domain.PetCare
             }
             else
             {
-                response = "Lo siento, ahora mismo no puedo pensar en una respuesta :/";
+                response = "Lo siento, ahora mismo no puedo pensar en una respuesta.";
             }
 
             return response;
@@ -692,10 +719,15 @@ namespace Master.Domain.PetCare
             return rations;
         }
 
+        public void ScheduleNextBTCall()
+        {
+            SetNextIterationStartTime(nextIterationStartTime.AddSeconds(updateIntervalBTree));
+        }
+
         public void SetNextIterationStartTime(DateTime newNextIterationStartTime)
         {
             nextIterationStartTime = newNextIterationStartTime;
-            _petCareRepository.SaveNextIterationStartTime(nextIterationStartTime);
+            _petCareRepository.SaveNextIterationStartTime(newNextIterationStartTime);
         }
     }
 }

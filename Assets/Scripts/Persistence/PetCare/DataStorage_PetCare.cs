@@ -13,37 +13,37 @@ namespace Master.Persistence.PetCare
         #region AttributeLog
         public void SaveGlycemiaLog(List<AttributeLog> glycemiaLogList)
         {
-            string path = $"{Application.persistentDataPath}/GlycemiaLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "GlycemiaLogData.txt");
             SaveAttributeLog(path, glycemiaLogList);
         }
 
         public List<AttributeLog> LoadGlycemiaLog()
         {
-            string path = $"{Application.persistentDataPath}/GlycemiaLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "GlycemiaLogData.txt");
             return LoadAttributeLog(path);
         }
 
         public void SaveHungerLog(List<AttributeLog> hungerLogList)
         {
-            string path = $"{Application.persistentDataPath}/HungerLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "HungerLogData.txt");
             SaveAttributeLog(path, hungerLogList);
         }
 
         public List<AttributeLog> LoadHungerLog()
         {
-            string path = $"{Application.persistentDataPath}/HungerLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "HungerLogData.txt");
             return LoadAttributeLog(path);
         }
 
         public void SaveEnergyLog(List<AttributeLog> energyLogList)
         {
-            string path = $"{Application.persistentDataPath}/EnergyLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "EnergyLogData.txt");
             SaveAttributeLog(path, energyLogList);
         }
 
         public List<AttributeLog> LoadEnergyLog()
         {
-            string path = $"{Application.persistentDataPath}/EnergyLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "EnergyLogData.txt");
             return LoadAttributeLog(path);
         }
 
@@ -91,36 +91,36 @@ namespace Master.Persistence.PetCare
         #region ActionsLog
         public void SaveInsulinLog(List<ActionLog> insulinLogList)
         {
-            string path = $"{Application.persistentDataPath}/InsulinLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "InsulinLogData.txt");
             SaveActionLog(path, insulinLogList);
         }
 
         public List<ActionLog> LoadInsulinLog()
         {
-            string path = $"{Application.persistentDataPath}/InsulinLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "InsulinLogData.txt");
             return LoadActionLog(path);
         }
         public void SaveFoodLog(List<ActionLog> foodLogList)
         {
-            string path = $"{Application.persistentDataPath}/FoodLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "FoodLogData.txt");
             SaveActionLog(path, foodLogList);
         }
 
         public List<ActionLog> LoadFoodLog()
         {
-            string path = $"{Application.persistentDataPath}/FoodLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "FoodLogData.txt");
             return LoadActionLog(path);
         }
 
         public void SaveExerciseLog(List<ActionLog> exerciseLogList)
         {
-            string path = $"{Application.persistentDataPath}/ExerciseLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "ExerciseLogData.txt");
             SaveActionLog(path, exerciseLogList);
         }
 
         public List<ActionLog> LoadExerciseLog()
         {
-            string path = $"{Application.persistentDataPath}/ExerciseLogData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "ExerciseLogData.txt");
             return LoadActionLog(path);
         }
 
@@ -276,7 +276,7 @@ namespace Master.Persistence.PetCare
             PlayerPrefs.Save();
         }
 
-        public DateTime LoadLastIterationStartTime()
+        public DateTime LoadNextIterationStartTime()
         {
             return DateTime.Parse(PlayerPrefs.GetString("LastIntervalStartTime", DateTime.Now.Date.ToString()));
         }

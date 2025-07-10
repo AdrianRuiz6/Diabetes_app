@@ -22,7 +22,7 @@ namespace Master.Domain.Questions
         private List<Question> _iterationQuestions;
         public int currentQuestionIndex { private set; get; }
         private int _maxQuestionIndex = 10;
-        public float maxTimerSeconds { private set; get; } = 30f;
+        public float maxTimerSeconds { private set; get; } = 1800f;
 
         public bool isFSMExecuting { private set; get; }
 
@@ -87,6 +87,9 @@ namespace Master.Domain.Questions
             {
                 if(currentQuestionIndex == _maxQuestionIndex)
                 {
+                    _userPerformanceManager.UpdatePerformance(_iterationQuestions);
+                    _iterationQuestions = new List<Question>();
+                    RestartQuestionIndex();
                     StartQuestionSearch();
                 }
                 else
@@ -351,6 +354,7 @@ namespace Master.Domain.Questions
             }
             else
             {
+                _userPerformanceManager.UpdatePerformance(_iterationQuestions);
                 _iterationQuestions = new List<Question>();
                 RestartQuestionIndex();
                 StartQuestionSearch();
@@ -360,13 +364,9 @@ namespace Master.Domain.Questions
 
         public void Answer(string answerText)
         {
-            // Actualizar rendimiento
+            // Responder pregunta
             _iterationQuestions[currentQuestionIndex].AnswerQuestion(answerText);
-            if (currentQuestionIndex >= 0)
-            {
-                List<Question> currentAnswer = new List<Question> { _iterationQuestions[currentQuestionIndex] };
-                _userPerformanceManager.UpdatePerformance(currentAnswer);
-            }
+            _questionRepository.SaveIterationQuestions(_iterationQuestions);
 
             // Proporcionar recompensas
             if (_iterationQuestions[currentQuestionIndex].IsCorrect())

@@ -31,7 +31,7 @@ namespace Master.Persistence.Shop
 
         public void SaveProducts(Dictionary<string, ProductState> newAllProducts)
         {
-            string path = $"{Application.persistentDataPath}/ProductData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "ProductData.txt");
 
             ProductDataList allProducts = new ProductDataList();
 
@@ -49,7 +49,7 @@ namespace Master.Persistence.Shop
 
         public Dictionary<string, ProductState> LoadProducts()
         {
-            string path = $"{Application.persistentDataPath}/ProductData.txt";
+            string path = Path.Combine(Application.persistentDataPath, "ProductData.txt");
             Dictionary<string, ProductState> result = new Dictionary<string, ProductState>();
 
             if (!File.Exists(path))

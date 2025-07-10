@@ -16,10 +16,27 @@ namespace Master.Presentation.Questions
             GameEvents_Questions.OnExecuteNextQuestionState += ChangeState;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Questions.OnExecuteNextQuestionState -= ChangeState;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Questions.OnExecuteNextQuestionState -= ChangeState;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Questions.OnExecuteNextQuestionState -= ChangeState;
+        }
+#endif
 
         void Start()
         {

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.GameEvents;
 using Master.Domain.Settings;
-using Master.Infrastructure;
 using Master.Domain.PetCare.Log;
+using Master.Infrastructure;
+using TMPro;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -36,6 +36,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnResetSlider += UpdateDateFilter;
         }
 
+
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
@@ -46,7 +48,34 @@ namespace Master.Presentation.PetCare.Log
 
             GameEvents_PetCareLog.OnResetSlider -= UpdateDateFilter;
         }
+#endif
 
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
+                GameEvents_Settings.OnFinishTimeModified -= ModifyFinishHour;
+
+                GameEvents_PetCareLog.OnUpdatedActionsLog -= UpdateActionInfo;
+                GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
+
+                GameEvents_PetCareLog.OnResetSlider -= UpdateDateFilter;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Settings.OnInitialTimeModified -= ModifyInitialHour;
+            GameEvents_Settings.OnFinishTimeModified -= ModifyFinishHour;
+
+            GameEvents_PetCareLog.OnUpdatedActionsLog -= UpdateActionInfo;
+            GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
+
+            GameEvents_PetCareLog.OnResetSlider -= UpdateDateFilter;
+        }
+#endif
         void Start()
         {
             _petCareLogManager = ServiceLocator.Instance.GetService<IPetCareLogManager>();

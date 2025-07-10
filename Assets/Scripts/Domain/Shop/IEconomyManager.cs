@@ -1,5 +1,3 @@
-
-using Master.Persistence.Shop;
 using System.Collections.Generic;
 
 namespace Master.Domain.Shop

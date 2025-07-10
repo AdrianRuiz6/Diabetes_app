@@ -1,0 +1,17 @@
+{
+    "name": "Master.Persistence",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b730311a1803ce64e98d6507ac83d6c7",
+        "GUID:4bea4d0755632e6458802ae37962b560"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

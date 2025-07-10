@@ -1,5 +1,4 @@
 using Master.Domain.BehaviorTree;
-using System;
 
 namespace Master.Domain.PetCare
 {
@@ -14,7 +13,7 @@ namespace Master.Domain.PetCare
 
         public override NodeState Evaluate(AttributeUpdateIntervalInfo intervalInfo)
         {
-            _petCareManager.ModifyHunger(3);
+            _petCareManager.ModifyHunger(2);
             return NodeState.SUCCESS;
         }
     }

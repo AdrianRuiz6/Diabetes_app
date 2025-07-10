@@ -54,27 +54,27 @@ namespace Master.Domain.PetCare
                 );
             #endregion
             #region OtherAttributesEffects
-            Node checkIntermediateHighHunger = new Node_CheckIntermediateHighEnergy(_petCareManager);
-            Node applyIntermediateHighHunger = new NodeGlycemia_ApplyIntermediateHighEnergy(_petCareManager);
-            Node checkBadHighHunger = new Node_CheckBadHighEnergy(_petCareManager);
-            Node applyBadHighHunger = new NodeGlycemia_ApplyBadHighEnergy(_petCareManager);
+            Node checkIntermediateHighEnergy = new Node_CheckIntermediateHighEnergy(_petCareManager);
+            Node applyIntermediateHighEnergy = new NodeGlycemia_ApplyIntermediateHighEnergy(_petCareManager);
+            Node checkBadHighEnergy = new Node_CheckBadHighEnergy(_petCareManager);
+            Node applyBadHighEnergy = new NodeGlycemia_ApplyBadHighEnergy(_petCareManager);
 
             Node intermediateHighHunger = new NodeSequenceLeftRight(
                 new List<Node>
                            {
-                            checkIntermediateHighHunger,
-                            applyIntermediateHighHunger
+                            checkIntermediateHighEnergy,
+                            applyIntermediateHighEnergy
                            }
                 );
             Node badHighHunger = new NodeSequenceLeftRight(
                 new List<Node>
                            {
-                            checkBadHighHunger,
-                            applyBadHighHunger
+                            checkBadHighEnergy,
+                            applyBadHighEnergy
                            }
                 );
 
-            Node highHunger = new NodeSequenceLeftRight(
+            Node highHunger = new NodeSelector(
                 new List<Node>
                            {
                             intermediateHighHunger,

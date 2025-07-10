@@ -22,16 +22,34 @@ namespace Master.Presentation.Questions
 
         void Awake()
         {
-            // Events
             GameEvents_Questions.OnPrepareTimerUI += StartTimer;
         }
 
+
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
-            // Events
             GameEvents_Questions.OnPrepareTimerUI -= StartTimer;
             _questionManager.SaveTimeLeftQuestionTimer(_timer);
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_Questions.OnPrepareTimerUI -= StartTimer;
+                _questionManager.SaveTimeLeftQuestionTimer(_timer);
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_Questions.OnPrepareTimerUI -= StartTimer;
+            _questionManager.SaveTimeLeftQuestionTimer(_timer);
+        }
+#endif
 
         private void Start()
         {

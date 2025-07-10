@@ -3,7 +3,6 @@ using Master.Domain.Connection;
 using Master.Domain.GameEvents;
 using Master.Domain.PetCare;
 using Master.Domain.Settings;
-using System;
 using UnityEngine;
 using Master.Infrastructure;
 
@@ -23,10 +22,28 @@ namespace Master.Presentation.PetCare
             GameEvents_PetCare.OnExecuteAttributesBTree += OnAttributeExecution;
         }
 
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         void OnDestroy()
         {
             GameEvents_PetCare.OnExecuteAttributesBTree -= OnAttributeExecution;
         }
+#endif
+
+#if UNITY_ANDROID
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                GameEvents_PetCare.OnExecuteAttributesBTree -= OnAttributeExecution;
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            GameEvents_PetCare.OnExecuteAttributesBTree -= OnAttributeExecution;
+        }
+#endif
+
 
         void Start()
         {

@@ -1,4 +1,3 @@
-using Master.Persistence.Connection;
 using System;
 
 namespace Master.Domain.Connection

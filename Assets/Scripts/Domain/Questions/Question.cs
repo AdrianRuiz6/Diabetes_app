@@ -1,20 +1,19 @@
 using System.Collections.Generic;
 using Master.Auxiliar;
 
-[System.Serializable]
 public class Question
 {
-    public string topic;
-    public string question;
-    public string answer1;
-    public string answer2;
-    public string answer3;
-    public string correctAnswer;
-    public string advice;
+    public string topic { private set; get; }
+    public string question { private set; get; }
+    public string answer1 { private set; get; }
+    public string answer2 { private set; get; }
+    public string answer3 { private set; get; }
+    public string correctAnswer { private set; get; }
+    public string explanation { private set; get; }
 
-    public string resultAnswer;
+    public string resultAnswer { private set; get; }
 
-    public Question(string topic, string question, string answer1, string answer2, string answer3, string correctAnswer, string advice)
+    public Question(string topic, string question, string answer1, string answer2, string answer3, string correctAnswer, string explanation, string resultAnswer = " ")
     {
         this.topic = topic;
         this.question = question;
@@ -22,9 +21,9 @@ public class Question
         this.answer2 = answer2;
         this.answer3 = answer3;
         this.correctAnswer = correctAnswer;
-        this.advice = advice;
+        this.explanation = explanation;
 
-        this.resultAnswer = " ";
+        this.resultAnswer = resultAnswer;
     }
 
     public void AnswerQuestion(string answer)
