@@ -376,7 +376,7 @@ namespace Master.Domain.Questions
             }
             else
             {
-                _scoreManager.SubstractScore(-5, DateTime.Now, "respuesta incorrecta");
+                _scoreManager.SubstractScore(5, DateTime.Now, "respuesta incorrecta");
             }
 
             // Avanzar el índice de preguntas o generar nuevas

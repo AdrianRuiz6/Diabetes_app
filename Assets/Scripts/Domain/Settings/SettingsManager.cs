@@ -80,26 +80,26 @@ namespace Master.Domain.Settings
             SetInitialHour((int)currentInitialHour);
             SetFinishHour((int)currentFinishHour);
 
-            // Reset score
+            // Reiniciar puntuación
             _scoreManager.ResetScore();
             _scoreLogManager.ClearScoreLogElements();
 
-            // Reset attributes record
+            // Reiniciar historial de atributos
             _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Energy);
             _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Hunger);
             _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Glycemia);
 
-            // Reset actions record
+            // Reiniciar historial de acciones
             _petCareLogManager.ClearThisDateActionLog(ActionType.Insulin);
             _petCareLogManager.ClearThisDateActionLog(ActionType.Food);
             _petCareLogManager.ClearThisDateActionLog(ActionType.Exercise);
 
-            // Reset attributes
+            // Reiniciar atributos
             _petCareManager.RestartGlycemia(DateTime.Now);
             _petCareManager.RestartEnergy(DateTime.Now);
             _petCareManager.RestartHunger(DateTime.Now);
 
-            // Reset actions CD and effects
+            // Reiniciar efectos y CD de acciones
             _petCareManager.DeactivateInsulinActionCD();
             _petCareManager.DeactivateInsulinEffect();
             _petCareManager.DeactivateExerciseActionCD();
@@ -134,6 +134,11 @@ namespace Master.Domain.Settings
 
         private void ResetQuestionsValues()
         {
+            // Reiniciar puntuación
+            _scoreManager.ResetScore();
+            _scoreLogManager.ClearScoreLogElements();
+
+            // Reiniciar valores de las preguntas
             _questionRepository.ResetUserPerformance();
             _questionRepository.ResetIterationQuestions();
             _questionRepository.SaveCurrentQuestionIndex(0);

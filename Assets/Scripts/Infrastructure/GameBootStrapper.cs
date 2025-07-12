@@ -11,6 +11,7 @@ using Master.Persistence.Questions;
 using Master.Persistence.Score;
 using Master.Persistence.Settings;
 using Master.Persistence.Shop;
+using System.Collections;
 using UnityEngine;
 
 namespace Master.Infrastructure
@@ -55,7 +56,7 @@ namespace Master.Infrastructure
             int screenWidth = Mathf.RoundToInt(screenHeight * 9f / 16f);
             Screen.SetResolution(screenWidth, screenHeight, false);
 #endif
-
+            
             DontDestroyOnLoad(gameObject);
             InitializeServices();
         }

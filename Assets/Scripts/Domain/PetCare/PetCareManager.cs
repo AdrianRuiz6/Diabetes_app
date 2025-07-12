@@ -551,6 +551,7 @@ namespace Master.Domain.PetCare
         public void DeactivateInsulinActionCD()
         {
             isInsulinActionInCD = false;
+            _petCareRepository.SaveInsulinCooldownEndTime(DateTime.Now.AddSeconds(-1));
             GameEvents_PetCare.OnFinishTimerCD(ActionType.Insulin);
         }
 
@@ -563,6 +564,7 @@ namespace Master.Domain.PetCare
 
         public void DeactivateInsulinEffect()
         {
+            _petCareRepository.SaveInsulinEffectsEndTime(DateTime.Now.AddSeconds(-1));
             isInsulinEffectActive = false;
         }
 
@@ -610,6 +612,7 @@ namespace Master.Domain.PetCare
         public void DeactivateExerciseActionCD()
         {
             isExerciseActionInCD = false;
+            _petCareRepository.SaveExerciseCooldownEndTime(DateTime.Now.AddSeconds(-1));
             GameEvents_PetCare.OnFinishTimerCD(ActionType.Exercise);
         }
 
@@ -622,6 +625,7 @@ namespace Master.Domain.PetCare
 
         public void DeactivateExerciseEffect()
         {
+            _petCareRepository.SaveExerciseEffectsEndTime(DateTime.Now.AddSeconds(-1));
             isExerciseEffectActive = false;
         }
 
@@ -669,6 +673,7 @@ namespace Master.Domain.PetCare
         public void DeactivateFoodActionCD()
         {
             isFoodActionInCD = false;
+            _petCareRepository.SaveFoodCooldownEndTime(DateTime.Now.AddSeconds(-1));
             GameEvents_PetCare.OnFinishTimerCD(ActionType.Food);
         }
 
@@ -681,6 +686,7 @@ namespace Master.Domain.PetCare
 
         public void DeactivateFoodEffect()
         {
+            _petCareRepository.SaveFoodEffectsEndTime(DateTime.Now.AddSeconds(-1));
             isFoodEffectActive = false;
         }
 

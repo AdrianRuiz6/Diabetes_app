@@ -84,8 +84,6 @@ namespace Master.Presentation.PetCare
 
         void Update()
         {
-            CheckEnabled();
-
             if (_isInCD)
             {
                 float remainingSeconds = Mathf.Max(0f, (float)(_cooldownEndTime - DateTime.Now).TotalSeconds);
@@ -105,7 +103,7 @@ namespace Master.Presentation.PetCare
             }
             else
             {
-                _button.interactable = true;
+                CheckEnabled();
             }
         }
 
@@ -113,24 +111,19 @@ namespace Master.Presentation.PetCare
         {
             if (_actionType == actionType)
             {
+                _isInCD = true;
+                _backgroundImageCD.enabled = true;
+                _iconImageCD.enabled = true;
+
                 switch (_actionType)
                 {
                     case ActionType.Insulin:
-                        _isInCD = true;
-                        _backgroundImageCD.enabled = true;
-                        _iconImageCD.enabled = true;
                         _cooldownEndTime = _petCareManager.insulinCooldownEndTime;
                         break;
                     case ActionType.Food:
-                        _isInCD = true;
-                        _backgroundImageCD.enabled = true;
-                        _iconImageCD.enabled = true;
                         _cooldownEndTime = _petCareManager.foodCooldownEndTime;
                         break;
                     case ActionType.Exercise:
-                        _isInCD = true;
-                        _backgroundImageCD.enabled = true;
-                        _iconImageCD.enabled = true;
                         _cooldownEndTime = _petCareManager.exerciseCooldownEndTime;
                         break;
                 }
@@ -152,16 +145,11 @@ namespace Master.Presentation.PetCare
         {
             if (_settingsManager.IsInRange(DateTime.Now.TimeOfDay))
             {
-                if (!_isInRange)
-                {
-                    EnableButton();
-                    _isInRange = true;
-                }
+                EnableButton();
             }
             else
             {
                 DisableButton();
-                _isInRange = false;
             }
         }
 

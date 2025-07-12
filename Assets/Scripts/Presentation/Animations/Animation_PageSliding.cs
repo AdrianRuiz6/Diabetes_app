@@ -1,8 +1,6 @@
 // code from https://pressstart.vip/tutorials/2019/06/1/96/level-selector.html
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,13 +8,16 @@ namespace Master.Presentation.Animations
 {
     public class Animation_PageSliding : MonoBehaviour, IDragHandler, IEndDragHandler
     {
-        private Vector3 panelLocation;
+        private Vector2 panelLocation;
         [SerializeField] private float percentThreshold = 0.2f;
+        [SerializeField] private float dragSensitivity = 1f;
         [SerializeField] private float easing = 0.2f;
         [SerializeField] private int totalPages = 5;
         [SerializeField] private int initialPage = 3;
         private int currentPage = 1;
         private bool _isWorking = true;
+
+        private RectTransform _rectTransform;
 
         public static Animation_PageSliding Instance;
 
@@ -35,42 +36,46 @@ namespace Master.Presentation.Animations
 
         void Start()
         {
+            _rectTransform = GetComponent<RectTransform>();
+
             currentPage = initialPage;
-            panelLocation = transform.position;
+            panelLocation = _rectTransform.anchoredPosition;
         }
         public void OnDrag(PointerEventData data)
         {
             if (!_isWorking)
                 return;
 
-            float difference = data.pressPosition.x - data.position.x;
-            transform.position = panelLocation - new Vector3(difference, 0, 0);
+            float difference = (data.pressPosition.x - data.position.x) * dragSensitivity;
+            _rectTransform.anchoredPosition = panelLocation - new Vector2(difference, 0);
         }
         public void OnEndDrag(PointerEventData data)
         {
             if (!_isWorking)
                 return;
 
-            float percentage = (data.pressPosition.x - data.position.x) / Screen.width;
+            float width = _rectTransform.rect.width;
+            float percentage = (data.pressPosition.x - data.position.x) / width;
+
             if (Mathf.Abs(percentage) >= percentThreshold)
             {
-                Vector3 newLocation = panelLocation;
+                Vector2 newLocation = panelLocation;
                 if (percentage > 0 && currentPage < totalPages)
                 {
                     currentPage++;
-                    newLocation += new Vector3(-Screen.width, 0, 0);
+                    newLocation += new Vector2(-width, 0);
                 }
                 else if (percentage < 0 && currentPage > 1)
                 {
                     currentPage--;
-                    newLocation += new Vector3(Screen.width, 0, 0);
+                    newLocation += new Vector2(width, 0);
                 }
-                StartCoroutine(SmoothMove(transform.position, newLocation, easing));
+                StartCoroutine(SmoothMove(_rectTransform.anchoredPosition, newLocation, easing));
                 panelLocation = newLocation;
             }
             else
             {
-                StartCoroutine(SmoothMove(transform.position, panelLocation, easing));
+                StartCoroutine(SmoothMove(_rectTransform.anchoredPosition, panelLocation, easing));
             }
         }
         IEnumerator SmoothMove(Vector3 startpos, Vector3 endpos, float seconds)
@@ -79,7 +84,7 @@ namespace Master.Presentation.Animations
             while (t <= 1.0)
             {
                 t += Time.deltaTime / seconds;
-                transform.position = Vector3.Lerp(startpos, endpos, Mathf.SmoothStep(0f, 1f, t));
+                _rectTransform.anchoredPosition = Vector3.Lerp(startpos, endpos, Mathf.SmoothStep(0f, 1f, t));
                 yield return null;
             }
         }
@@ -87,10 +92,11 @@ namespace Master.Presentation.Animations
         public void MoveToInitialPage()
         {
             int pageDifference = initialPage - currentPage;
+            float width = _rectTransform.rect.width;
 
-            Vector3 newLocation = panelLocation;
+            Vector2 newLocation = panelLocation;
             currentPage = initialPage;
-            newLocation += new Vector3(-Screen.width * pageDifference, 0, 0);
+            newLocation += new Vector2(-width * pageDifference, 0);
 
             StartCoroutine(SmoothMove(transform.position, newLocation, easing));
 
