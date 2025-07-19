@@ -25,22 +25,6 @@ namespace Master.Domain.Score
                     scoreLogList.Add(scoreLogListAux[i]);
                 }
             }
-
-            _ = CheckScoreAtMidnightAsync();
-        }
-
-        private async Task CheckScoreAtMidnightAsync()
-        {
-            while (true)
-            {
-                DateTime now = DateTime.Now;
-                DateTime nextMidnight = now.AddDays(1).Date;
-                TimeSpan timeUntilMidnight = nextMidnight - now;
-
-                await Task.Delay(timeUntilMidnight);
-
-                ClearScoreLogElements();
-            }
         }
 
         public void AddScoreLogElement(int addedScoreWithSign, DateTime? time, string activity)

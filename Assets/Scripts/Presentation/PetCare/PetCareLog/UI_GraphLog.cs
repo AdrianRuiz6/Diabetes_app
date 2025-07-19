@@ -12,6 +12,7 @@ using Master.Domain.Settings;
 using Master.Domain.PetCare.Log;
 using Master.Domain.PetCare;
 using Master.Infrastructure;
+using Master.Domain.Score;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -36,6 +37,8 @@ namespace Master.Presentation.PetCare.Log
         private ISettingsManager _settingsManager;
         private IPetCareLogManager _petCareLogManager;
 
+        private bool _isSimulationFinished = false;
+
         private void Awake()
         {
             GameEvents_Settings.OnInitialTimeModified += ModifyInitialHour;
@@ -47,6 +50,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnUpdatedAttributesLog += UpdateAttributeLog;
 
             GameEvents_PetCareLog.OnResetGraph += ResetGraphContainer;
+
+            GameEvents_PetCare.OnFinishedSimulation += StartUI;
         }
 
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
@@ -61,6 +66,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnUpdatedAttributesLog -= UpdateAttributeLog;
 
             GameEvents_PetCareLog.OnResetGraph -= ResetGraphContainer;
+
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
@@ -78,6 +85,8 @@ namespace Master.Presentation.PetCare.Log
                 GameEvents_PetCareLog.OnUpdatedAttributesLog -= UpdateAttributeLog;
 
                 GameEvents_PetCareLog.OnResetGraph -= ResetGraphContainer;
+
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
             }
         }
 
@@ -92,6 +101,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnUpdatedAttributesLog -= UpdateAttributeLog;
 
             GameEvents_PetCareLog.OnResetGraph -= ResetGraphContainer;
+
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
@@ -109,12 +120,13 @@ namespace Master.Presentation.PetCare.Log
             // Se establece el minimo y máximo de la franja horaria.
             _minHour = _settingsManager.initialTime.Hours;
             _maxHour = _settingsManager.finishTime.Hours;
-
-            PlotCurrentGraph();
         }
 
         private void ResetGraphContainer()
         {
+            if (!_isSimulationFinished)
+                return;
+
             if (_graphElements.transform.childCount > 0)
             {
                 foreach (Transform child in _graphElements.transform)
@@ -126,18 +138,25 @@ namespace Master.Presentation.PetCare.Log
 
         private void UpdateDateFilter()
         {
+            if (!_isSimulationFinished)
+                return;
             ResetGraphContainer();
             PlotCurrentGraph();
         }
 
         private void UpdateAttributeFilter()
         {
+            if (!_isSimulationFinished)
+                return;
             ResetGraphContainer();
             PlotCurrentGraph();
         }
 
         private void UpdateAttributeLog(AttributeType attributeType)
         {
+            if (!_isSimulationFinished)
+                return;
+
             if (_petCareLogManager.currentDateFilter.Date == DateTime.Now.Date && _petCareLogManager.currentAttributeFilter == attributeType)
             {
                 PlotCurrentGraph();
@@ -347,12 +366,18 @@ namespace Master.Presentation.PetCare.Log
 
         private void ModifyInitialHour(int hour)
         {
+            if (!_isSimulationFinished)
+                return;
+
             _minHour = hour;
             _petCareLogManager.ModifyDayFilter((DateTime.Now.Date - _petCareLogManager.currentDateFilter.Date).Days);
         }
 
         private void ModifyFinishHour(int hour)
         {
+            if (!_isSimulationFinished)
+                return;
+
             _maxHour = hour;
             _petCareLogManager.ModifyDayFilter((DateTime.Now.Date - _petCareLogManager.currentDateFilter.Date).Days);
         }
@@ -380,6 +405,12 @@ namespace Master.Presentation.PetCare.Log
             }
 
             _x_labels.Clear();
+        }
+
+        private void StartUI()
+        {
+            _isSimulationFinished = true;
+            PlotCurrentGraph();
         }
     }
 }

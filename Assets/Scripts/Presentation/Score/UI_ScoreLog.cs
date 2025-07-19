@@ -16,10 +16,13 @@ namespace Master.Presentation.Score
 
         private IScoreLogManager _scoreLogManager;
 
+        private bool _isSimulationFinished = false;
+
         void Awake()
         {
             GameEvents_Score.OnResetScoreLog += ClearElements;
             GameEvents_Score.OnAddScoreLog += AddElement;
+            GameEvents_PetCare.OnFinishedSimulation += StartUI;
         }
 
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
@@ -27,6 +30,7 @@ namespace Master.Presentation.Score
         {
             GameEvents_Score.OnResetScoreLog -= ClearElements;
             GameEvents_Score.OnAddScoreLog -= AddElement;
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
@@ -37,6 +41,7 @@ namespace Master.Presentation.Score
             {
                 GameEvents_Score.OnResetScoreLog -= ClearElements;
                 GameEvents_Score.OnAddScoreLog -= AddElement;
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
             }
         }
 
@@ -44,17 +49,13 @@ namespace Master.Presentation.Score
         {
             GameEvents_Score.OnResetScoreLog -= ClearElements;
             GameEvents_Score.OnAddScoreLog -= AddElement;
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
         void Start()
         {
             _scoreLogManager = ServiceLocator.Instance.GetService<IScoreLogManager>();
-
-            if (_scoreLogManager.scoreLogList.Count > 0)
-            {
-                InitializeElements();
-            }
         }
 
         private void InitializeElements()
@@ -68,6 +69,9 @@ namespace Master.Presentation.Score
 
         private void ClearElements()
         {
+            if (!_isSimulationFinished)
+                return;
+
             foreach (GameObject element in _elementsList)
             {
                 Destroy(element);
@@ -76,6 +80,9 @@ namespace Master.Presentation.Score
 
         private void AddElement(ScoreLog newScoreLog, int siblingIndex)
         {
+            if (!_isSimulationFinished)
+                return;
+
             GameObject newElement = CreateLogElement(newScoreLog.GetTime(), newScoreLog.GetInfo());
             newElement.transform.SetSiblingIndex(siblingIndex);
             _elementsList.Add(newElement);
@@ -96,6 +103,16 @@ namespace Master.Presentation.Score
             infoTMP.text = info;
 
             return newElement;
+        }
+
+        private void StartUI()
+        {
+            _isSimulationFinished = true;
+
+            if (_scoreLogManager.scoreLogList.Count > 0)
+            {
+                InitializeElements();
+            }
         }
     }
 }

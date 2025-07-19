@@ -46,6 +46,7 @@ namespace Master.Domain.PetCare
             }
             else{
                 _isSimulating = false;
+                GameEvents_PetCare.OnFinishedSimulation?.Invoke();
                 _petCareManager.SetNextIterationStartTime(_currentIterationFinishTime);
             }
         }
@@ -173,6 +174,7 @@ namespace Master.Domain.PetCare
                 if(iterationsTotal == 0)
                 {
                     _isSimulating = false;
+                    GameEvents_PetCare.OnFinishedSimulation?.Invoke();
                     _petCareManager.SetNextIterationStartTime(_currentIterationFinishTime);
                 }
                 else

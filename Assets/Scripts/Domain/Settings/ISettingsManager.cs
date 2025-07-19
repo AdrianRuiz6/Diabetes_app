@@ -14,7 +14,7 @@ namespace Master.Domain.Settings
 
         public float soundEffectsVolume { get; }
 
-        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager, IScoreLogManager scoreLogManager);
+        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager);
 
         public void SetInitialHour(int newHour);
 

@@ -83,7 +83,7 @@ namespace Master.Infrastructure
             _aimulatorManager = new AISimulatorManager(_petCareManager, _connectionManager, _settingsManager);
 
             // Inicializacion SettingsManager
-            _settingsManager.InitializeDependencies(_petCareManager, _petCareLogManager, _questionManager, _scoreManager, _scoreLogManager);
+            _settingsManager.InitializeDependencies(_petCareManager, _petCareLogManager, _questionManager, _scoreManager);
 
             // Registro de servicios en ServiceLocator
             ServiceLocator.Instance.RegisterService(_connectionManager);

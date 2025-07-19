@@ -1,12 +1,9 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System;
 using Master.Presentation.Animations;
 using Master.Presentation.Sound;
-using Master.Domain.Score;
 using Master.Domain.GameEvents;
-using Master.Domain.Shop;
 using Master.Domain.Questions;
 using Master.Infrastructure;
 

@@ -78,7 +78,7 @@ namespace Master.Tests
 
             // Asserts de valores esperados
             Assert.Contains(_petCareManager.glycemiaValue, new[] { 115, 125 });
-            Assert.AreEqual(52, _petCareManager.energyValue);
+            Assert.AreEqual(48, _petCareManager.energyValue);
             Assert.AreEqual(52, _petCareManager.hungerValue);
         }
 
@@ -378,7 +378,7 @@ namespace Master.Tests
                 throw new NotImplementedException();
             }
 
-            public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager, IScoreLogManager scoreLogManager)
+            public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager)
             {
                 throw new NotImplementedException();
             }

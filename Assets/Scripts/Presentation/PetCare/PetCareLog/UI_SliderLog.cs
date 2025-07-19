@@ -7,6 +7,7 @@ using Master.Domain.Settings;
 using Master.Domain.PetCare.Log;
 using Master.Infrastructure;
 using TMPro;
+using Master.Domain.Score;
 
 namespace Master.Presentation.PetCare.Log
 {
@@ -25,6 +26,8 @@ namespace Master.Presentation.PetCare.Log
         private IPetCareLogManager _petCareLogManager;
         private ISettingsManager _settingsManager;
 
+        private bool _isSimulationFinished = false;
+
         private void Awake()
         {
             GameEvents_Settings.OnInitialTimeModified += ModifyInitialHour;
@@ -34,6 +37,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnChangedDateFilter += UpdateDateFilter;
 
             GameEvents_PetCareLog.OnResetSlider += UpdateDateFilter;
+
+            GameEvents_PetCare.OnFinishedSimulation += StartUI;
         }
 
 
@@ -47,6 +52,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
 
             GameEvents_PetCareLog.OnResetSlider -= UpdateDateFilter;
+
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
@@ -62,6 +69,8 @@ namespace Master.Presentation.PetCare.Log
                 GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
 
                 GameEvents_PetCareLog.OnResetSlider -= UpdateDateFilter;
+                
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
             }
         }
 
@@ -74,6 +83,8 @@ namespace Master.Presentation.PetCare.Log
             GameEvents_PetCareLog.OnChangedDateFilter -= UpdateDateFilter;
 
             GameEvents_PetCareLog.OnResetSlider -= UpdateDateFilter;
+            
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
         void Start()
@@ -83,26 +94,20 @@ namespace Master.Presentation.PetCare.Log
 
             _slider = GetComponent<Slider>();
             _slider.wholeNumbers = true;
-
-            // Se establece el minimo y máximo de la franja horaria.
-            ModifyInitialHour(_settingsManager.initialTime.Hours);
-            ModifyFinishHour(_settingsManager.finishTime.Hours);
-
-            // Iniciar datos fecha actual.
-            _slider.SetValueWithoutNotify(0);
-            UpdateAdditionalInfo(0);
-
-            _slider.onValueChanged.AddListener(ChangeValue);
         }
 
         private void UpdateDateFilter()
         {
+            if (!_isSimulationFinished)
+                return;
             _slider.SetValueWithoutNotify(0);
             UpdateAdditionalInfo(0);
         }
 
         private void UpdateActionInfo()
         {
+            if (!_isSimulationFinished)
+                return;
             UpdateAdditionalInfo((int)_slider.value);
         }
 
@@ -198,6 +203,8 @@ namespace Master.Presentation.PetCare.Log
 
         private void ModifyInitialHour(int hour)
         {
+            if (!_isSimulationFinished)
+                return;
             _minHour = hour;
             _slider.minValue = 0;
             int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
@@ -209,6 +216,8 @@ namespace Master.Presentation.PetCare.Log
 
         private void ModifyFinishHour(int hour)
         {
+            if (!_isSimulationFinished)
+                return;
             _maxHour = hour;
             int maxHourAux = (_maxHour < _minHour) ? _maxHour + 24 : _maxHour;
             _slider.maxValue = (maxHourAux - _minHour) * 60 + 59;
@@ -230,6 +239,21 @@ namespace Master.Presentation.PetCare.Log
             DateTime minimumTime = new DateTime(_petCareLogManager.currentDateFilter.Year, _petCareLogManager.currentDateFilter.Month, _petCareLogManager.currentDateFilter.Day, _minHour, 0, 0);
             DateTime time = new DateTime(_petCareLogManager.currentDateFilter.Year, _petCareLogManager.currentDateFilter.Month, _petCareLogManager.currentDateFilter.Day, minimumTime.Hour + additionalTime.Hour, additionalTime.Minute, 0);
             return time;
+        }
+
+        private void StartUI()
+        {
+            _isSimulationFinished = true;
+
+            // Se establece el minimo y máximo de la franja horaria.
+            ModifyInitialHour(_settingsManager.initialTime.Hours);
+            ModifyFinishHour(_settingsManager.finishTime.Hours);
+
+            // Iniciar datos fecha actual.
+            _slider.SetValueWithoutNotify(0);
+            UpdateAdditionalInfo(0);
+
+            _slider.onValueChanged.AddListener(ChangeValue);
         }
     }
 }

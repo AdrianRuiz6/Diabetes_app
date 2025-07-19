@@ -11,15 +11,19 @@ namespace Master.Presentation.Score
 
         private IScoreManager _scoreManager;
 
+        private bool _isSimulationFinished = false;
+
         private void Awake()
         {
             GameEvents_Score.OnModifyHighestScore += ModifyHighestScoreTMP;
+            GameEvents_PetCare.OnFinishedSimulation += StartUI;
         }
 
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
         private void OnDestroy()
         {
             GameEvents_Score.OnModifyHighestScore -= ModifyHighestScoreTMP;
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
@@ -29,12 +33,14 @@ namespace Master.Presentation.Score
             if (pause)
             {
                 GameEvents_Score.OnModifyHighestScore -= ModifyHighestScoreTMP;
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
             }
         }
 
         void OnApplicationQuit()
         {
             GameEvents_Score.OnModifyHighestScore -= ModifyHighestScoreTMP;
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
@@ -43,12 +49,19 @@ namespace Master.Presentation.Score
             _scoreManager = ServiceLocator.Instance.GetService<IScoreManager>();
 
             _highestScore_TMP = GetComponent<TMP_Text>();
-            ModifyHighestScoreTMP(_scoreManager.highestScore);
         }
 
         private void ModifyHighestScoreTMP(int highestScore)
         {
+            if (!_isSimulationFinished)
+                return;
             _highestScore_TMP.text = highestScore.ToString();
+        }
+
+        private void StartUI()
+        {
+            _isSimulationFinished = true;
+            ModifyHighestScoreTMP(_scoreManager.highestScore);
         }
     }
 }

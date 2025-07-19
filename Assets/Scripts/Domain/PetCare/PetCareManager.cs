@@ -114,7 +114,7 @@ namespace Master.Domain.PetCare
         {
             AttributeUpdateIntervalInfo currentIntervalInfo = new AttributeUpdateIntervalInfo
                 (
-                    DateTime.Now,
+                    nextIterationStartTime,
                     glycemiaValue,
                     energyValue,
                     hungerValue,
@@ -288,8 +288,8 @@ namespace Master.Domain.PetCare
                     // Sumar puntos y sumar monedas
                     if (IsGlycemiaInRange(AttributeRangeValue.BadHigh, glycemiaValue))
                     {
-                        int addedScore = -2;
-                        _scoreManager.AddScore(addedScore, currentDateTime, "control malo de la glucemia");
+                        int substractedScore = 2;
+                        _scoreManager.SubstractScore(substractedScore, currentDateTime, "control malo de la glucemia");
                     }
                     else if (IsGlycemiaInRange(AttributeRangeValue.IntermediateHigh, glycemiaValue))
                     {
@@ -311,8 +311,8 @@ namespace Master.Domain.PetCare
                     }
                     else if (IsGlycemiaInRange(AttributeRangeValue.BadLow, glycemiaValue))
                     {
-                        int addedScore = -2;
-                        _scoreManager.AddScore(addedScore, currentDateTime, "control malo de la glucemia");
+                        int substractedScore = 2;
+                        _scoreManager.SubstractScore(substractedScore, currentDateTime, "control malo de la glucemia");
                     }
                 }
             }
@@ -365,8 +365,8 @@ namespace Master.Domain.PetCare
                     // Sumar puntos y sumar monedas
                     if (IsEnergyInRange(AttributeRangeValue.BadHigh, energyValue))
                     {
-                        int addedScore = -2;
-                        _scoreManager.AddScore(addedScore, currentDateTime, "control malo de la energía");
+                        int substractedScore = 2;
+                        _scoreManager.SubstractScore(substractedScore, currentDateTime, "control malo de la energía");
                     }
                     else if (IsEnergyInRange(AttributeRangeValue.IntermediateHigh, energyValue))
                     {
@@ -388,8 +388,8 @@ namespace Master.Domain.PetCare
                     }
                     else if (IsEnergyInRange(AttributeRangeValue.BadLow, energyValue))
                     {
-                        int addedScore = -2;
-                        _scoreManager.AddScore(addedScore, currentDateTime, "control malo de la energía");
+                        int substractedScore = 2;
+                        _scoreManager.SubstractScore(substractedScore, currentDateTime, "control malo de la energía");
                     }
                 }
             }
@@ -442,8 +442,8 @@ namespace Master.Domain.PetCare
                     // Sumar puntos y sumar monedas
                     if (IsHungerInRange(AttributeRangeValue.BadHigh, hungerValue))
                     {
-                        int addedScore = -2;
-                        _scoreManager.AddScore(addedScore, currentDateTime, "control malo del hambre");
+                        int substractedScore = 2;
+                        _scoreManager.SubstractScore(substractedScore, currentDateTime, "control malo del hambre");
                     }
                     else if (IsHungerInRange(AttributeRangeValue.IntermediateHigh, hungerValue))
                     {
@@ -465,8 +465,8 @@ namespace Master.Domain.PetCare
                     }
                     else if (IsHungerInRange(AttributeRangeValue.BadLow, hungerValue))
                     {
-                        int addedScore = -2;
-                        _scoreManager.AddScore(addedScore, currentDateTime, "control malo del hambre");
+                        int substractedScore = 2;
+                        _scoreManager.SubstractScore(substractedScore, currentDateTime, "control malo del hambre");
                     }
                 }
             }
@@ -517,7 +517,8 @@ namespace Master.Domain.PetCare
 
         public void ActivateInsulinAction(int value)
         {
-            _petCareRepository.SaveInsulinEffectsEndTime(DateTime.Now.AddSeconds(timeEffectActions));
+            insulinEffectsEndTime = DateTime.Now.AddSeconds(timeEffectActions);
+            _petCareRepository.SaveInsulinEffectsEndTime(insulinEffectsEndTime);
 
             int affectedGlycemia = value * -85;
             ModifyGlycemia(affectedGlycemia, DateTime.Now, true);
@@ -551,7 +552,8 @@ namespace Master.Domain.PetCare
         public void DeactivateInsulinActionCD()
         {
             isInsulinActionInCD = false;
-            _petCareRepository.SaveInsulinCooldownEndTime(DateTime.Now.AddSeconds(-1));
+            insulinCooldownEndTime = DateTime.Now.AddSeconds(-1);
+            _petCareRepository.SaveInsulinCooldownEndTime(insulinCooldownEndTime);
             GameEvents_PetCare.OnFinishTimerCD(ActionType.Insulin);
         }
 
@@ -564,13 +566,15 @@ namespace Master.Domain.PetCare
 
         public void DeactivateInsulinEffect()
         {
-            _petCareRepository.SaveInsulinEffectsEndTime(DateTime.Now.AddSeconds(-1));
+            insulinEffectsEndTime = DateTime.Now.AddSeconds(-1);
+            _petCareRepository.SaveInsulinEffectsEndTime(insulinEffectsEndTime);
             isInsulinEffectActive = false;
         }
 
         public void ActivateExerciseAction(string intensity)
         {
-            _petCareRepository.SaveExerciseEffectsEndTime(DateTime.Now.AddSeconds(timeEffectActions));
+            exerciseEffectsEndTime = DateTime.Now.AddSeconds(timeEffectActions);
+            _petCareRepository.SaveExerciseEffectsEndTime(exerciseEffectsEndTime);
 
             switch (intensity)
             {
@@ -612,7 +616,8 @@ namespace Master.Domain.PetCare
         public void DeactivateExerciseActionCD()
         {
             isExerciseActionInCD = false;
-            _petCareRepository.SaveExerciseCooldownEndTime(DateTime.Now.AddSeconds(-1));
+            exerciseCooldownEndTime = DateTime.Now.AddSeconds(-1);
+            _petCareRepository.SaveExerciseCooldownEndTime(exerciseCooldownEndTime);
             GameEvents_PetCare.OnFinishTimerCD(ActionType.Exercise);
         }
 
@@ -625,13 +630,15 @@ namespace Master.Domain.PetCare
 
         public void DeactivateExerciseEffect()
         {
-            _petCareRepository.SaveExerciseEffectsEndTime(DateTime.Now.AddSeconds(-1));
+            exerciseEffectsEndTime = DateTime.Now.AddSeconds(-1);
+            _petCareRepository.SaveExerciseEffectsEndTime(exerciseEffectsEndTime);
             isExerciseEffectActive = false;
         }
 
         public void ActivateFoodAction(float ration, string food)
         {
-            _petCareRepository.SaveFoodEffectsEndTime(DateTime.Now.AddSeconds(timeEffectActions));
+            foodEffectsEndTime = DateTime.Now.AddSeconds(timeEffectActions);
+            _petCareRepository.SaveFoodEffectsEndTime(foodEffectsEndTime);
 
             float affectedGlycemia = ration * 34;
             ModifyGlycemia((int)affectedGlycemia, DateTime.Now, true);
@@ -673,7 +680,8 @@ namespace Master.Domain.PetCare
         public void DeactivateFoodActionCD()
         {
             isFoodActionInCD = false;
-            _petCareRepository.SaveFoodCooldownEndTime(DateTime.Now.AddSeconds(-1));
+            foodCooldownEndTime = DateTime.Now.AddSeconds(-1);
+            _petCareRepository.SaveFoodCooldownEndTime(foodCooldownEndTime);
             GameEvents_PetCare.OnFinishTimerCD(ActionType.Food);
         }
 
@@ -686,7 +694,8 @@ namespace Master.Domain.PetCare
 
         public void DeactivateFoodEffect()
         {
-            _petCareRepository.SaveFoodEffectsEndTime(DateTime.Now.AddSeconds(-1));
+            foodEffectsEndTime = DateTime.Now.AddSeconds(-1);
+            _petCareRepository.SaveFoodEffectsEndTime(foodEffectsEndTime);
             isFoodEffectActive = false;
         }
 

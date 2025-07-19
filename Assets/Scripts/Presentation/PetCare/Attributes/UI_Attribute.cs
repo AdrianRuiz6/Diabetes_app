@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Master.Domain.PetCare;
 using Master.Infrastructure;
+using Master.Domain.Score;
 
 namespace Master.Presentation.PetCare
 {
@@ -28,6 +29,8 @@ namespace Master.Presentation.PetCare
 
         private IPetCareManager _petCareManager;
 
+        private bool _isSimulationFinished = false;
+
         void Awake()
         {
             switch (_attributeType)
@@ -42,6 +45,8 @@ namespace Master.Presentation.PetCare
                     GameEvents_PetCare.OnModifyHungerUI += UpdateVisualBar;
                     break;
             }
+
+            GameEvents_PetCare.OnFinishedSimulation += StartUI;
         }
 
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
@@ -59,6 +64,8 @@ namespace Master.Presentation.PetCare
                     GameEvents_PetCare.OnModifyHungerUI -= UpdateVisualBar;
                     break;
             }
+
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
@@ -79,6 +86,8 @@ namespace Master.Presentation.PetCare
                         GameEvents_PetCare.OnModifyHungerUI -= UpdateVisualBar;
                         break;
                 }
+
+                GameEvents_PetCare.OnFinishedSimulation -= StartUI;
             }
         }
 
@@ -96,12 +105,80 @@ namespace Master.Presentation.PetCare
                     GameEvents_PetCare.OnModifyHungerUI -= UpdateVisualBar;
                     break;
             }
+
+            GameEvents_PetCare.OnFinishedSimulation -= StartUI;
         }
 #endif
 
         void Start()
         {
             _petCareManager = ServiceLocator.Instance.GetService<IPetCareManager>();
+        }
+
+        private void ChangeValue(float value)
+        {
+            _slider.SetValueWithoutNotify(_currentValue);
+        }
+
+        private void InitializeVisualBar()
+        {
+            _slider.SetValueWithoutNotify(_currentValue);
+            _value_TXT.text = $"{_slider.value} {_unit}";
+
+            foreach (AttributeState state in _attributeStates)
+            {
+                if (_slider.value >= state.minValue && _slider.value <= state.maxValue)
+                {
+                    if (state.rangeValue == AttributeRangeValue.Good)
+                    {
+                        _sliderBackground.color = _colorGood;
+                    }
+                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow || state.rangeValue == AttributeRangeValue.IntermediateHigh)
+                    {
+                        _sliderBackground.color = _colorIntermediate;
+                    }
+                    else if (state.rangeValue == AttributeRangeValue.BadLow || state.rangeValue == AttributeRangeValue.BadHigh)
+                    {
+                        _sliderBackground.color = _colorBad;
+                    }
+                    break;
+                }
+            }
+        }
+
+        private void UpdateVisualBar(int newValue)
+        {
+            if (!_isSimulationFinished)
+                return;
+
+            _currentValue = Mathf.Clamp(newValue, _minValue, _maxValue);
+            _slider.SetValueWithoutNotify(_currentValue);
+            _value_TXT.text = $"{_slider.value} {_unit}";
+
+            foreach (AttributeState state in _attributeStates)
+            {
+                if (_slider.value >= state.minValue && _slider.value <= state.maxValue)
+                {
+                    if (state.rangeValue == AttributeRangeValue.Good)
+                    {
+                        _sliderBackground.color = _colorGood;
+                    }
+                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow || state.rangeValue == AttributeRangeValue.IntermediateHigh)
+                    {
+                        _sliderBackground.color = _colorIntermediate;
+                    }
+                    else if (state.rangeValue == AttributeRangeValue.BadLow || state.rangeValue == AttributeRangeValue.BadHigh)
+                    {
+                        _sliderBackground.color = _colorBad;
+                    }
+                    break;
+                }
+            }
+        }
+
+        private void StartUI()
+        {
+            _isSimulationFinished = true;
 
             _slider = GetComponentInChildren<Slider>();
             _value_TXT = GetComponentInChildren<TextMeshProUGUI>();
@@ -138,67 +215,9 @@ namespace Master.Presentation.PetCare
             _slider.maxValue = _maxValue;
             _value_TXT.text = $"{_slider.value} {_unit}";
 
+            _slider.onValueChanged.AddListener(ChangeValue);
             _slider.value = _currentValue;
             InitializeVisualBar();
-            _slider.onValueChanged.AddListener(ChangeValue);
-        }
-
-        private void ChangeValue(float value)
-        {
-            _slider.SetValueWithoutNotify(_currentValue);
-        }
-
-        private void InitializeVisualBar()
-        {
-            _slider.SetValueWithoutNotify(_currentValue);
-            _value_TXT.text = $"{_slider.value} {_unit}";
-
-            foreach (AttributeState state in _attributeStates)
-            {
-                if (_slider.value >= state.minValue && _slider.value <= state.maxValue)
-                {
-                    if (state.rangeValue == AttributeRangeValue.Good)
-                    {
-                        _sliderBackground.color = _colorGood;
-                    }
-                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow || state.rangeValue == AttributeRangeValue.IntermediateHigh)
-                    {
-                        _sliderBackground.color = _colorIntermediate;
-                    }
-                    else if (state.rangeValue == AttributeRangeValue.BadLow || state.rangeValue == AttributeRangeValue.BadHigh)
-                    {
-                        _sliderBackground.color = _colorBad;
-                    }
-                    break;
-                }
-            }
-        }
-
-        private void UpdateVisualBar(int newValue)
-        {
-            _currentValue = Mathf.Clamp(newValue, _minValue, _maxValue);
-            _slider.SetValueWithoutNotify(_currentValue);
-            _value_TXT.text = $"{_slider.value} {_unit}";
-
-            foreach (AttributeState state in _attributeStates)
-            {
-                if (_slider.value >= state.minValue && _slider.value <= state.maxValue)
-                {
-                    if (state.rangeValue == AttributeRangeValue.Good)
-                    {
-                        _sliderBackground.color = _colorGood;
-                    }
-                    else if (state.rangeValue == AttributeRangeValue.IntermediateLow || state.rangeValue == AttributeRangeValue.IntermediateHigh)
-                    {
-                        _sliderBackground.color = _colorIntermediate;
-                    }
-                    else if (state.rangeValue == AttributeRangeValue.BadLow || state.rangeValue == AttributeRangeValue.BadHigh)
-                    {
-                        _sliderBackground.color = _colorBad;
-                    }
-                    break;
-                }
-            }
         }
     }
 }

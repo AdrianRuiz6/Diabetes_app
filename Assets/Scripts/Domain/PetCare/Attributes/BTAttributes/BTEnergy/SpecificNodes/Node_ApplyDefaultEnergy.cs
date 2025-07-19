@@ -13,7 +13,7 @@ namespace Master.Domain.PetCare
 
         public override NodeState Evaluate(AttributeUpdateIntervalInfo intervalInfo)
         {
-            _petCareManager.ModifyEnergy(+2);
+            _petCareManager.ModifyEnergy(-2);
             return NodeState.SUCCESS;
         }
     }

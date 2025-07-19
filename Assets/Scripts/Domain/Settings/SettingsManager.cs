@@ -15,7 +15,6 @@ namespace Master.Domain.Settings
         private IQuestionRepository _questionRepository;
         private IQuestionManager _questionManager;
         private IScoreManager _scoreManager;
-        private IScoreLogManager _scoreLogManager;
 
         public TimeSpan initialTime { get; private set; }
         public TimeSpan finishTime { get; private set; }
@@ -33,13 +32,12 @@ namespace Master.Domain.Settings
             soundEffectsVolume = _settingsRepository.LoadSoundEffectsVolume();
         }
 
-        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager, IScoreLogManager scoreLogManager)
+        public void InitializeDependencies(IPetCareManager petCareManager, IPetCareLogManager petCareLogManager, IQuestionManager questionManager, IScoreManager scoreManager)
         {
             _petCareManager = petCareManager;
             _petCareLogManager = petCareLogManager;
             _questionManager = questionManager;
             _scoreManager = scoreManager;
-            _scoreLogManager = scoreLogManager;
         }
 
         public void SetInitialHour(int newHour)
@@ -82,7 +80,6 @@ namespace Master.Domain.Settings
 
             // Reiniciar puntuación
             _scoreManager.ResetScore();
-            _scoreLogManager.ClearScoreLogElements();
 
             // Reiniciar historial de atributos
             _petCareLogManager.ClearThisDateAttributeLog(AttributeType.Energy);
@@ -136,7 +133,6 @@ namespace Master.Domain.Settings
         {
             // Reiniciar puntuación
             _scoreManager.ResetScore();
-            _scoreLogManager.ClearScoreLogElements();
 
             // Reiniciar valores de las preguntas
             _questionRepository.ResetUserPerformance();

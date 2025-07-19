@@ -14,5 +14,7 @@ namespace Master.Domain.GameEvents
 
         public static Action<AttributeUpdateIntervalInfo> OnExecuteAttributesBTree;
         public static Action OnFinishedExecutionAttributesBTree;
+
+        public static Action OnFinishedSimulation;
     }
 }

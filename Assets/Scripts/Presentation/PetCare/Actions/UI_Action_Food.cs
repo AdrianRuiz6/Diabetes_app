@@ -72,7 +72,7 @@ namespace Master.Presentation.PetCare
 
             _resultBot = await _petCareManager.GetInformationFromFoodName(input);
             _feedBackTMP.text = _resultBot;
-            if (_resultBot == "No has escrito una comida, prueba otra vez." || _resultBot == "Lo siento, ahora mismo no puedo pensar en una respuesta :/")
+            if (_resultBot == "No has escrito una comida, prueba otra vez." || _resultBot == "Lo siento, ahora mismo no puedo pensar en una respuesta.")
             {
                 DeactivateSendButton();
             }

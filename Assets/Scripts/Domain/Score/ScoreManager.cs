@@ -100,6 +100,7 @@ namespace Master.Domain.Score
             {
                 currentScore = 0;
                 _scoreRepository.SaveCurrentScore(currentScore);
+                _scoreLogManager.ClearScoreLogElements();
                 GameEvents_Score.OnResetScore?.Invoke();
             }
             finally
