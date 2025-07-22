@@ -9,8 +9,11 @@ namespace Master.Infrastructure
     {
         private readonly ChatCompletionsApi _chatCompletionsApi;
 
-        public OpenAIChatBot(string apiKey)
+        public OpenAIChatBot()
         {
+            string apiKey = "";
+            apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
             string initialSystemText = "Si te envío el nombre de una comida, me dirás los hidratos de carbono" +
                 " que tiene para un niño de 8 años. Si no es una comida, responderás: 'No has escrito" +
                 " una comida, prueba otra vez'. Siempre dirás específicamente la oración: 'La comida \"x\" tiene" +

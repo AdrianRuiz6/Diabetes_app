@@ -22,7 +22,7 @@ namespace Master.Domain.Questions
         private List<Question> _iterationQuestions;
         public int currentQuestionIndex { private set; get; }
         private int _maxQuestionIndex = 10;
-        public float maxTimerSeconds { private set; get; } = 1800f;
+        public float maxTimerSeconds { private set; get; } = 3600f; // 1 hora = 3600 segundos
 
         public bool isFSMExecuting { private set; get; }
 

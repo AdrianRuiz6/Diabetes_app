@@ -63,13 +63,15 @@ namespace Master.Infrastructure
 
         private void InitializeServices()
         {
+            EnvReader.Load();
+
             _connectionRepository = new DataStorage_Connection();
             _settingsRepository = new DataStorage_Settings();
             _scoreRepository = new DataStorage_Score();
             _shopRepository = new DataStorage_Shop();
             _questionRepository = new DataStorage_Questions();
             _petCareRepository = new DataStorage_PetCare();
-            _chatBot = new OpenAIChatBot("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");
+            _chatBot = new OpenAIChatBot();
 
             _connectionManager = new ConnectionManager(_connectionRepository);
             _settingsManager = new SettingsManager(_settingsRepository, _questionRepository);

@@ -8,7 +8,6 @@ using Master.Domain.Shop;
 using Master.Domain.PetCare.Log;
 using Master.Auxiliar;
 using Master.Domain.Connection;
-using System.Diagnostics;
 
 namespace Master.Domain.PetCare
 {
@@ -580,18 +579,18 @@ namespace Master.Domain.PetCare
             {
                 case "Intensidad baja":
                     ModifyGlycemia(-30, DateTime.Now, true);
-                    ModifyEnergy(-15, DateTime.Now, true);
+                    ModifyEnergy(-10, DateTime.Now, true);
                     ModifyHunger(10, DateTime.Now, true);
                     break;
                 case "Intensidad media":
                     ModifyGlycemia(-60, DateTime.Now, true);
-                    ModifyEnergy(-35, DateTime.Now, true);
-                    ModifyHunger(15, DateTime.Now, true);
+                    ModifyEnergy(-20, DateTime.Now, true);
+                    ModifyHunger(20, DateTime.Now, true);
                     break;
                 case "Intensidad alta":
                     ModifyGlycemia(-90, DateTime.Now, true);
-                    ModifyEnergy(-50, DateTime.Now, true);
-                    ModifyHunger(20, DateTime.Now, true);
+                    ModifyEnergy(-30, DateTime.Now, true);
+                    ModifyHunger(30, DateTime.Now, true);
                     break;
             }
 
@@ -645,18 +644,18 @@ namespace Master.Domain.PetCare
 
             if (ration > 0 && ration <= 2)
             {
-                ModifyHunger(-20, DateTime.Now, true);
-                ModifyEnergy(10, DateTime.Now, true);
+                ModifyHunger(-15, DateTime.Now, true);
+                ModifyEnergy(15, DateTime.Now, true);
             }
             else if (ration > 2 && ration <= 4.5)
             {
-                ModifyHunger(-40, DateTime.Now, true);
-                ModifyEnergy(15, DateTime.Now, true);
+                ModifyHunger(-30, DateTime.Now, true);
+                ModifyEnergy(30, DateTime.Now, true);
             }
             else if (ration > 4.5)
             {
-                ModifyHunger(-60, DateTime.Now, true);
-                ModifyEnergy(20, DateTime.Now, true);
+                ModifyHunger(-40, DateTime.Now, true);
+                ModifyEnergy(40, DateTime.Now, true);
             }
 
             // Se guarda la información para la gráfica.
