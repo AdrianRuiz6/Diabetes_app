@@ -136,8 +136,13 @@ namespace Master.Presentation.PetCare.Log
             int closeValue = GetSliderValueAccordingTime(availableTimesThisDate[0]);
             int minimumDistance = Mathf.Abs(value - closeValue);
 
+            bool valueExists = false;
             foreach (DateTime newDate in availableTimesThisDate)
             {
+                if (!_settingsManager.IsInRange(newDate.TimeOfDay))
+                    continue;
+
+                valueExists = true;
                 int currentValue = GetSliderValueAccordingTime(newDate);
                 int currentDistance = Mathf.Abs(value - currentValue);
 
@@ -148,7 +153,10 @@ namespace Master.Presentation.PetCare.Log
                 }
             }
 
-            return closeValue;
+            if (valueExists)
+                return closeValue;
+            else
+                return 0;
         }
 
         // Escribe la fecha en el TMP correspondiente y actualiza los datos de la información de los botones.

@@ -310,6 +310,8 @@ namespace Master.Presentation.PetCare.Log
                 DateTime time = dataPoint.GetDateAndTime().Value;
                 int currentHour = time.Hour;
                 int currentMinute = time.Minute;
+                if (!_settingsManager.IsInRange(time.TimeOfDay))
+                    continue;
 
                 // Ajuste de horas si el rango cruza la medianoche.
                 if (currentHour < _minHour)
