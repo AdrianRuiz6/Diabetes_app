@@ -3,13 +3,16 @@ using System.IO;
 using UnityEngine;
 public static class EnvReader
 {
+    public static string apikey = "";
+
     public static void Load()
     {
-        string path = Path.Combine(Application.dataPath, "../.env");
+        string path = Path.Combine(Application.persistentDataPath, ".env");
 
         if (!File.Exists(path))
         {
-            return;
+            string content = $"OPENAI_API_KEY=";
+            File.WriteAllText(path, content);
         }
 
         foreach (string line in File.ReadAllLines(path))
@@ -19,7 +22,11 @@ public static class EnvReader
 
             string[] lineParts = line.Split('=', 2);
             if (lineParts.Length == 2)
+            {
                 Environment.SetEnvironmentVariable(lineParts[0].Trim(), lineParts[1].Trim());
+                apikey = lineParts[1].Trim();
+            }
+                
         }
     }
 }

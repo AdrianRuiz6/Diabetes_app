@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using com.studios.taprobana;
+using Master.Domain.GameEvents;
 using Master.Domain.PetCare;
 
 namespace Master.Infrastructure
@@ -12,7 +13,13 @@ namespace Master.Infrastructure
         public OpenAIChatBot()
         {
             string apiKey = "";
-            apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX
+        apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+#endif
+#if UNITY_ANDROID
+            apiKey = EnvReader.apikey;
+#endif
+
 
             string initialSystemText = "Si te envío el nombre de una comida, me dirás los hidratos de carbono" +
                 " que tiene para un niño de 8 años. Si no es una comida, responderás: 'No has escrito" +
