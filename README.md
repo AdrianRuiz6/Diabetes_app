@@ -12,10 +12,11 @@ Esta aplicación desarrollada en Unity está diseñada como una forma didáctica
 
 ## Requisitos
 
-- Unity 2022.3.8f1 o superior
+- Unity 2022.3.8f1 o superior.
 - Módulos de plataforma instalados (en caso de querer crear ejecutables):
     - Android Build Support
     - Linux Build Support (Mono)
+- Establecer una variable de entorno llamada `OPENAI_API_KEY` con la clave de API de OpenAI para habilitar una funcionalidad de cuidado de la mascota.
 
 ## Instalación
 
